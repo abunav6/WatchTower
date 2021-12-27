@@ -19,24 +19,24 @@ class _SignedInWidgetState extends State<SignedInWidget> {
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         automaticallyImplyLeading: true,
-        actions: [],
+        actions: const [],
         centerTitle: true,
         elevation: 10,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Align(
-          alignment: AlignmentDirectional(0, 0),
+          alignment: const AlignmentDirectional(0, 0),
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10, 50, 10, 50),
+            padding: const EdgeInsetsDirectional.fromSTEB(10, 50, 10, 50),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                  padding: const EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
                   child: Image.asset(
                     'assets/movie_logo.jpg',
                     width: MediaQuery.of(context).size.width * 2,
@@ -45,7 +45,7 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 70),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 70),
                   child: Text(
                     'WatchD',
                     textAlign: TextAlign.center,
@@ -58,23 +58,23 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                   child: ElevatedButton(
                       onPressed: () {
-                        print("Need to add a movie");
+                        debugPrint("Need to add a movie");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AddTitleWidget()),
+                              builder: (context) => const AddTitleWidget()),
                         );
                       },
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.black),
                           minimumSize: MaterialStateProperty.all(
-                              Size(double.infinity, 40)),
+                              const Size(double.infinity, 40)),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           color: Colors.transparent)))),
                       child: Text("Add a Movie",
                           style: GoogleFonts.poppins(fontSize: 14))),
@@ -83,18 +83,18 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                   child: ElevatedButton(
                       onPressed: () {
-                        print("View your watched movies");
+                        debugPrint("View your watched movies");
                       },
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.black),
                           minimumSize: MaterialStateProperty.all(
-                              Size(double.infinity, 40)),
+                              const Size(double.infinity, 40)),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           color: Colors.transparent)))),
                       child: Text("Your WatchD list",
                           style: GoogleFonts.poppins(fontSize: 14))),
@@ -103,18 +103,18 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                   child: ElevatedButton(
                       onPressed: () {
-                        print("Need to add a movie/series to watchlist");
+                        debugPrint("Need to add a movie/series to watchlist");
                       },
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.black),
                           minimumSize: MaterialStateProperty.all(
-                              Size(double.infinity, 40)),
+                              const Size(double.infinity, 40)),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           color: Colors.transparent)))),
                       child: Text("Your Watchlist",
                           style: GoogleFonts.poppins(fontSize: 14))),

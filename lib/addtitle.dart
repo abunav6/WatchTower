@@ -29,22 +29,22 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         automaticallyImplyLeading: true,
-        actions: [],
+        actions: const [],
         centerTitle: true,
         elevation: 4,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Align(
-          alignment: AlignmentDirectional(0, 0),
+          alignment: const AlignmentDirectional(0, 0),
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 20),
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 10, 20, 20),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                   child: Text(
                     'Add a Movie or Show to WatchD',
                     style: GoogleFonts.poppins(
@@ -52,7 +52,7 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
                   child: Image.asset(
                     'assets/film.png',
                     width: 100,
@@ -61,7 +61,7 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20, 50, 20, 20),
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 50, 20, 20),
                   child: TextFormField(
                     controller: titleName,
                     obscureText: false,
@@ -69,22 +69,22 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                       hintText: 'Enter a Movie\'s or Show\'s name /IMDb ID',
                       hintStyle: GoogleFonts.poppins(
                           fontSize: 14, fontStyle: FontStyle.italic),
-                      enabledBorder: UnderlineInputBorder(
+                      enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0x00000000),
                           width: 1,
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
                         ),
                       ),
-                      focusedBorder: UnderlineInputBorder(
+                      focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0x00000000),
                           width: 1,
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
                         ),
@@ -98,9 +98,9 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
 
                 // for movie checkbox
                 Align(
-                  alignment: AlignmentDirectional(-0.9, 0),
+                  alignment: const AlignmentDirectional(-0.9, 0),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
                     child: CheckboxListTile(
                       title: Text("Movie",
                           style: GoogleFonts.poppins(fontSize: 14)),
@@ -118,9 +118,9 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
 
                 //for series checkbox
                 Align(
-                  alignment: AlignmentDirectional(-0.9, 0),
+                  alignment: const AlignmentDirectional(-0.9, 0),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
                     child: CheckboxListTile(
                       title: Text("Series",
                           style: GoogleFonts.poppins(fontSize: 14)),
@@ -138,22 +138,22 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
 
                 //Button for search by name
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                   child: ElevatedButton(
                       onPressed: () {
-                        print("Search by Name");
+                        debugPrint("Search by Name");
                         search(movieRadio, showRadio, false, titleName.text);
                       },
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.black),
                           minimumSize: MaterialStateProperty.all(
-                              Size(double.infinity, 40)),
+                              const Size(double.infinity, 40)),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           color: Colors.transparent)))),
                       child: Text("Search by Name",
                           style: GoogleFonts.poppins(fontSize: 14))),
@@ -161,22 +161,22 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
 
                 //Button for search by IMDB
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                   child: ElevatedButton(
                       onPressed: () {
-                        print("Search by IMDb ID");
+                        debugPrint("Search by IMDb ID");
                         search(movieRadio, showRadio, true, titleName.text);
                       },
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.black),
                           minimumSize: MaterialStateProperty.all(
-                              Size(double.infinity, 40)),
+                              const Size(double.infinity, 40)),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           color: Colors.transparent)))),
                       child: Text("Search by IMDb ID",
                           style: GoogleFonts.poppins(fontSize: 14))),
