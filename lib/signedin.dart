@@ -43,7 +43,7 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 100),
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 70),
                   child: Text(
                     'WatchD',
                     textAlign: TextAlign.center,
@@ -53,13 +53,84 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        print("Need to add a movie");
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.black),
+                          minimumSize: MaterialStateProperty.all(
+                              Size(double.infinity, 40)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      side: BorderSide(
+                                          color: Colors.transparent)))),
+                      child: Text("Add a Movie",
+                          style: GoogleFonts.poppins(fontSize: 14))),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        print("Need to add a series");
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.black),
+                          minimumSize: MaterialStateProperty.all(
+                              Size(double.infinity, 40)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      side: BorderSide(
+                                          color: Colors.transparent)))),
+                      child: Text("Add a Series",
+                          style: GoogleFonts.poppins(fontSize: 14))),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 40),
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        print("View your watched movies");
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.black),
+                          minimumSize: MaterialStateProperty.all(
+                              Size(double.infinity, 40)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      side: BorderSide(
+                                          color: Colors.transparent)))),
+                      child: Text("Your WatchD list",
+                          style: GoogleFonts.poppins(fontSize: 14))),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        print("Need to add a movie/series to watchlist");
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.black),
+                          minimumSize: MaterialStateProperty.all(
+                              Size(double.infinity, 40)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      side: BorderSide(
+                                          color: Colors.transparent)))),
+                      child: Text("Your Watchlist",
+                          style: GoogleFonts.poppins(fontSize: 14))),
                 ),
               ],
             ),
