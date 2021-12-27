@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'addtitle.dart';
+
 class SignedInWidget extends StatefulWidget {
   const SignedInWidget({Key? key}) : super(key: key);
 
@@ -57,6 +59,11 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                   child: ElevatedButton(
                       onPressed: () {
                         print("Need to add a movie");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddTitleWidget()),
+                        );
                       },
                       style: ButtonStyle(
                           backgroundColor:
@@ -70,26 +77,6 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                                       side: BorderSide(
                                           color: Colors.transparent)))),
                       child: Text("Add a Movie",
-                          style: GoogleFonts.poppins(fontSize: 14))),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        print("Need to add a series");
-                      },
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.black),
-                          minimumSize: MaterialStateProperty.all(
-                              Size(double.infinity, 40)),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(
-                                          color: Colors.transparent)))),
-                      child: Text("Add a Series",
                           style: GoogleFonts.poppins(fontSize: 14))),
                 ),
                 Padding(
