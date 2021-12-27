@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import "./signedin.dart";
+import "helper.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -200,17 +201,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  void showToast(BuildContext context, String s) {
-    final scaffold = ScaffoldMessenger.of(context);
-    scaffold.showSnackBar(
-      SnackBar(
-        content: Text(s),
-        action: SnackBarAction(
-            label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
   }
