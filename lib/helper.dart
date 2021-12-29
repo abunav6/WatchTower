@@ -14,35 +14,81 @@ void showToast(BuildContext context, String s) {
   );
 }
 
-Future<void> search(
-// TODO: Need to get the JSON object using decode() and then pass it to the options screen, where the processing can be done to extract the list of titles
+class SearchDetails {
+  String title = "";
+  String year = "";
+  String imdbID = "";
+  String poster = "";
 
-    bool? movie,
-    bool? series,
-    bool byIMDb,
-    String searchElement) async {
+  SearchDetails(
+      {required this.title,
+      required this.year,
+      required this.imdbID,
+      required this.poster});
+
+  SearchDetails.fromJson(Map<String, dynamic> json) {
+    title = json['Title'];
+    year = json['Year'];
+    imdbID = json['imdbID'];
+    poster = json['Poster'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['Title'] = this.title;
+    data['Year'] = this.year;
+    data['imdbID'] = this.imdbID;
+    data['Poster'] = this.poster;
+    return data;
+  }
+}
+
+List<SearchDetails> getTitleLists(final data) {
+  List<SearchDetails> details = [];
+
+  final jsonData = json.decode(data);
+  if (jsonData["Response"] == "True") {
+    List<dynamic> searchEle = jsonData["Search"];
+    for (int i = 0; i < searchEle.length; i++) {
+      if (searchEle[i] != null) {
+        Map<String, dynamic> temp = searchEle[i];
+        details.add(SearchDetails.fromJson(searchEle[i]));
+      }
+    }
+    return details;
+  } else {
+    debugPrint(jsonData["Error"]);
+    return [];
+  }
+}
+
+Future<void> search(
+    bool? movie, bool? series, bool byIMDb, String searchElement) async {
   if (movie != null && series != null) {
     String url_base = "http://www.omdbapi.com/?apikey=b9fb2464&";
+    final titleData;
     searchElement.trim();
     searchElement = searchElement.replaceAll(" ", "%20");
     if (movie && series) {
       debugPrint("not possible");
     } else if (movie && !series) {
       if (byIMDb) {
-        String parsed =
-            await http.read(Uri.parse(url_base + "i=" + searchElement));
-        debugPrint(parsed);
+        titleData = await http.read(Uri.parse(url_base + "i=" + searchElement));
       } else {
-        String parsed = await http
+        titleData = await http
             .read(Uri.parse(url_base + "s=" + searchElement + "&type=movie"));
-        debugPrint(parsed);
       }
+
+      List<SearchDetails> options = getTitleLists(titleData);
     } else if (series && !movie) {
       if (byIMDb) {
-        debugPrint(url_base + "i=" + searchElement);
+        titleData = await http.read(Uri.parse(url_base + "i=" + searchElement));
       } else {
-        debugPrint(url_base + "s=" + searchElement + "&type=series");
+        titleData = await http
+            .read(Uri.parse(url_base + "s=" + searchElement + "&type=series"));
       }
+      debugPrint(titleData);
+      List<SearchDetails> options = getTitleLists(titleData);
     } else {
       debugPrint("You need to search something bro lol");
     }
