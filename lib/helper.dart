@@ -62,7 +62,7 @@ List<SearchDetails> getTitleLists(final data) {
   }
 }
 
-Future<void> search(
+Future<List<SearchDetails>> search(
     bool? movie, bool? series, bool byIMDb, String searchElement) async {
   if (movie != null && series != null) {
     String url_base = "http://www.omdbapi.com/?apikey=b9fb2464&";
@@ -71,6 +71,7 @@ Future<void> search(
     searchElement = searchElement.replaceAll(" ", "%20");
     if (movie && series) {
       debugPrint("not possible");
+      return [];
     } else if (movie && !series) {
       if (byIMDb) {
         titleData = await http.read(Uri.parse(url_base + "i=" + searchElement));
@@ -79,7 +80,7 @@ Future<void> search(
             .read(Uri.parse(url_base + "s=" + searchElement + "&type=movie"));
       }
 
-      List<SearchDetails> options = getTitleLists(titleData);
+      return getTitleLists(titleData);
     } else if (series && !movie) {
       if (byIMDb) {
         titleData = await http.read(Uri.parse(url_base + "i=" + searchElement));
@@ -88,9 +89,12 @@ Future<void> search(
             .read(Uri.parse(url_base + "s=" + searchElement + "&type=series"));
       }
       debugPrint(titleData);
-      List<SearchDetails> options = getTitleLists(titleData);
+      return getTitleLists(titleData);
     } else {
       debugPrint("You need to search something bro lol");
+      return [];
     }
+  } else {
+    return [];
   }
 }

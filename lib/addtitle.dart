@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mtvdb/options.dart';
 
 import "helper.dart";
 
@@ -19,7 +20,6 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
   @override
   void initState() {
     super.initState();
-    titleName = TextEditingController();
   }
 
   @override
@@ -140,9 +140,15 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                   child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         debugPrint("Search by Name");
-                        search(movieRadio, showRadio, false, titleName.text);
+                        List<SearchDetails> options = await search(
+                            movieRadio, showRadio, false, titleName.text);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    OptionsScreen(options: options)));
                       },
                       style: ButtonStyle(
                           backgroundColor:
@@ -163,9 +169,10 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                   child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         debugPrint("Search by IMDb ID");
-                        search(movieRadio, showRadio, true, titleName.text);
+                        List<SearchDetails> options = await search(
+                            movieRadio, showRadio, true, titleName.text);
                       },
                       style: ButtonStyle(
                           backgroundColor:
