@@ -52,7 +52,17 @@ List<SearchDetails> getTitleLists(final data) {
     for (int i = 0; i < searchEle.length; i++) {
       if (searchEle[i] != null) {
         Map<String, dynamic> temp = searchEle[i];
-        details.add(SearchDetails.fromJson(searchEle[i]));
+        if (temp["Poster"] == "N/A") {
+          Map<String, dynamic> temp2 = <String, dynamic>{};
+          temp2["Title"] = temp["Title"];
+          temp2["Poster"] =
+              "https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101028/112815904-no-image-available-icon-flat-vector-illustration.jpg?ver=6";
+          temp2["Year"] = temp["Year"];
+          temp2["imdbID"] = temp["imdbID"];
+          details.add(SearchDetails.fromJson(temp2));
+        } else {
+          details.add(SearchDetails.fromJson(temp));
+        }
       }
     }
     return details;
@@ -88,7 +98,6 @@ Future<List<SearchDetails>> search(
         titleData = await http
             .read(Uri.parse(url_base + "s=" + searchElement + "&type=series"));
       }
-      debugPrint(titleData);
       return getTitleLists(titleData);
     } else {
       debugPrint("You need to search something bro lol");

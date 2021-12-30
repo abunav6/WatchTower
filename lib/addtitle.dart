@@ -25,6 +25,7 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -144,11 +145,13 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                         debugPrint("Search by Name");
                         List<SearchDetails> options = await search(
                             movieRadio, showRadio, false, titleName.text);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    OptionsScreen(options: options)));
+                        if (options != []) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      OptionsScreen(options: options)));
+                        }
                       },
                       style: ButtonStyle(
                           backgroundColor:
