@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'addtitle.dart';
+import "helper.dart";
 
 class SignedInWidget extends StatefulWidget {
   const SignedInWidget({Key? key}) : super(key: key);
@@ -19,11 +22,17 @@ class _SignedInWidgetState extends State<SignedInWidget> {
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-        automaticallyImplyLeading: true,
-        actions: const [],
-        centerTitle: true,
-        elevation: 10,
+        leading: GestureDetector(
+          onTap: () async {
+            debugPrint("need to log out");
+            FirebaseAuth.instance.signOut();
+            showToast(context, "Logging you out!");
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_back_ios_new, // add custom icons also
+          ),
+        ),
       ),
       backgroundColor: Colors.white,
       body: SafeArea(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mtvdb/details.dart';
 import "helper.dart";
 import 'package:google_fonts/google_fonts.dart';
 
@@ -30,9 +31,15 @@ class OptionsScreen extends StatelessWidget {
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
-                      onTap: () {
-                        //TODO: send this IMDB ID to the details screen and show the details!
-                        debugPrint(options[index].imdbID);
+                      onTap: () async {
+                        TitleDetails title =
+                            await getDetails(options[index].imdbID);
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailsScreenWidget(title: title)));
                       },
                       child: Card(
                           shape: RoundedRectangleBorder(
