@@ -29,4 +29,11 @@ class DatabaseHandler {
     final List<Map<String, Object?>> queryResult = await db.query('watchd');
     return queryResult.map((e) => Record.fromMap(e)).toList();
   }
+
+  Future<List<Record>> retrieveData(String type, String watchlist) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.query('watchd',
+        where: 'type=? AND watchlist=?', whereArgs: [type, watchlist]);
+    return queryResult.map((e) => Record.fromMap(e)).toList();
+  }
 }

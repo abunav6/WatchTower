@@ -37,8 +37,10 @@ class OptionsScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    DetailsScreenWidget(title: title)));
+                                builder: (context) => DetailsScreenWidget(
+                                      title: title,
+                                      showButtons: true,
+                                    )));
                       },
                       child: Card(
                           shape: RoundedRectangleBorder(

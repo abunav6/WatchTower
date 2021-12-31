@@ -6,8 +6,11 @@ import "services/DatabaseHandler.dart";
 
 class DetailsScreenWidget extends StatelessWidget {
   final TitleDetails title;
+  final bool showButtons;
 
-  const DetailsScreenWidget({Key? key, required this.title}) : super(key: key);
+  const DetailsScreenWidget(
+      {Key? key, required this.title, required this.showButtons})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -334,30 +337,33 @@ class DetailsScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                        onPressed: () async {
-                          debugPrint("Add to WatchD");
-                          Record rec = Record(
-                              imdbID: title.imdbID,
-                              type: title.type,
-                              watchlist: "false");
+                    (showButtons)
+                        ? ElevatedButton(
+                            onPressed: () async {
+                              debugPrint("Add to WatchD");
+                              Record rec = Record(
+                                  imdbID: title.imdbID,
+                                  type: title.type,
+                                  watchlist: "false");
 
-                          DatabaseHandler().insert(rec);
-                        },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                const Color(0xFF4B39EF)),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    side: const BorderSide(
-                                        color: Colors.transparent)))),
-                        child: Row(children: <Widget>[
-                          const Icon(Icons.add, size: 15),
-                          Text("\t Add to WatchD",
-                              style: GoogleFonts.poppins(fontSize: 14))
-                        ]))
+                              DatabaseHandler().insert(rec);
+                            },
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    const Color(0xFF4B39EF)),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                        side: const BorderSide(
+                                            color: Colors.transparent)))),
+                            child: Row(children: <Widget>[
+                              const Icon(Icons.add, size: 15),
+                              Text("\t Add to WatchD",
+                                  style: GoogleFonts.poppins(fontSize: 14))
+                            ]))
+                        : Container()
                   ]),
             ),
             Padding(
@@ -367,29 +373,32 @@ class DetailsScreenWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                          onPressed: () async {
-                            debugPrint("Add to Watchlist");
-                            Record rec = Record(
-                                imdbID: title.imdbID,
-                                type: title.type,
-                                watchlist: "true");
-                            DatabaseHandler().insert(rec);
-                          },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color(0xFF4B39EF)),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: const BorderSide(
-                                          color: Colors.transparent)))),
-                          child: Row(children: <Widget>[
-                            const Icon(Icons.add, size: 15),
-                            Text("\t Add to Watchlist",
-                                style: GoogleFonts.poppins(fontSize: 14))
-                          ]))
+                      (showButtons)
+                          ? ElevatedButton(
+                              onPressed: () async {
+                                debugPrint("Add to Watchlist");
+                                Record rec = Record(
+                                    imdbID: title.imdbID,
+                                    type: title.type,
+                                    watchlist: "true");
+                                DatabaseHandler().insert(rec);
+                              },
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      const Color(0xFF4B39EF)),
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                          side: const BorderSide(
+                                              color: Colors.transparent)))),
+                              child: Row(children: <Widget>[
+                                const Icon(Icons.add, size: 15),
+                                Text("\t Add to Watchlist",
+                                    style: GoogleFonts.poppins(fontSize: 14))
+                              ]))
+                          : Container()
                     ])),
           ],
         ),

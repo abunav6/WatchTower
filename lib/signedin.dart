@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'addtitle.dart';
 import "helper.dart";
 import "services/DatabaseHandler.dart";
+import "watched.dart";
 
 class SignedInWidget extends StatefulWidget {
   const SignedInWidget({Key? key}) : super(key: key);
@@ -69,19 +70,28 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                                       borderRadius: BorderRadius.circular(20.0),
                                       side: const BorderSide(
                                           color: Colors.transparent)))),
-                      child: Text("Add a Movie",
+                      child: Text("Add a Movie/Show to WatchD",
                           style: GoogleFonts.poppins(fontSize: 14))),
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                   child: ElevatedButton(
                       onPressed: () async {
-                        debugPrint("View your watched movies");
-                        List<Record> records =
-                            await DatabaseHandler().retrieveAll();
-                        for (int i = 0; i < records.length; i++) {
-                          debugPrint(records[i].imdbID);
-                        }
+                        debugPrint("View your watched stuff");
+                        List<TitleDetails> movies = await getList(
+                            await DatabaseHandler()
+                                .retrieveData("movie", "false"));
+
+                        List<TitleDetails> shows = await getList(
+                            await DatabaseHandler()
+                                .retrieveData("series", "false"));
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WatchedScreenWidget(
+                                  movies: movies, shows: shows)),
+                        );
                       },
                       style: ButtonStyle(
                           backgroundColor:

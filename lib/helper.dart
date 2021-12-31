@@ -35,7 +35,7 @@ void showToast(BuildContext context, String s) {
 Future<TitleDetails> getDetails(String imdbID) async {
   String url = "http://www.omdbapi.com/?apikey=b9fb2464&i=" + imdbID;
   final response = await http.read(Uri.parse(url));
-  debugPrint(response);
+  // debugPrint(response);
   final jsonData = json.decode(response);
   return TitleDetails.fromJson(jsonData);
 }
@@ -204,4 +204,13 @@ Future<List<SearchDetails>> search(
   } else {
     return [];
   }
+}
+
+Future<List<TitleDetails>> getList(List<Record> rec) async {
+  List<TitleDetails> result = [];
+  for (int i = 0; i < rec.length; i++) {
+    TitleDetails temp = await getDetails(rec[i].imdbID);
+    result.add(temp);
+  }
+  return result;
 }
