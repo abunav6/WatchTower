@@ -25,74 +25,66 @@ class WatchedScreenWidget extends StatelessWidget {
             initialIndex: 0,
             child: Column(
               children: [
-                const TabBar(
+                TabBar(
                   labelColor: Colors.white,
                   indicatorColor: Color(0xFF673AB7),
                   tabs: [
                     Tab(
-                      text: 'Movies',
+                      text: 'Movies -  ${movies.length}',
                     ),
                     Tab(
-                      text: 'Shows',
+                      text: 'Shows - ${shows.length}',
                     ),
                   ],
                 ),
                 Expanded(
                   child: TabBarView(
                     children: [
-                      Container(
-                          child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  5, 30, 5, 30),
-                              child: ListView.separated(
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return const SizedBox(
-                                      height: 10,
-                                    );
-                                  },
-                                  itemCount: movies.length,
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return GestureDetector(
-                                        onTap: () async {
-                                          debugPrint(movies[index].imdbID);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DetailsScreenWidget(
-                                                      title: movies[index],
-                                                      showButtons: false,
-                                                    )),
-                                          );
-                                        },
-                                        child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            child: Padding(
-                                                padding:
-                                                    const EdgeInsetsDirectional
-                                                        .fromSTEB(5, 30, 5, 30),
-                                                child: ListTile(
-                                                  leading: CircleAvatar(
-                                                      radius: 30,
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                              movies[index]
-                                                                  .poster)),
-                                                  title:
-                                                      Text(movies[index].title),
-                                                  trailing: const Icon(
-                                                      Icons.arrow_right),
-                                                ))));
-                                  }))),
+                      Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              5, 30, 5, 30),
+                          child: ListView.separated(
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const SizedBox(
+                                  height: 10,
+                                );
+                              },
+                              itemCount: movies.length,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                    onTap: () async {
+                                      debugPrint(movies[index].imdbID);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetailsScreenWidget(
+                                                  title: movies[index],
+                                                  showButtons: false,
+                                                )),
+                                      );
+                                    },
+                                    child: Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.0)),
+                                        child: Padding(
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(5, 30, 5, 30),
+                                            child: ListTile(
+                                              leading: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundImage: NetworkImage(
+                                                      movies[index].poster)),
+                                              title: Text(movies[index].title),
+                                              trailing:
+                                                  const Icon(Icons.arrow_right),
+                                            ))));
+                              })),
                       Container(
                           child: Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(

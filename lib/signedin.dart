@@ -71,7 +71,7 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                                       borderRadius: BorderRadius.circular(20.0),
                                       side: const BorderSide(
                                           color: Colors.transparent)))),
-                      child: Text("Add a Movie/Show to WatchD",
+                      child: Text("Search for a Movie or Show",
                           style: GoogleFonts.poppins(fontSize: 14))),
                 ),
                 Padding(
