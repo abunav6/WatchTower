@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mtvdb/details.dart';
 import "helper.dart";
-import 'package:google_fonts/google_fonts.dart';
 
 class OptionsScreen extends StatelessWidget {
   // Declare a field that holds the Person data
   final List<SearchDetails> options;
 
-  ScrollController controller = ScrollController();
+  final ScrollController controller = ScrollController();
 
   OptionsScreen({Key? key, required this.options}) : super(key: key);
 

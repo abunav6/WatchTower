@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import "helper.dart";
+import "services/DatabaseHandler.dart";
 
 class DetailsScreenWidget extends StatelessWidget {
   final TitleDetails title;
+
   const DetailsScreenWidget({Key? key, required this.title}) : super(key: key);
 
   @override
@@ -33,7 +35,7 @@ class DetailsScreenWidget extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Color(0xFF090F13),
+      backgroundColor: const Color(0xFF090F13),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -42,7 +44,7 @@ class DetailsScreenWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  child: Container(
+                  child: SizedBox(
                     height: 400,
                     child: Stack(
                       children: [
@@ -305,7 +307,7 @@ class DetailsScreenWidget extends StatelessWidget {
                           child: Text(
                             'Genre',
                             style: GoogleFonts.lexendDeca(
-                              color: Color(0xFF8B97A2),
+                              color: const Color(0xFF8B97A2),
                               fontSize: 14,
                               fontWeight: FontWeight.normal,
                             ),
@@ -335,10 +337,16 @@ class DetailsScreenWidget extends StatelessWidget {
                     ElevatedButton(
                         onPressed: () async {
                           debugPrint("Add to WatchD");
+                          Record rec = Record(
+                              imdbID: title.imdbID,
+                              type: title.type,
+                              watchlist: "false");
+
+                          DatabaseHandler().insert(rec);
                         },
                         style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xFF4B39EF)),
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color(0xFF4B39EF)),
                             shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -362,10 +370,15 @@ class DetailsScreenWidget extends StatelessWidget {
                       ElevatedButton(
                           onPressed: () async {
                             debugPrint("Add to Watchlist");
+                            Record rec = Record(
+                                imdbID: title.imdbID,
+                                type: title.type,
+                                watchlist: "true");
+                            DatabaseHandler().insert(rec);
                           },
                           style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFF4B39EF)),
+                              backgroundColor: MaterialStateProperty.all(
+                                  const Color(0xFF4B39EF)),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(

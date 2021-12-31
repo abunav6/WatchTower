@@ -1,7 +1,25 @@
+// ignore_for_file: unnecessary_this
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+class Record {
+  String imdbID = "";
+  String type = "";
+  String watchlist = "";
+
+  Record({required this.imdbID, required this.type, required this.watchlist});
+
+  Record.fromMap(Map<String, dynamic> res)
+      : imdbID = res["imdbID"],
+        type = res["type"],
+        watchlist = res["watchlist"];
+
+  Map<String, Object> toMap() {
+    return {"imdbID": imdbID, "type": type, "watchlist": watchlist};
+  }
+}
 
 void showToast(BuildContext context, String s) {
   final scaffold = ScaffoldMessenger.of(context);
@@ -59,16 +77,15 @@ class TitleDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['Title'] = this.title;
     data['Year'] = this.year;
     data['Runtime'] = this.runtime;
     data['Genre'] = this.genre;
 
     data['Poster'] = this.poster;
-    if (this.ratings != null) {
-      data['Ratings'] = this.ratings.map((v) => v.toJson()).toList();
-    }
+
+    data['Ratings'] = this.ratings.map((v) => v.toJson()).toList();
 
     data['imdbID'] = this.imdbID;
     data['Type'] = this.type;
@@ -88,7 +105,7 @@ class Ratings {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['Source'] = this.source;
     data['Value'] = this.value;
     return data;
@@ -115,7 +132,7 @@ class SearchDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['Title'] = this.title;
     data['Year'] = this.year;
     data['imdbID'] = this.imdbID;
@@ -156,8 +173,8 @@ List<SearchDetails> getSearchList(final data) {
 Future<List<SearchDetails>> search(
     bool? movie, bool? series, bool byIMDb, String searchElement) async {
   if (movie != null && series != null) {
-    String url_base = "http://www.omdbapi.com/?apikey=b9fb2464&";
-    final titleData;
+    String urlBase = "http://www.omdbapi.com/?apikey=b9fb2464&";
+    final String titleData;
     searchElement.trim();
     searchElement = searchElement.replaceAll(" ", "%20");
     if (movie && series) {
@@ -165,19 +182,19 @@ Future<List<SearchDetails>> search(
       return [];
     } else if (movie && !series) {
       if (byIMDb) {
-        titleData = await http.read(Uri.parse(url_base + "i=" + searchElement));
+        titleData = await http.read(Uri.parse(urlBase + "i=" + searchElement));
       } else {
         titleData = await http
-            .read(Uri.parse(url_base + "s=" + searchElement + "&type=movie"));
+            .read(Uri.parse(urlBase + "s=" + searchElement + "&type=movie"));
       }
 
       return getSearchList(titleData);
     } else if (series && !movie) {
       if (byIMDb) {
-        titleData = await http.read(Uri.parse(url_base + "i=" + searchElement));
+        titleData = await http.read(Uri.parse(urlBase + "i=" + searchElement));
       } else {
         titleData = await http
-            .read(Uri.parse(url_base + "s=" + searchElement + "&type=series"));
+            .read(Uri.parse(urlBase + "s=" + searchElement + "&type=series"));
       }
       return getSearchList(titleData);
     } else {

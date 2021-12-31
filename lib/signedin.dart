@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'addtitle.dart';
 import "helper.dart";
+import "services/DatabaseHandler.dart";
 
 class SignedInWidget extends StatefulWidget {
   const SignedInWidget({Key? key}) : super(key: key);
@@ -20,20 +18,6 @@ class _SignedInWidgetState extends State<SignedInWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: GestureDetector(
-          onTap: () async {
-            debugPrint("need to log out");
-            FirebaseAuth.instance.signOut();
-            showToast(context, "Logging you out!");
-            Navigator.pop(context);
-          },
-          child: const Icon(
-            Icons.arrow_back_ios_new, // add custom icons also
-          ),
-        ),
-      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Align(
@@ -91,8 +75,13 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                   child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         debugPrint("View your watched movies");
+                        List<Record> records =
+                            await DatabaseHandler().retrieveAll();
+                        for (int i = 0; i < records.length; i++) {
+                          debugPrint(records[i].imdbID);
+                        }
                       },
                       style: ButtonStyle(
                           backgroundColor:
