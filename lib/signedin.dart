@@ -4,6 +4,7 @@ import 'addtitle.dart';
 import "helper.dart";
 import "services/DatabaseHandler.dart";
 import "watched.dart";
+import "watchlist.dart";
 
 class SignedInWidget extends StatefulWidget {
   const SignedInWidget({Key? key}) : super(key: key);
@@ -110,8 +111,21 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                   child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         debugPrint("Need to add a movie/series to watchlist");
+                        List<TitleDetails> movies = await getList(
+                            await DatabaseHandler()
+                                .retrieveData("movie", "true"));
+
+                        List<TitleDetails> shows = await getList(
+                            await DatabaseHandler()
+                                .retrieveData("series", "true"));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WatchlistWidget(
+                                  movies: movies, shows: shows)),
+                        );
                       },
                       style: ButtonStyle(
                           backgroundColor:
