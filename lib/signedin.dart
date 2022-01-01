@@ -6,6 +6,8 @@ import "services/DatabaseHandler.dart";
 import "watched.dart";
 import "watchlist.dart";
 
+import 'package:sqflite/sqflite.dart';
+
 class SignedInWidget extends StatefulWidget {
   const SignedInWidget({Key? key}) : super(key: key);
 
@@ -84,13 +86,12 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                       child: ElevatedButton(
                           onPressed: () async {
                             debugPrint("View your watched stuff");
+                            Database db = await initializeDB();
                             List<TitleDetails> movies = await getList(
-                                await DatabaseHandler()
-                                    .retrieveData("movie", "false"));
+                                await retrieveData(db, "movie", "false"));
 
                             List<TitleDetails> shows = await getList(
-                                await DatabaseHandler()
-                                    .retrieveData("series", "false"));
+                                await retrieveData(db, "series", "false"));
 
                             Navigator.push(
                               context,
@@ -120,13 +121,12 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                           onPressed: () async {
                             debugPrint(
                                 "Need to add a movie/series to watchlist");
+                            Database db = await initializeDB();
                             List<TitleDetails> movies = await getList(
-                                await DatabaseHandler()
-                                    .retrieveData("movie", "true"));
+                                await retrieveData(db, "movie", "true"));
 
                             List<TitleDetails> shows = await getList(
-                                await DatabaseHandler()
-                                    .retrieveData("series", "true"));
+                                await retrieveData(db, "series", "true"));
                             Navigator.push(
                               context,
                               MaterialPageRoute(

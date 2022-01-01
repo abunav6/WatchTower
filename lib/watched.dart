@@ -13,6 +13,7 @@ class WatchedScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     movies.sort((a, b) => a.title.compareTo(b.title));
+    shows.sort((a, b) => a.title.compareTo(b.title));
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -82,10 +83,10 @@ class WatchedScreenWidget extends StatelessWidget {
                                                       movies[index].poster)),
                                               title: Text(movies[index].title),
                                               trailing: IconButton(
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     debugPrint(
                                                         "delete ${movies[index].imdbID}");
-                                                    DatabaseHandler().delete(
+                                                    delete(await initializeDB(),
                                                         movies[index].imdbID);
                                                     showToast(context,
                                                         "Deleted ${movies[index].title} from WatchD!");
@@ -136,11 +137,11 @@ class WatchedScreenWidget extends StatelessWidget {
                                                       shows[index].poster)),
                                               title: Text(shows[index].title),
                                               trailing: IconButton(
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     debugPrint(
                                                         "delete ${shows[index].imdbID}");
 
-                                                    DatabaseHandler().delete(
+                                                    delete(await initializeDB(),
                                                         shows[index].imdbID);
                                                     showToast(context,
                                                         "Deleted ${shows[index].title} from WatchD!");

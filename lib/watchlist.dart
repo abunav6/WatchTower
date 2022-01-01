@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import "helper.dart";
 import "details.dart";
 import "services/DatabaseHandler.dart";
@@ -13,6 +12,7 @@ class WatchlistWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     movies.sort((a, b) => a.title.compareTo(b.title));
     shows.sort((a, b) => a.title.compareTo(b.title));
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -28,7 +28,7 @@ class WatchlistWidget extends StatelessWidget {
               children: [
                 TabBar(
                   labelColor: Colors.white,
-                  indicatorColor: Color(0xFF673AB7),
+                  indicatorColor: const Color(0xFF673AB7),
                   tabs: [
                     Tab(
                       text: 'Movies - ${movies.length}',
@@ -75,32 +75,59 @@ class WatchlistWidget extends StatelessWidget {
                                                 BorderRadius.circular(30.0)),
                                         child: Padding(
                                             padding: const EdgeInsetsDirectional
-                                                .fromSTEB(5, 30, 5, 30),
+                                                .fromSTEB(5, 30, 5, 40),
                                             child: ListTile(
-                                              leading: CircleAvatar(
-                                                  radius: 30,
-                                                  backgroundImage: NetworkImage(
-                                                      movies[index].poster)),
-                                              title: Text(movies[index].title),
-                                              trailing: IconButton(
-                                                  onPressed: () {
-                                                    debugPrint(
-                                                        "watched ${movies[index].title}!");
-                                                    Record rec = Record(
-                                                        imdbID: movies[index]
-                                                            .imdbID,
-                                                        type:
-                                                            movies[index].type,
-                                                        watchlist: "false");
-                                                    DatabaseHandler()
-                                                        .changeWatchlist(rec);
-                                                    showToast(context,
-                                                        "Added ${movies[index].title} to WatchD!");
-                                                    Navigator.pop(context);
-                                                  },
-                                                  icon:
-                                                      const Icon(Icons.check)),
-                                            ))));
+                                                leading: CircleAvatar(
+                                                    radius: 30,
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                            movies[index]
+                                                                .poster)),
+                                                title:
+                                                    Text(movies[index].title),
+                                                trailing: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      IconButton(
+                                                          onPressed: () async {
+                                                            debugPrint(
+                                                                "watched ${movies[index].title}!");
+                                                            Record rec = Record(
+                                                                imdbID: movies[
+                                                                        index]
+                                                                    .imdbID,
+                                                                type: movies[
+                                                                        index]
+                                                                    .type,
+                                                                watchlist:
+                                                                    "false");
+                                                            changeWatchlist(
+                                                                await initializeDB(),
+                                                                rec);
+                                                            showToast(context,
+                                                                "Added ${movies[index].title} to WatchD!");
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons.check)),
+                                                      IconButton(
+                                                          onPressed: () async {
+                                                            debugPrint(
+                                                                "delete from watchlist");
+                                                            delete(
+                                                                await initializeDB(),
+                                                                movies[index]
+                                                                    .imdbID);
+                                                            showToast(context,
+                                                                "Deleted ${movies[index].title} from your watchlist!");
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons.cancel))
+                                                    ])))));
                               })),
                       Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
@@ -137,29 +164,56 @@ class WatchlistWidget extends StatelessWidget {
                                             padding: const EdgeInsetsDirectional
                                                 .fromSTEB(5, 30, 5, 30),
                                             child: ListTile(
-                                              leading: CircleAvatar(
-                                                  radius: 30,
-                                                  backgroundImage: NetworkImage(
-                                                      shows[index].poster)),
-                                              title: Text(shows[index].title),
-                                              trailing: IconButton(
-                                                  onPressed: () {
-                                                    debugPrint(
-                                                        "watched ${shows[index].title}");
-                                                    Record rec = Record(
-                                                        imdbID:
-                                                            shows[index].imdbID,
-                                                        type: shows[index].type,
-                                                        watchlist: "false");
-                                                    DatabaseHandler()
-                                                        .changeWatchlist(rec);
-                                                    showToast(context,
-                                                        "Added ${shows[index].title} to WatchD!");
-                                                    Navigator.pop(context);
-                                                  },
-                                                  icon:
-                                                      const Icon(Icons.check)),
-                                            ))));
+                                                leading: CircleAvatar(
+                                                    radius: 30,
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                            shows[index]
+                                                                .poster)),
+                                                title: Text(shows[index].title),
+                                                trailing: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      IconButton(
+                                                          onPressed: () async {
+                                                            debugPrint(
+                                                                "watched ${shows[index].title}!");
+                                                            Record rec = Record(
+                                                                imdbID:
+                                                                    shows[index]
+                                                                        .imdbID,
+                                                                type:
+                                                                    shows[index]
+                                                                        .type,
+                                                                watchlist:
+                                                                    "false");
+                                                            changeWatchlist(
+                                                                await initializeDB(),
+                                                                rec);
+                                                            showToast(context,
+                                                                "Added ${shows[index].title} to WatchD!");
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons.check)),
+                                                      IconButton(
+                                                          onPressed: () async {
+                                                            debugPrint(
+                                                                "delete from watchlist");
+                                                            delete(
+                                                                await initializeDB(),
+                                                                shows[index]
+                                                                    .imdbID);
+                                                            showToast(context,
+                                                                "Deleted ${shows[index].title} from your watchlist!");
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons.cancel))
+                                                    ])))));
                               })),
                     ],
                   ),

@@ -24,7 +24,6 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool moveToNext = false;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       key: scaffoldKey,

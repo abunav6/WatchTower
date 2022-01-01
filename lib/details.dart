@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import "helper.dart";
 import "services/DatabaseHandler.dart";
 
+import 'package:sqflite/sqflite.dart';
+
 class DetailsScreenWidget extends StatelessWidget {
   final TitleDetails title;
   final bool showButtons;
@@ -345,8 +347,8 @@ class DetailsScreenWidget extends StatelessWidget {
                                   imdbID: title.imdbID,
                                   type: title.type,
                                   watchlist: "false");
-
-                              DatabaseHandler().insert(rec);
+                              final Database db = await initializeDB();
+                              insert(db, rec);
                               debugPrint("added to DB");
                               showToast(
                                   context, "Added ${title.title} to WatchD!");
@@ -385,7 +387,7 @@ class DetailsScreenWidget extends StatelessWidget {
                                     imdbID: title.imdbID,
                                     type: title.type,
                                     watchlist: "true");
-                                DatabaseHandler().insert(rec);
+                                insert(await initializeDB(), rec);
                                 showToast(context,
                                     "Added ${title.title} to your Watchlist!");
                                 Navigator.pop(context);
