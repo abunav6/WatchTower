@@ -24,6 +24,7 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
 
   @override
   Widget build(BuildContext context) {
+    bool moveToNext = false;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       key: scaffoldKey,
@@ -34,7 +35,7 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
         centerTitle: true,
         elevation: 4,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Align(
           alignment: const AlignmentDirectional(0, 0),
@@ -49,7 +50,9 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                   child: Text(
                     'Add a Movie or Show to WatchD',
                     style: GoogleFonts.poppins(
-                        fontSize: 40, fontWeight: FontWeight.w700),
+                        fontSize: 40,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
                   ),
                 ),
                 Padding(
@@ -69,7 +72,9 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                     decoration: InputDecoration(
                       hintText: 'Enter a Movie\'s or Show\'s name /IMDb ID',
                       hintStyle: GoogleFonts.poppins(
-                          fontSize: 14, fontStyle: FontStyle.italic),
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                          color: Colors.white38),
                       enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0x00000000),
@@ -91,7 +96,8 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                         ),
                       ),
                     ),
-                    style: GoogleFonts.poppins(fontSize: 18),
+                    style:
+                        GoogleFonts.poppins(fontSize: 18, color: Colors.white),
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.multiline,
                   ),
@@ -104,13 +110,15 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
                     child: CheckboxListTile(
                       title: Text("Movie",
-                          style: GoogleFonts.poppins(fontSize: 14)),
+                          style: GoogleFonts.poppins(
+                              fontSize: 14, color: Colors.white)),
                       value: movieRadio,
                       onChanged: (newValue) {
                         setState(() {
                           movieRadio = newValue;
                         });
                       },
+                      activeColor: const Color(0xFF4B39EF),
                       controlAffinity: ListTileControlAffinity
                           .leading, //  <-- leading Checkbox
                     ),
@@ -124,13 +132,15 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
                     child: CheckboxListTile(
                       title: Text("Series",
-                          style: GoogleFonts.poppins(fontSize: 14)),
+                          style: GoogleFonts.poppins(
+                              fontSize: 14, color: Colors.white)),
                       value: showRadio,
                       onChanged: (newValue) {
                         setState(() {
                           showRadio = newValue;
                         });
                       },
+                      activeColor: const Color(0xFF4B39EF),
                       controlAffinity: ListTileControlAffinity
                           .leading, //  <-- leading Checkbox
                     ),
@@ -143,8 +153,8 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                   child: ElevatedButton(
                       onPressed: () async {
                         debugPrint("Search by Name");
-                        List<SearchDetails> options = await search(
-                            movieRadio, showRadio, false, titleName.text);
+                        List<SearchDetails> options = await search(movieRadio,
+                            showRadio, false, titleName.text.trim());
                         if (options != []) {
                           Navigator.push(
                               context,
@@ -154,8 +164,8 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                         }
                       },
                       style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.black),
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xFF4B39EF)),
                           minimumSize: MaterialStateProperty.all(
                               const Size(double.infinity, 40)),
                           shape:
@@ -175,13 +185,13 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                       onPressed: () async {
                         debugPrint("Search by IMDb ID");
                         List<SearchDetails> options = await search(
-                            movieRadio, showRadio, true, titleName.text);
+                            movieRadio, showRadio, true, titleName.text.trim());
 
                         // TODO: implement this too
                       },
                       style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.black),
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xFF4B39EF)),
                           minimumSize: MaterialStateProperty.all(
                               const Size(double.infinity, 40)),
                           shape:

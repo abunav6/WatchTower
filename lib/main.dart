@@ -15,12 +15,11 @@ class WatchD extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WatchD',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const SignedInWidget(),
-    );
+        title: 'WatchD',
+        theme: ThemeData(
+            primarySwatch: Colors.blue, unselectedWidgetColor: Colors.white),
+        initialRoute: "/",
+        routes: {"/": (context) => const SignedInWidget()});
   }
 }
 

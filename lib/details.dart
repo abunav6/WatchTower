@@ -347,6 +347,10 @@ class DetailsScreenWidget extends StatelessWidget {
                                   watchlist: "false");
 
                               DatabaseHandler().insert(rec);
+                              debugPrint("added to DB");
+                              showToast(
+                                  context, "Added ${title.title} to WatchD!");
+                              Navigator.pop(context);
                             },
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
@@ -382,6 +386,9 @@ class DetailsScreenWidget extends StatelessWidget {
                                     type: title.type,
                                     watchlist: "true");
                                 DatabaseHandler().insert(rec);
+                                showToast(context,
+                                    "Added ${title.title} to your Watchlist!");
+                                Navigator.pop(context);
                               },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(

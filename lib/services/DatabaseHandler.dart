@@ -36,4 +36,15 @@ class DatabaseHandler {
         where: 'type=? AND watchlist=?', whereArgs: [type, watchlist]);
     return queryResult.map((e) => Record.fromMap(e)).toList();
   }
+
+  void changeWatchlist(Record rec) async {
+    final Database db = await initializeDB();
+    await db.update("watchd", rec.toMap(),
+        where: "imdbID= ?", whereArgs: [rec.imdbID]);
+  }
+
+  void delete(String imdbID) async {
+    final Database db = await initializeDB();
+    await db.delete("watchd", where: "imdbId=?", whereArgs: [imdbID]);
+  }
 }

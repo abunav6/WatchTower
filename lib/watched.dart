@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mtvdb/services/DatabaseHandler.dart';
 import "helper.dart";
 import "details.dart";
 
@@ -27,7 +27,7 @@ class WatchedScreenWidget extends StatelessWidget {
               children: [
                 TabBar(
                   labelColor: Colors.white,
-                  indicatorColor: Color(0xFF673AB7),
+                  indicatorColor: const Color(0xFF673AB7),
                   tabs: [
                     Tab(
                       text: 'Movies -  ${movies.length}',
@@ -81,62 +81,75 @@ class WatchedScreenWidget extends StatelessWidget {
                                                   backgroundImage: NetworkImage(
                                                       movies[index].poster)),
                                               title: Text(movies[index].title),
-                                              trailing:
-                                                  const Icon(Icons.arrow_right),
+                                              trailing: IconButton(
+                                                  onPressed: () {
+                                                    debugPrint(
+                                                        "delete ${movies[index].imdbID}");
+                                                    DatabaseHandler().delete(
+                                                        movies[index].imdbID);
+                                                    showToast(context,
+                                                        "Deleted ${movies[index].title} from WatchD!");
+                                                    Navigator.pop(context);
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.cancel)),
                                             ))));
                               })),
-                      Container(
-                          child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  5, 30, 5, 30),
-                              child: ListView.separated(
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return const SizedBox(
-                                      height: 10,
-                                    );
-                                  },
-                                  itemCount: shows.length,
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return GestureDetector(
-                                        onTap: () async {
-                                          debugPrint(shows[index].imdbID);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DetailsScreenWidget(
-                                                        title: shows[index],
-                                                        showButtons: false)),
-                                          );
-                                        },
-                                        child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            child: Padding(
-                                                padding:
-                                                    const EdgeInsetsDirectional
-                                                        .fromSTEB(5, 30, 5, 30),
-                                                child: ListTile(
-                                                  leading: CircleAvatar(
-                                                      radius: 30,
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                              shows[index]
-                                                                  .poster)),
-                                                  title:
-                                                      Text(shows[index].title),
-                                                  trailing: const Icon(
-                                                      Icons.arrow_right),
-                                                ))));
-                                  }))),
+                      Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              5, 30, 5, 30),
+                          child: ListView.separated(
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const SizedBox(
+                                  height: 10,
+                                );
+                              },
+                              itemCount: shows.length,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                    onTap: () async {
+                                      debugPrint(shows[index].imdbID);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetailsScreenWidget(
+                                                    title: shows[index],
+                                                    showButtons: false)),
+                                      );
+                                    },
+                                    child: Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.0)),
+                                        child: Padding(
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(5, 30, 5, 30),
+                                            child: ListTile(
+                                              leading: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundImage: NetworkImage(
+                                                      shows[index].poster)),
+                                              title: Text(shows[index].title),
+                                              trailing: IconButton(
+                                                  onPressed: () {
+                                                    debugPrint(
+                                                        "delete ${shows[index].imdbID}");
+
+                                                    DatabaseHandler().delete(
+                                                        shows[index].imdbID);
+                                                    showToast(context,
+                                                        "Deleted ${shows[index].title} from WatchD!");
+                                                    Navigator.pop(context);
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.cancel)),
+                                            ))));
+                              })),
                     ],
                   ),
                 ),

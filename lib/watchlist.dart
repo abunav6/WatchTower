@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import "helper.dart";
 import "details.dart";
+import "services/DatabaseHandler.dart";
 
 class WatchlistWidget extends StatelessWidget {
   final List<TitleDetails> movies, shows;
@@ -85,7 +86,17 @@ class WatchlistWidget extends StatelessWidget {
                                                   onPressed: () {
                                                     debugPrint(
                                                         "watched ${movies[index].title}!");
-                                                    // need to delete this index from the list update watchlist to false and refresh this page
+                                                    Record rec = Record(
+                                                        imdbID: movies[index]
+                                                            .imdbID,
+                                                        type:
+                                                            movies[index].type,
+                                                        watchlist: "false");
+                                                    DatabaseHandler()
+                                                        .changeWatchlist(rec);
+                                                    showToast(context,
+                                                        "Added ${movies[index].title} to WatchD!");
+                                                    Navigator.pop(context);
                                                   },
                                                   icon:
                                                       const Icon(Icons.check)),
@@ -135,7 +146,16 @@ class WatchlistWidget extends StatelessWidget {
                                                   onPressed: () {
                                                     debugPrint(
                                                         "watched ${shows[index].title}");
-                                                    // need to delete this index from the list update watchlist to false and refresh this page
+                                                    Record rec = Record(
+                                                        imdbID:
+                                                            shows[index].imdbID,
+                                                        type: shows[index].type,
+                                                        watchlist: "false");
+                                                    DatabaseHandler()
+                                                        .changeWatchlist(rec);
+                                                    showToast(context,
+                                                        "Added ${shows[index].title} to WatchD!");
+                                                    Navigator.pop(context);
                                                   },
                                                   icon:
                                                       const Icon(Icons.check)),
