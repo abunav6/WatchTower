@@ -345,6 +345,8 @@ class DetailsScreenWidget extends StatelessWidget {
                               debugPrint("Add to WatchD");
                               Record rec = Record(
                                   imdbID: title.imdbID,
+                                  title: title.title,
+                                  poster: title.poster,
                                   type: title.type,
                                   watchlist: "false");
                               final Database db = await initializeDB();
@@ -385,6 +387,8 @@ class DetailsScreenWidget extends StatelessWidget {
                                 debugPrint("Add to Watchlist");
                                 Record rec = Record(
                                     imdbID: title.imdbID,
+                                    title: title.title,
+                                    poster: title.poster,
                                     type: title.type,
                                     watchlist: "true");
                                 insert(await initializeDB(), rec);

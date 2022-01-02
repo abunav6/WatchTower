@@ -87,17 +87,19 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                           onPressed: () async {
                             debugPrint("View your watched stuff");
                             Database db = await initializeDB();
-                            List<TitleDetails> movies = await getList(
-                                await retrieveData(db, "movie", "false"));
 
-                            List<TitleDetails> shows = await getList(
-                                await retrieveData(db, "series", "false"));
+                            List<Record> movieResponse =
+                                await retrieveData(db, "movie", "false");
+
+                            List<Record> showResponse =
+                                await retrieveData(db, "series", "false");
 
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => WatchedScreenWidget(
-                                      movies: movies, shows: shows)),
+                                      movies: movieResponse,
+                                      shows: showResponse)),
                             );
                           },
                           style: ButtonStyle(
@@ -119,14 +121,12 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                           const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                       child: ElevatedButton(
                           onPressed: () async {
-                            debugPrint(
-                                "Need to add a movie/series to watchlist");
                             Database db = await initializeDB();
-                            List<TitleDetails> movies = await getList(
-                                await retrieveData(db, "movie", "true"));
+                            List<Record> movies =
+                                await retrieveData(db, "movie", "true");
 
-                            List<TitleDetails> shows = await getList(
-                                await retrieveData(db, "series", "true"));
+                            List<Record> shows =
+                                await retrieveData(db, "series", "true");
                             Navigator.push(
                               context,
                               MaterialPageRoute(

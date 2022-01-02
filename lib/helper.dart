@@ -6,18 +6,33 @@ import 'dart:convert';
 
 class Record {
   String imdbID = "";
+  String title = "";
+  String poster = "";
   String type = "";
   String watchlist = "";
 
-  Record({required this.imdbID, required this.type, required this.watchlist});
+  Record(
+      {required this.imdbID,
+      required this.title,
+      required this.poster,
+      required this.type,
+      required this.watchlist});
 
   Record.fromMap(Map<String, dynamic> res)
       : imdbID = res["imdbID"],
+        title = res["title"],
+        poster = res["poster"],
         type = res["type"],
         watchlist = res["watchlist"];
 
   Map<String, Object> toMap() {
-    return {"imdbID": imdbID, "type": type, "watchlist": watchlist};
+    return {
+      "imdbID": imdbID,
+      "title": title,
+      "poster": poster,
+      "type": type,
+      "watchlist": watchlist
+    };
   }
 }
 
@@ -207,6 +222,8 @@ Future<List<SearchDetails>> search(
 }
 
 Future<List<TitleDetails>> getList(List<Record> rec) async {
+  //This is the time consuming element of the application
+
   List<TitleDetails> result = [];
   for (int i = 0; i < rec.length; i++) {
     TitleDetails temp = await getDetails(rec[i].imdbID);

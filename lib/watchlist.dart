@@ -4,7 +4,7 @@ import "details.dart";
 import "services/DatabaseHandler.dart";
 
 class WatchlistWidget extends StatelessWidget {
-  final List<TitleDetails> movies, shows;
+  final List<Record> movies, shows;
   const WatchlistWidget({Key? key, required this.movies, required this.shows})
       : super(key: key);
 
@@ -59,12 +59,14 @@ class WatchlistWidget extends StatelessWidget {
                                 return GestureDetector(
                                     onTap: () async {
                                       debugPrint(movies[index].imdbID);
+                                      TitleDetails title = await getDetails(
+                                          movies[index].imdbID);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 DetailsScreenWidget(
-                                                  title: movies[index],
+                                                  title: title,
                                                   showButtons: false,
                                                 )),
                                       );
@@ -97,6 +99,12 @@ class WatchlistWidget extends StatelessWidget {
                                                                 imdbID: movies[
                                                                         index]
                                                                     .imdbID,
+                                                                title: movies[
+                                                                        index]
+                                                                    .title,
+                                                                poster: movies[
+                                                                        index]
+                                                                    .poster,
                                                                 type: movies[
                                                                         index]
                                                                     .type,
@@ -147,12 +155,14 @@ class WatchlistWidget extends StatelessWidget {
                                 return GestureDetector(
                                     onTap: () async {
                                       debugPrint(shows[index].imdbID);
+                                      TitleDetails title =
+                                          await getDetails(shows[index].imdbID);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 DetailsScreenWidget(
-                                                    title: shows[index],
+                                                    title: title,
                                                     showButtons: false)),
                                       );
                                     },
@@ -183,6 +193,12 @@ class WatchlistWidget extends StatelessWidget {
                                                                 imdbID:
                                                                     shows[index]
                                                                         .imdbID,
+                                                                title:
+                                                                    shows[index]
+                                                                        .title,
+                                                                poster:
+                                                                    shows[index]
+                                                                        .poster,
                                                                 type:
                                                                     shows[index]
                                                                         .type,

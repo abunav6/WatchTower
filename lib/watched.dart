@@ -4,7 +4,7 @@ import "helper.dart";
 import "details.dart";
 
 class WatchedScreenWidget extends StatelessWidget {
-  final List<TitleDetails> movies, shows;
+  final List<Record> movies, shows;
 
   const WatchedScreenWidget(
       {Key? key, required this.movies, required this.shows})
@@ -59,12 +59,14 @@ class WatchedScreenWidget extends StatelessWidget {
                                 return GestureDetector(
                                     onTap: () async {
                                       debugPrint(movies[index].imdbID);
+                                      TitleDetails title = await getDetails(
+                                          movies[index].imdbID);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 DetailsScreenWidget(
-                                                  title: movies[index],
+                                                  title: title,
                                                   showButtons: false,
                                                 )),
                                       );
@@ -114,12 +116,14 @@ class WatchedScreenWidget extends StatelessWidget {
                                 return GestureDetector(
                                     onTap: () async {
                                       debugPrint(shows[index].imdbID);
+                                      TitleDetails title =
+                                          await getDetails(shows[index].imdbID);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 DetailsScreenWidget(
-                                                    title: shows[index],
+                                                    title: title,
                                                     showButtons: false)),
                                       );
                                     },
