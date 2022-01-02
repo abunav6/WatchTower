@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import "helper.dart";
-import "services/DatabaseHandler.dart";
+import 'services/database_handler.dart';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -350,10 +350,18 @@ class DetailsScreenWidget extends StatelessWidget {
                                   type: title.type,
                                   watchlist: "false");
                               final Database db = await initializeDB();
-                              insert(db, rec);
-                              debugPrint("added to DB");
-                              showToast(
-                                  context, "Added ${title.title} to WatchD!");
+                              int code = await insert(db, rec, false);
+                              if (code == 0) {
+                                debugPrint("added to DB");
+                                showToast(
+                                    context, "Added ${title.title} to WatchD!");
+                              } else if (code == -1) {
+                                showToast(context,
+                                    "${rec.title} was in your watchlist! Moving it to the WatchD list!");
+                              } else if (code == -2) {
+                                showToast(context,
+                                    "${rec.title} already exists in your WatchD list!");
+                              }
                               Navigator.pop(context);
                             },
                             style: ButtonStyle(
@@ -391,9 +399,18 @@ class DetailsScreenWidget extends StatelessWidget {
                                     poster: title.poster,
                                     type: title.type,
                                     watchlist: "true");
-                                insert(await initializeDB(), rec);
-                                showToast(context,
-                                    "Added ${title.title} to your Watchlist!");
+                                int code = await insert(
+                                    await initializeDB(), rec, true);
+                                if (code == 0) {
+                                  showToast(context,
+                                      "Added ${title.title} to your Watchlist!");
+                                } else if (code == -2) {
+                                  showToast(context,
+                                      "${title.title} already exists in WatchD list!");
+                                } else if (code == -3) {
+                                  showToast(context,
+                                      "${title.title} already exists in your watchlist!");
+                                }
                                 Navigator.pop(context);
                               },
                               style: ButtonStyle(

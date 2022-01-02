@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'addtitle.dart';
 import "helper.dart";
-import "services/DatabaseHandler.dart";
+import 'services/database_handler.dart';
 import "watched.dart";
 import "watchlist.dart";
 

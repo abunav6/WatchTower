@@ -202,7 +202,6 @@ Future<List<SearchDetails>> search(
         titleData = await http
             .read(Uri.parse(urlBase + "s=" + searchElement + "&type=movie"));
       }
-
       return getSearchList(titleData);
     } else if (series && !movie) {
       if (byIMDb) {
@@ -211,6 +210,7 @@ Future<List<SearchDetails>> search(
         titleData = await http
             .read(Uri.parse(urlBase + "s=" + searchElement + "&type=series"));
       }
+
       return getSearchList(titleData);
     } else {
       debugPrint("You need to search something bro lol");

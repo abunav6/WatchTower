@@ -152,14 +152,34 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                   child: ElevatedButton(
                       onPressed: () async {
                         debugPrint("Search by Name");
-                        List<SearchDetails> options = await search(movieRadio,
-                            showRadio, false, titleName.text.trim());
-                        if (options != []) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      OptionsScreen(options: options)));
+                        if (titleName.text.trim() != "") {
+                          bool result = false;
+                          List<SearchDetails> options = await search(movieRadio,
+                              showRadio, false, titleName.text.trim());
+                          debugPrint("${options.length}");
+                          if (options.isNotEmpty) {
+                            
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        OptionsScreen(options: options)));
+                          } else {
+                            if (movieRadio == true && showRadio == true) {
+                              showToast(context,
+                                  "You cannot search for both; Choose one!");
+                            } else if (movieRadio == false &&
+                                showRadio == false) {
+                              showToast(context,
+                                  "You have to search for at least one!");
+                            } else if (movieRadio == null &&
+                                showRadio == null) {
+                              showToast(context,
+                                  "You have to search for at least one!");
+                            } 
+                          }
+                        } else {
+                          showToast(context, "You need to enter something!");
                         }
                       },
                       style: ButtonStyle(

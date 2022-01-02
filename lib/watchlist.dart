@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import "helper.dart";
 import "details.dart";
-import "services/DatabaseHandler.dart";
+import 'services/database_handler.dart';
 
 class WatchlistWidget extends StatelessWidget {
   final List<Record> movies, shows;

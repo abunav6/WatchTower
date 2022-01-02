@@ -17,10 +17,35 @@ Future<Database> initializeDB() async {
   );
 }
 
-Future<int> insert(Database db, Record rec) async {
-  int result = 0;
-  result = await db.insert("MTVDB", rec.toMap());
-  return result;
+Future<int> insert(Database db, Record rec, bool fw) async {
+  String imdbID = rec.imdbID;
+  try {
+    await db.insert("MTVDB", rec.toMap());
+    return 0;
+  } on DatabaseException catch (e) {
+    // if watchlist is true, make it false and show Toast( return -1)
+    // if watchlist is false, show Toast( return -2)
+    final List<Map<String, Object?>> queryResult =
+        await db.query('MTVDB', where: 'imdbID=?', whereArgs: [imdbID]);
+    Record rec = queryResult.map((e) => Record.fromMap(e)).toList()[0];
+    if (rec.watchlist == "true") {
+      if (!fw) {
+        Record newrec = Record(
+            imdbID: rec.imdbID,
+            title: rec.title,
+            poster: rec.poster,
+            type: rec.type,
+            watchlist: "false");
+        await db.update("MTVDB", newrec.toMap(),
+            where: "imdbID=?", whereArgs: [newrec.imdbID]);
+        return -1;
+      } else {
+        return -3;
+      }
+    } else {
+      return -2;
+    }
+  }
 }
 
 Future<List<Record>> retrieveAll(Database db) async {
