@@ -185,8 +185,18 @@ List<SearchDetails> getSearchList(final data) {
   }
 }
 
-Future<List<SearchDetails>> search(
-    bool? movie, bool? series, bool byIMDb, String searchElement) async {
+Future<TitleDetails> searchByID(String imdbID) async {
+  imdbID.toLowerCase().trim();
+  String url = "http://www.omdbapi.com/?apikey=b9fb2464&i=$imdbID";
+  
+    final String titleData = await http.read(Uri.parse(url));
+    final jsonData = json.decode(titleData);
+    return TitleDetails.fromJson(jsonData);
+  
+}
+
+Future<List<SearchDetails>> searchByName(
+    bool? movie, bool? series, String searchElement) async {
   if (movie != null && series != null) {
     String urlBase = "http://www.omdbapi.com/?apikey=b9fb2464&";
     final String titleData;
@@ -196,20 +206,12 @@ Future<List<SearchDetails>> search(
       debugPrint("not possible");
       return [];
     } else if (movie && !series) {
-      if (byIMDb) {
-        titleData = await http.read(Uri.parse(urlBase + "i=" + searchElement));
-      } else {
-        titleData = await http
-            .read(Uri.parse(urlBase + "s=" + searchElement + "&type=movie"));
-      }
+      titleData = await http
+          .read(Uri.parse(urlBase + "s=" + searchElement + "&type=movie"));
       return getSearchList(titleData);
     } else if (series && !movie) {
-      if (byIMDb) {
-        titleData = await http.read(Uri.parse(urlBase + "i=" + searchElement));
-      } else {
-        titleData = await http
-            .read(Uri.parse(urlBase + "s=" + searchElement + "&type=series"));
-      }
+      titleData = await http
+          .read(Uri.parse(urlBase + "s=" + searchElement + "&type=series"));
 
       return getSearchList(titleData);
     } else {

@@ -61,10 +61,10 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                           onPressed: () {
                             debugPrint("Need to add a movie");
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const AddTitleWidget()),
-                            );
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AddTitleWidget()));
                           },
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(

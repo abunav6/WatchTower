@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/options.dart';
+import "details.dart";
 
 import "helper.dart";
 
@@ -153,12 +154,10 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                       onPressed: () async {
                         debugPrint("Search by Name");
                         if (titleName.text.trim() != "") {
-                          bool result = false;
-                          List<SearchDetails> options = await search(movieRadio,
-                              showRadio, false, titleName.text.trim());
+                          List<SearchDetails> options = await searchByName(
+                              movieRadio, showRadio, titleName.text.trim());
                           debugPrint("${options.length}");
                           if (options.isNotEmpty) {
-                            
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -176,7 +175,7 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                                 showRadio == null) {
                               showToast(context,
                                   "You have to search for at least one!");
-                            } 
+                            }
                           }
                         } else {
                           showToast(context, "You need to enter something!");
@@ -203,10 +202,17 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                   child: ElevatedButton(
                       onPressed: () async {
                         debugPrint("Search by IMDb ID");
-                        List<SearchDetails> options = await search(
-                            movieRadio, showRadio, true, titleName.text.trim());
-
-                        // TODO: implement this too
+                        try {
+                          TitleDetails title =
+                              await searchByID(titleName.text.trim());
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailsScreenWidget(
+                                      title: title, showButtons: true)));
+                        } catch (_) {
+                          showToast(context, "Incorrect IMDb ID");
+                        }
                       },
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
