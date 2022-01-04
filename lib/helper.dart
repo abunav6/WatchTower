@@ -60,31 +60,43 @@ class TitleDetails {
   String year = "";
   String runtime = "";
   String genre = "";
+  String director = "";
+  String writer = "";
+  String actors = "";
+  String plot = "";
   String poster = "";
   List<Ratings> ratings = [];
   String imdbID = "";
   String type = "";
 
-  TitleDetails({
-    required this.title,
-    required this.year,
-    required this.runtime,
-    required this.genre,
-    required this.poster,
-    required this.ratings,
-    required this.imdbID,
-    required this.type,
-  });
+  TitleDetails(
+      {required this.title,
+      required this.year,
+      required this.runtime,
+      required this.genre,
+      required this.director,
+      required this.writer,
+      required this.actors,
+      required this.plot,
+      required this.poster,
+      required this.ratings,
+      required this.imdbID,
+      required this.type});
 
   TitleDetails.fromJson(Map<String, dynamic> json) {
     title = json['Title'];
     year = json['Year'];
     runtime = json['Runtime'];
     genre = json['Genre'];
-    poster = json['Poster'];
+    director = json['Director'];
+    writer = json['Writer'];
+    poster = json["Poster"];
+    actors = json['Actors'];
+    plot = json['Plot'];
     if (json['Ratings'] != null) {
+      ratings = <Ratings>[];
       json['Ratings'].forEach((v) {
-        ratings.add(Ratings.fromJson(v));
+        ratings.add(new Ratings.fromJson(v));
       });
     }
     imdbID = json['imdbID'];
@@ -92,16 +104,17 @@ class TitleDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Title'] = this.title;
     data['Year'] = this.year;
     data['Runtime'] = this.runtime;
     data['Genre'] = this.genre;
-
+    data['Director'] = this.director;
+    data['Writer'] = this.writer;
+    data['Actors'] = this.actors;
+    data['Plot'] = this.plot;
     data['Poster'] = this.poster;
-
     data['Ratings'] = this.ratings.map((v) => v.toJson()).toList();
-
     data['imdbID'] = this.imdbID;
     data['Type'] = this.type;
     return data;
@@ -120,7 +133,7 @@ class Ratings {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Source'] = this.source;
     data['Value'] = this.value;
     return data;
@@ -188,11 +201,10 @@ List<SearchDetails> getSearchList(final data) {
 Future<TitleDetails> searchByID(String imdbID) async {
   imdbID.toLowerCase().trim();
   String url = "http://www.omdbapi.com/?apikey=b9fb2464&i=$imdbID";
-  
-    final String titleData = await http.read(Uri.parse(url));
-    final jsonData = json.decode(titleData);
-    return TitleDetails.fromJson(jsonData);
-  
+
+  final String titleData = await http.read(Uri.parse(url));
+  final jsonData = json.decode(titleData);
+  return TitleDetails.fromJson(jsonData);
 }
 
 Future<List<SearchDetails>> searchByName(

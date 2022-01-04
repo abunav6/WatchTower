@@ -29,15 +29,16 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
 
     for (var movie in widget.movies) {
       debugPrint(movie.title);
-      if (movie.title.toLowerCase().contains(text.toLowerCase())) {
-        debugPrint("checking for $text in ${movie.title}");
+      if (movie.title
+          .toLowerCase()
+          .trim()
+          .contains(text.toLowerCase().trim())) {
         _searchResultM.add(movie);
       }
     }
 
     for (var show in widget.shows) {
-      if (show.title.toLowerCase().contains(text.toLowerCase())) {
-        debugPrint("checking for $text in ${show.title}");
+      if (show.title.toLowerCase().trim().contains(text.toLowerCase().trim())) {
         _searchResultS.add(show);
       }
     }
