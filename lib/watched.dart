@@ -18,6 +18,7 @@ class WatchedScreenWidget extends StatefulWidget {
 class _WatchedScreenWidget extends State<WatchedScreenWidget> {
   final List<Record> _searchResultM = [], _searchResultS = [];
   TextEditingController controller = TextEditingController();
+  ScrollController listScrollController = ScrollController();
 
   onSearchTextChanged(String text) async {
     _searchResultM.clear();
@@ -53,6 +54,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
             height: 10,
           );
         },
+        controller: listScrollController,
         itemCount: widget.movies.length,
         physics: const AlwaysScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
@@ -106,6 +108,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
             height: 10,
           );
         },
+        controller: listScrollController,
         itemCount: widget.shows.length,
         physics: const AlwaysScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
@@ -183,6 +186,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
             height: 10,
           );
         },
+        controller: listScrollController,
         itemCount: _searchResultM.length,
         physics: const AlwaysScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
@@ -236,6 +240,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
             height: 10,
           );
         },
+        controller: listScrollController,
         itemCount: _searchResultS.length,
         physics: const AlwaysScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
@@ -287,55 +292,64 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
     widget.shows.sort((a, b) => a.title.compareTo(b.title));
 
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(backgroundColor: Colors.black),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(10, 20, 10, 20),
-          child: DefaultTabController(
-            length: 2,
-            initialIndex: 0,
-            child: Column(
-              children: [
-                TabBar(
-                  labelColor: Colors.white,
-                  indicatorColor: const Color(0xFF673AB7),
-                  tabs: [
-                    Tab(
-                      text: 'Movies -  ${widget.movies.length}',
-                    ),
-                    Tab(
-                      text: 'Shows - ${widget.shows.length}',
-                    ),
-                  ],
-                ),
-                buildSearchBox(),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              5, 30, 5, 30),
-                          child: (_searchResultM.isNotEmpty ||
-                                  controller.text.isNotEmpty)
-                              ? buildSearchListMovie()
-                              : buildMovieList()),
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(5, 30, 5, 30),
-                        child: (_searchResultS.isNotEmpty ||
-                                controller.text.isNotEmpty)
-                            ? buildSearchListSeries()
-                            : buildShowList(),
+        floatingActionButton: FloatingActionButton(
+            child: CircleAvatar(
+                radius: 30,
+                backgroundColor: const Color(0xFF673AB7),
+                child: IconButton(
+                    icon: const Icon(Icons.arrow_upward_rounded,
+                        color: Colors.white),
+                    onPressed: () {
+                      listScrollController.animateTo(0,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeOut);
+                    })),
+            onPressed: () {}),
+        backgroundColor: Colors.black,
+        appBar: AppBar(backgroundColor: Colors.black),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(10, 20, 10, 20),
+            child: DefaultTabController(
+                length: 2,
+                initialIndex: 0,
+                child: Column(children: [
+                  TabBar(
+                    labelColor: Colors.white,
+                    indicatorColor: const Color(0xFF673AB7),
+                    tabs: [
+                      Tab(
+                        text: 'Movies -  ${widget.movies.length}',
+                      ),
+                      Tab(
+                        text: 'Shows - ${widget.shows.length}',
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
+                  buildSearchBox(),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                5, 30, 5, 30),
+                            child: (_searchResultM.isNotEmpty ||
+                                    controller.text.isNotEmpty)
+                                ? buildSearchListMovie()
+                                : buildMovieList()),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              5, 30, 5, 30),
+                          child: (_searchResultS.isNotEmpty ||
+                                  controller.text.isNotEmpty)
+                              ? buildSearchListSeries()
+                              : buildShowList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ])),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
