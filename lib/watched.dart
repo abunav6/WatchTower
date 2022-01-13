@@ -86,6 +86,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                             backgroundImage:
                                 NetworkImage(widget.movies[index].poster)),
                         title: Text(widget.movies[index].title),
+                        subtitle: Text(widget.movies[index].year),
                         trailing: IconButton(
                             onPressed: () async {
                               debugPrint(
@@ -138,6 +139,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                             backgroundImage:
                                 NetworkImage(widget.shows[index].poster)),
                         title: Text(widget.shows[index].title),
+                        subtitle: Text(widget.shows[index].year),
                         trailing: IconButton(
                             onPressed: () async {
                               debugPrint(
@@ -218,6 +220,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                             backgroundImage:
                                 NetworkImage(_searchResultM[index].poster)),
                         title: Text(_searchResultM[index].title),
+                        subtitle: Text(_searchResultM[index].year),
                         trailing: IconButton(
                             onPressed: () async {
                               debugPrint(
@@ -270,6 +273,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                             backgroundImage:
                                 NetworkImage(_searchResultS[index].poster)),
                         title: Text(_searchResultS[index].title),
+                        subtitle: Text(_searchResultS[index].year),
                         trailing: IconButton(
                             onPressed: () async {
                               debugPrint(

@@ -83,6 +83,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                               backgroundImage:
                                   NetworkImage(widget.movies[index].poster)),
                           title: Text(widget.movies[index].title),
+                          subtitle: Text(widget.movies[index].year),
                           trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -95,7 +96,8 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                           title: widget.movies[index].title,
                                           poster: widget.movies[index].poster,
                                           type: widget.movies[index].type,
-                                          watchlist: "false");
+                                          watchlist: "false",
+                                          year: widget.movies[index].year);
                                       changeWatchlist(
                                           await initializeDB(), rec);
                                       showToast(context,
@@ -153,6 +155,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                               backgroundImage:
                                   NetworkImage(widget.shows[index].poster)),
                           title: Text(widget.shows[index].title),
+                          subtitle: Text(widget.shows[index].year),
                           trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -165,7 +168,8 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                           title: widget.shows[index].title,
                                           poster: widget.shows[index].poster,
                                           type: widget.shows[index].type,
-                                          watchlist: "false");
+                                          watchlist: "false",
+                                          year: widget.shows[index].year);
                                       changeWatchlist(
                                           await initializeDB(), rec);
                                       showToast(context,
@@ -250,6 +254,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                               backgroundImage:
                                   NetworkImage(_searchResultM[index].poster)),
                           title: Text(_searchResultM[index].title),
+                          subtitle: Text(_searchResultM[index].year),
                           trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -262,7 +267,8 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                           title: _searchResultM[index].title,
                                           poster: _searchResultM[index].poster,
                                           type: _searchResultM[index].type,
-                                          watchlist: "false");
+                                          watchlist: "false",
+                                          year: _searchResultM[index].year);
                                       changeWatchlist(
                                           await initializeDB(), rec);
                                       showToast(context,
@@ -320,6 +326,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                               backgroundImage:
                                   NetworkImage(_searchResultS[index].poster)),
                           title: Text(_searchResultS[index].title),
+                          subtitle: Text(_searchResultS[index].year),
                           trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -332,7 +339,8 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                           title: _searchResultS[index].title,
                                           poster: _searchResultS[index].poster,
                                           type: _searchResultS[index].type,
-                                          watchlist: "false");
+                                          watchlist: "false",
+                                          year: _searchResultS[index].year);
                                       changeWatchlist(
                                           await initializeDB(), rec);
                                       showToast(context,

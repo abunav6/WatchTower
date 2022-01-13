@@ -510,7 +510,8 @@ class DetailsScreenWidget extends StatelessWidget {
                                 title: title.title,
                                 poster: title.poster,
                                 type: title.type,
-                                watchlist: "false");
+                                watchlist: "false",
+                                year: title.year);
                             final Database db = await initializeDB();
                             int code = await insert(db, rec, false);
                             if (code == 0) {
@@ -559,7 +560,8 @@ class DetailsScreenWidget extends StatelessWidget {
                                   title: title.title,
                                   poster: title.poster,
                                   type: title.type,
-                                  watchlist: "true");
+                                  watchlist: "true",
+                                  year: title.year);
                               int code =
                                   await insert(await initializeDB(), rec, true);
                               if (code == 0) {

@@ -86,6 +86,7 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                       child: ElevatedButton(
                           onPressed: () async {
                             debugPrint("View your watched stuff");
+
                             Database db = await initializeDB();
 
                             List<Record> movieResponse =

@@ -35,7 +35,8 @@ Future<int> insert(Database db, Record rec, bool fw) async {
             title: rec.title,
             poster: rec.poster,
             type: rec.type,
-            watchlist: "false");
+            watchlist: "false",
+            year: rec.year);
         await db.update("MTVDB", newrec.toMap(),
             where: "imdbID=?", whereArgs: [newrec.imdbID]);
         return -1;
