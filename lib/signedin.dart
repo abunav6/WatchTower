@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mtvdb/recommendation.dart';
 import 'addtitle.dart';
 import "helper.dart";
 import 'services/database_handler.dart';
@@ -119,7 +120,7 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                     ),
                     Padding(
                       padding:
-                          const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
+                          const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                       child: ElevatedButton(
                           onPressed: () async {
                             Database db = await initializeDB();
@@ -147,6 +148,32 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                                       side: const BorderSide(
                                           color: Colors.transparent)))),
                           child: Text("Your Watchlist",
+                              style: GoogleFonts.poppins(fontSize: 14))),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RecommendationWidget()),
+                            );
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  const Color(0xFF4B39EF)),
+                              minimumSize: MaterialStateProperty.all(
+                                  const Size(double.infinity, 40)),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      side: const BorderSide(
+                                          color: Colors.transparent)))),
+                          child: Text("Get a movie Recommendation!",
                               style: GoogleFonts.poppins(fontSize: 14))),
                     ),
                   ],

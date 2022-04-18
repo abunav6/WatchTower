@@ -587,7 +587,7 @@ class DetailsScreenWidget extends StatelessWidget {
                                         side: const BorderSide(
                                             color: Colors.transparent)))),
                             child: Row(children: <Widget>[
-                              const Icon(Icons.add, size: 15),
+                              const Icon(Icons.bookmark_add, size: 15),
                               Text("\t Add to Watchlist",
                                   style: GoogleFonts.poppins(fontSize: 14))
                             ]))
