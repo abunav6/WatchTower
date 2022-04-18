@@ -156,11 +156,6 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                           const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                       child: ElevatedButton(
                           onPressed: () async {
-<<<<<<< HEAD
-=======
-                            debugPrint("recommender!");
-
->>>>>>> 2b3989e7fb34d41653565f4f62d383a26c307288
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -179,11 +174,7 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                                       borderRadius: BorderRadius.circular(20.0),
                                       side: const BorderSide(
                                           color: Colors.transparent)))),
-<<<<<<< HEAD
-                          child: Text("Get a movie Recommendation!",
-=======
-                          child: Text("Get a Recommendation!",
->>>>>>> 2b3989e7fb34d41653565f4f62d383a26c307288
+                          child: Text("Get a Movie Recommendation!",
                               style: GoogleFonts.poppins(fontSize: 14))),
                     ),
                   ],
