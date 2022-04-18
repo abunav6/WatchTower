@@ -100,7 +100,7 @@ class TitleDetails {
     if (json['Ratings'] != null) {
       ratings = <Ratings>[];
       json['Ratings'].forEach((v) {
-        ratings.add(new Ratings.fromJson(v));
+        ratings.add(Ratings.fromJson(v));
       });
     }
     imdbID = json['imdbID'];
@@ -108,7 +108,7 @@ class TitleDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['Title'] = this.title;
     data['Year'] = this.year;
     data['Runtime'] = this.runtime;
@@ -137,7 +137,7 @@ class Ratings {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['Source'] = this.source;
     data['Value'] = this.value;
     return data;

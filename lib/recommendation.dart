@@ -1,7 +1,3 @@
-
-
-
-
 import 'dart:collection';
 import 'dart:convert';
 
@@ -439,4 +435,3 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
     );
   }
 }
-
