@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:mtvdb/services/database_handler.dart';
+import 'package:sqflite/sqlite_api.dart';
 import "helper.dart";
 import "details.dart";
 
@@ -14,6 +16,17 @@ class RecommendationWidget extends StatefulWidget {
   _RecommendationWidgetState createState() => _RecommendationWidgetState();
 }
 
+Future<int> checkIfExists(String imdbID) async {
+  final Database db = await initializeDB();
+  List<Map<String, Object?>> tmp =
+      await db.query("watchD", where: "imdbID=?", whereArgs: [imdbID]);
+  if (tmp.isEmpty) {
+    // element is not in watchlist or in the watchD list
+    return 0;
+  }
+  return -1;
+}
+
 void showDetails(String genre, BuildContext context) async {
   final response =
       await http.get(Uri.parse("http://flaskmtv-abunav6.vercel.app/" + genre));
@@ -22,6 +35,26 @@ void showDetails(String genre, BuildContext context) async {
     LinkedHashMap object = json.decode(response.body)[0];
 
     TitleDetails recommendation = await getDetails(object['imdbID']);
+
+    if (await checkIfExists(recommendation.imdbID) == -1) {
+      // the recommendation exists in DB, wait for a new recommendation
+      debugPrint("${recommendation.title} exists in DB!");
+
+      while (true) {
+        final response = await http
+            .get(Uri.parse("http://flaskmtv-abunav6.vercel.app/" + genre));
+
+        if (response.statusCode == 200) {
+          LinkedHashMap object = json.decode(response.body)[0];
+
+          recommendation = await getDetails(object['imdbID']);
+
+          if (await checkIfExists(recommendation.imdbID) == 0) {
+            break;
+          }
+        }
+      }
+    }
 
     Navigator.push(
       context,

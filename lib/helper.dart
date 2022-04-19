@@ -240,8 +240,6 @@ Future<List<SearchDetails>> searchByName(
 }
 
 Future<List<TitleDetails>> getList(List<Record> rec) async {
-  //This is the time consuming element of the application
-
   List<TitleDetails> result = [];
   for (int i = 0; i < rec.length; i++) {
     TitleDetails temp = await getDetails(rec[i].imdbID);
