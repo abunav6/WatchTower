@@ -4,15 +4,71 @@ import 'package:google_fonts/google_fonts.dart';
 import "helper.dart";
 import 'services/database_handler.dart';
 
+import "youtube.dart";
+
+import 'package:http/http.dart' as http;
+
 import 'package:sqflite/sqflite.dart';
 
-class DetailsScreenWidget extends StatelessWidget {
+import 'dart:convert';
+
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:youtube_api/youtube_api.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class DetailsScreenWidget extends StatefulWidget {
   final TitleDetails title;
   final bool showButtons;
 
   const DetailsScreenWidget(
       {Key? key, required this.title, required this.showButtons})
       : super(key: key);
+
+  @override
+  _DetailsScreenWidget createState() => _DetailsScreenWidget();
+}
+
+class _DetailsScreenWidget extends State<DetailsScreenWidget> {
+  List<YouTubeVideo> videoResult = [];
+  YoutubeAPI youtube = YoutubeAPI("AIzaSyA3WxLx51sMfthV99wJ7hkpDAufnEu3Sck");
+
+  Future<void> _launchYoutubeVideo(String _youtubeUrl) async {
+    if (_youtubeUrl.isNotEmpty) {
+      if (await canLaunch(_youtubeUrl)) {
+        final bool _nativeAppLaunchSucceeded = await launch(
+          _youtubeUrl,
+          forceSafariVC: false,
+          universalLinksOnly: true,
+        );
+        if (!_nativeAppLaunchSucceeded) {
+          await launch(_youtubeUrl, forceSafariVC: true);
+        }
+      }
+    }
+  }
+
+  void getResults(String title, String year, String type) async {
+    String query =
+        Uri.encodeComponent(title + " " + year + " " + type + " " + " trailer");
+    String url =
+        "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=" +
+            query +
+            "&key=AIzaSyA3WxLx51sMfthV99wJ7hkpDAufnEu3Sck";
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      SearchResult sr = SearchResult.fromJson(json.decode(response.body));
+      List<Items>? items = sr.items;
+      if (items!.isNotEmpty) {
+        debugPrint("https://youtube.com/watch/" + items[0].id!.videoId!);
+        _launchYoutubeVideo(
+            "https://youtube.com/watch/" + items[0].id!.videoId!);
+      }
+    } else {
+      showToast(context, "Error fetching trailer");
+    }
+  }
 
   Widget buildMoreInfo(BuildContext context, TitleDetails title) {
     return Column(
@@ -229,6 +285,18 @@ class DetailsScreenWidget extends StatelessWidget {
                         ),
                       ),
                       Align(
+                        alignment: const AlignmentDirectional(0.9, -0.84),
+                        child: IconButton(
+                          icon: const Icon(FontAwesomeIcons.youtube,
+                              color: Colors.white, size: 30),
+                          onPressed: () {
+                            debugPrint('trailer pressed ...');
+                            getResults(widget.title.title, widget.title.year,
+                                widget.title.type);
+                          },
+                        ),
+                      ),
+                      Align(
                         alignment: const AlignmentDirectional(-0.9, -0.84),
                         child: IconButton(
                           icon: const Icon(
@@ -253,7 +321,7 @@ class DetailsScreenWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Expanded(
-                    child: Text(title.title,
+                    child: Text(widget.title.title,
                         style: GoogleFonts.lexendDeca(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -272,7 +340,7 @@ class DetailsScreenWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title.year,
+                        widget.title.year,
                         textAlign: TextAlign.start,
                         style: GoogleFonts.lexendDeca(
                           color: const Color(0xFF8B97A2),
@@ -301,7 +369,7 @@ class DetailsScreenWidget extends StatelessWidget {
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   6, 2, 6, 2),
                               child: Text(
-                                title.runtime,
+                                widget.title.runtime,
                                 style: GoogleFonts.lexendDeca(
                                   color: const Color(0xFF8B97A2),
                                   fontSize: 14,
@@ -481,7 +549,7 @@ class DetailsScreenWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        title.genre,
+                        widget.title.genre,
                         style: GoogleFonts.lexendDeca(
                           color: Colors.white,
                           fontSize: 16,
@@ -501,23 +569,23 @@ class DetailsScreenWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  (showButtons)
+                  (widget.showButtons)
                       ? ElevatedButton(
                           onPressed: () async {
                             debugPrint("Add to WatchD");
                             Record rec = Record(
-                                imdbID: title.imdbID,
-                                title: title.title,
-                                poster: title.poster,
-                                type: title.type,
+                                imdbID: widget.title.imdbID,
+                                title: widget.title.title,
+                                poster: widget.title.poster,
+                                type: widget.title.type,
                                 watchlist: "false",
-                                year: title.year);
+                                year: widget.title.year);
                             final Database db = await initializeDB();
                             int code = await insert(db, rec, false);
                             if (code == 0) {
                               debugPrint("added to DB");
                               showToast(
-                                  context, "Added ${title.title} to WatchD!");
+                                  context, "Added ${widget.title} to WatchD!");
                             } else if (code == -1) {
                               showToast(context,
                                   "${rec.title} was in your watchlist! Moving it to the WatchD list!");
@@ -551,28 +619,28 @@ class DetailsScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    (showButtons)
+                    (widget.showButtons)
                         ? ElevatedButton(
                             onPressed: () async {
                               debugPrint("Add to Watchlist");
                               Record rec = Record(
-                                  imdbID: title.imdbID,
-                                  title: title.title,
-                                  poster: title.poster,
-                                  type: title.type,
+                                  imdbID: widget.title.imdbID,
+                                  title: widget.title.title,
+                                  poster: widget.title.poster,
+                                  type: widget.title.type,
                                   watchlist: "true",
-                                  year: title.year);
+                                  year: widget.title.year);
                               int code =
                                   await insert(await initializeDB(), rec, true);
                               if (code == 0) {
                                 showToast(context,
-                                    "Added ${title.title} to your Watchlist!");
+                                    "Added ${widget.title.title} to your Watchlist!");
                               } else if (code == -2) {
                                 showToast(context,
-                                    "${title.title} already exists in WatchD list!");
+                                    "${widget.title.title} already exists in WatchD list!");
                               } else if (code == -3) {
                                 showToast(context,
-                                    "${title.title} already exists in your watchlist!");
+                                    "${widget.title.title} already exists in your watchlist!");
                               }
                               Navigator.pop(context);
                             },
@@ -605,21 +673,21 @@ class DetailsScreenWidget extends StatelessWidget {
     ratings["RT"] = "NA";
     ratings["meta"] = "NA";
 
-    String posterURL = title.poster;
+    String posterURL = widget.title.poster;
 
     if (posterURL == "N/A") {
       posterURL =
           "https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101028/112815904-no-image-available-icon-flat-vector-illustration.jpg?ver=6";
     }
 
-    for (int i = 0; i < title.ratings.length; i++) {
-      String source = title.ratings[i].source;
+    for (int i = 0; i < widget.title.ratings.length; i++) {
+      String source = widget.title.ratings[i].source;
       if (source == "Internet Movie Database") {
-        ratings["imdb"] = title.ratings[i].value;
+        ratings["imdb"] = widget.title.ratings[i].value;
       } else if (source == "Rotten Tomatoes") {
-        ratings["RT"] = title.ratings[i].value;
+        ratings["RT"] = widget.title.ratings[i].value;
       } else if (source == "Metacritic") {
-        ratings["meta"] = title.ratings[i].value;
+        ratings["meta"] = widget.title.ratings[i].value;
       }
     }
 
@@ -641,7 +709,7 @@ class DetailsScreenWidget extends StatelessWidget {
                 Expanded(
                     child: TabBarView(children: [
                   buildDetails(context, ratings, posterURL),
-                  buildMoreInfo(context, title)
+                  buildMoreInfo(context, widget.title)
                 ]))
               ]))),
     );
