@@ -288,11 +288,9 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                         alignment: const AlignmentDirectional(0.9, -0.84),
                         child: IconButton(
                           icon: const Icon(FontAwesomeIcons.youtube,
-                              color: Colors.white, size: 25),
+                              color: Colors.white, size: 30),
                           onPressed: () {
                             debugPrint('trailer pressed ...');
-                            // callAPI(widget.title.title, widget.title.type,
-                            //     widget.title.year);
                             getResults(widget.title.title, widget.title.year,
                                 widget.title.type);
                           },
