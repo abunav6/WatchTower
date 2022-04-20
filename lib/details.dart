@@ -285,7 +285,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                         ),
                       ),
                       Align(
-                        alignment: const AlignmentDirectional(0.92, -0.88),
+                        alignment: const AlignmentDirectional(0.9, -0.84),
                         child: IconButton(
                           icon: const Icon(FontAwesomeIcons.youtube,
                               color: Colors.white, size: 25),
