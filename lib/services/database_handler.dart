@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +9,15 @@ import "package:mtvdb/helper.dart";
 
 Future<Database> initializeDB() async {
   String path = await getDatabasesPath();
-  // deleteDatabase(join(path, "mtv.db"));
+
+  // String dbPath = join(path, "watch.db");
+  // deleteDatabase(dbPath);
+
+  // ByteData data = await rootBundle.load("assets/mtv.db");
+  // List<int> bytes =
+  //     data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+  // await File(dbPath).writeAsBytes(bytes);
+
   return openDatabase(
     join(path, 'watch.db'),
     onCreate: (database, version) async {
@@ -23,7 +35,7 @@ Future<int> insert(Database db, Record rec, bool fw) async {
     //database has no entry corresponding to the IMDB ID, either cuz there's no match or its just empty
     await db.insert("watchD", rec.toMap());
     return 0;
-  } on DatabaseException catch (e) {
+  } on DatabaseException {
     // need to check if DB is empty lol
     // if watchlist is true, make it false and show Toast( return -1)
     // if watchlist is false, show Toast( return -2)

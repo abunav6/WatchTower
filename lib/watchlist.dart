@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import "helper.dart";
 import "details.dart";
 import 'services/database_handler.dart';
-import "addtitle.dart";
 
 class WatchlistWidget extends StatefulWidget {
   final List<Record> movies, shows;

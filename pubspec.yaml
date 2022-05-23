@@ -70,6 +70,7 @@ flutter:
     - assets/imdb.png
     - assets/rt.png
     - assets/meta.png
+    - assets/mtv.db
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

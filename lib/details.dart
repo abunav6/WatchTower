@@ -585,7 +585,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                             if (code == 0) {
                               debugPrint("added to DB");
                               showToast(
-                                  context, "Added ${widget.title} to WatchD!");
+                                  context, "Added ${widget.title.title} to WatchD!");
                             } else if (code == -1) {
                               showToast(context,
                                   "${rec.title} was in your watchlist! Moving it to the WatchD list!");
