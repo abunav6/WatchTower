@@ -48,6 +48,21 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     }
   }
 
+  Future<void> _launchIMDbPage(String _imdbURL) async {
+    if (_imdbURL.isNotEmpty) {
+      if (await canLaunch(_imdbURL)) {
+        final bool _nativeAppLaunchSucceeded = await launch(
+          _imdbURL,
+          forceSafariVC: false,
+          universalLinksOnly: true,
+        );
+        if (!_nativeAppLaunchSucceeded) {
+          await launch(_imdbURL, forceSafariVC: true);
+        }
+      }
+    }
+  }
+
   void getResults(String title, String year, String type) async {
     String query =
         Uri.encodeComponent(title + " " + year + " " + type + " " + " trailer");
@@ -68,6 +83,90 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     } else {
       showToast(context, "Error fetching trailer");
     }
+  }
+
+  Widget buildIMDB(Map<String, String> ratings) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
+          child: Text(
+            ratings["imdb"]!,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.lexendDeca(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Image.asset(
+          'assets/imdb.png',
+          width: 40,
+          height: 24,
+          fit: BoxFit.cover,
+        ),
+      ],
+    );
+  }
+
+  Widget createRT(Map<String, String> ratings) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
+          child: Text(
+            ratings["RT"]!,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.lexendDeca(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Image.asset(
+          'assets/rt.png',
+          width: 24,
+          height: 30,
+          fit: BoxFit.cover,
+        ),
+      ],
+    );
+  }
+
+  Widget createMeta(Map<String, String> ratings) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
+          child: Text(
+            ratings["meta"]!,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.lexendDeca(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Image.asset(
+          'assets/meta.png',
+          width: 24,
+          height: 24,
+          fit: BoxFit.cover,
+        ),
+      ],
+    );
   }
 
   Widget buildMoreInfo(BuildContext context, TitleDetails title) {
@@ -261,160 +360,92 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     );
   }
 
-  Widget buildDetails(
-      BuildContext context, Map<String, String> ratings, String posterURL) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
+  Widget createTopDrawer(String posterURL) {
+    return SizedBox(
+      height: 400,
+      child: Stack(
         children: [
-          Row(
+          Align(
+            // BG Image of title poster
+            alignment: const AlignmentDirectional(0, 0),
+            child: Image.network(
+              posterURL,
+              width: MediaQuery.of(context).size.width,
+              height: 400,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Align(
+            // YT button for trailer
+            alignment: const AlignmentDirectional(0.9, -0.84),
+            child: IconButton(
+              icon: const Icon(FontAwesomeIcons.youtube,
+                  color: Colors.white, size: 30),
+              onPressed: () {
+                debugPrint('trailer pressed ...');
+                getResults(
+                    widget.title.title, widget.title.year, widget.title.type);
+              },
+            ),
+          ),
+          Align(
+            // Back button
+            alignment: const AlignmentDirectional(-0.9, -0.84),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.white,
+                size: 30,
+              ),
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget createDetailsRow() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: Column(
             mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: SizedBox(
-                  height: 400,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: const AlignmentDirectional(0, 0),
-                        child: Image.network(
-                          posterURL,
-                          width: MediaQuery.of(context).size.width,
-                          height: 400,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Align(
-                        alignment: const AlignmentDirectional(0.9, -0.84),
-                        child: IconButton(
-                          icon: const Icon(FontAwesomeIcons.youtube,
-                              color: Colors.white, size: 30),
-                          onPressed: () {
-                            debugPrint('trailer pressed ...');
-                            getResults(widget.title.title, widget.title.year,
-                                widget.title.type);
-                          },
-                        ),
-                      ),
-                      Align(
-                        alignment: const AlignmentDirectional(-0.9, -0.84),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                          onPressed: () async {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+              Text(
+                widget.title.year,
+                textAlign: TextAlign.start,
+                style: GoogleFonts.lexendDeca(
+                  color: const Color(0xFF8B97A2),
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Expanded(
-                    child: Text(widget.title.title,
-                        style: GoogleFonts.lexendDeca(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white))),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.title.year,
-                        textAlign: TextAlign.start,
-                        style: GoogleFonts.lexendDeca(
-                          color: const Color(0xFF8B97A2),
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Card(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            color: const Color(0xFF0F181F),
-                            elevation: 2,
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  6, 2, 6, 2),
-                              child: Text(
-                                widget.title.runtime,
-                                style: GoogleFonts.lexendDeca(
-                                  color: const Color(0xFF8B97A2),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 1,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF353D43),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(
+        ),
+        Expanded(
+          child: Column(
             mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    color: const Color(0xFF0F181F),
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(6, 2, 6, 2),
                       child: Text(
-                        'Ratings',
+                        widget.title.runtime,
                         style: GoogleFonts.lexendDeca(
                           color: const Color(0xFF8B97A2),
                           fontSize: 14,
@@ -422,245 +453,280 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
-          Row(
+        ),
+      ],
+    );
+  }
+
+  Widget createRatingsRow() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+          child: Column(
             mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
-                        child: Text(
-                          ratings["imdb"]!,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.lexendDeca(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Image.asset(
-                        'assets/imdb.png',
-                        width: 40,
-                        height: 24,
-                        fit: BoxFit.cover,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 8, 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
-                        child: Text(
-                          ratings["RT"]!,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.lexendDeca(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Image.asset(
-                        'assets/rt.png',
-                        width: 24,
-                        height: 30,
-                        fit: BoxFit.cover,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
-                        child: Text(
-                          ratings["meta"]!,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.lexendDeca(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Image.asset(
-                        'assets/meta.png',
-                        width: 24,
-                        height: 24,
-                        fit: BoxFit.cover,
-                      ),
-                    ],
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
+                child: Text(
+                  'Ratings',
+                  style: GoogleFonts.lexendDeca(
+                    color: const Color(0xFF8B97A2),
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               ),
             ],
           ),
-          Row(
+        ),
+      ],
+    );
+  }
+
+  Widget addRatingImages(Map<String, String> ratings) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+              child: InkWell(
+                onTap: () {
+                  _launchIMDbPage(
+                      "https://www.imdb.com/title/" + widget.title.imdbID);
+                },
+                child: buildIMDB(ratings),
+              )),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 8, 0),
+            child: createRT(ratings),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+            child: createMeta(ratings),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget genreRow() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
+                  child: Text(
+                    'Genre',
+                    style: GoogleFonts.lexendDeca(
+                      color: const Color(0xFF8B97A2),
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                Text(
+                  widget.title.genre,
+                  style: GoogleFonts.lexendDeca(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget addToWatchDButton() {
+    return ElevatedButton(
+        onPressed: () async {
+          debugPrint("Add to WatchD");
+          Record rec = Record(
+              imdbID: widget.title.imdbID,
+              title: widget.title.title,
+              poster: widget.title.poster,
+              type: widget.title.type,
+              watchlist: "false",
+              year: widget.title.year);
+          final Database db = await initializeDB();
+          int code = await insert(db, rec, false);
+          if (code == 0) {
+            debugPrint("added to DB");
+            showToast(context, "Added ${widget.title.title} to WatchD!");
+          } else if (code == -1) {
+            showToast(context,
+                "${rec.title} was in your watchlist! Moving it to the WatchD list!");
+          } else if (code == -2) {
+            showToast(
+                context, "${rec.title} already exists in your WatchD list!");
+          }
+          Navigator.pop(context);
+        },
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(const Color(0xFF4B39EF)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    side: const BorderSide(color: Colors.transparent)))),
+        child: Row(children: <Widget>[
+          const Icon(Icons.add, size: 15),
+          Text("\t Add to WatchD", style: GoogleFonts.poppins(fontSize: 14))
+        ]));
+  }
+
+  Widget addToWatchlistButton() {
+    return ElevatedButton(
+        onPressed: () async {
+          debugPrint("Add to Watchlist");
+          Record rec = Record(
+              imdbID: widget.title.imdbID,
+              title: widget.title.title,
+              poster: widget.title.poster,
+              type: widget.title.type,
+              watchlist: "true",
+              year: widget.title.year);
+          int code = await insert(await initializeDB(), rec, true);
+          if (code == 0) {
+            showToast(
+                context, "Added ${widget.title.title} to your Watchlist!");
+          } else if (code == -2) {
+            showToast(context,
+                "${widget.title.title} already exists in WatchD list!");
+          } else if (code == -3) {
+            showToast(context,
+                "${widget.title.title} already exists in your watchlist!");
+          }
+          Navigator.pop(context);
+        },
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(const Color(0xFF4B39EF)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    side: const BorderSide(color: Colors.transparent)))),
+        child: Row(children: <Widget>[
+          const Icon(Icons.bookmark_add, size: 15),
+          Text("\t Add to Watchlist", style: GoogleFonts.poppins(fontSize: 14))
+        ]));
+  }
+
+  Widget showTitle() {
+    return Padding(
+      // Textbox of title title
+      padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Expanded(
+              child: Text(widget.title.title,
+                  style: GoogleFonts.lexendDeca(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white))),
+        ],
+      ),
+    );
+  }
+
+  Widget showTopDrawer(String posterURL) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: createTopDrawer(posterURL),
+        ),
+      ],
+    );
+  }
+
+  Widget showDetails() {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
+      child: createDetailsRow(),
+    );
+  }
+
+  Widget showBG() {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: 1,
+            decoration: const BoxDecoration(
+              color: Color(0xFF353D43),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget showWatchD() {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
+      child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [(widget.showButtons) ? addToWatchDButton() : Container()]),
+    );
+  }
+
+  Widget showWatchlist() {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+        child: Row(
             mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
-                        child: Text(
-                          'Genre',
-                          style: GoogleFonts.lexendDeca(
-                            color: const Color(0xFF8B97A2),
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        widget.title.genre,
-                        style: GoogleFonts.lexendDeca(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
-            child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  (widget.showButtons)
-                      ? ElevatedButton(
-                          onPressed: () async {
-                            debugPrint("Add to WatchD");
-                            Record rec = Record(
-                                imdbID: widget.title.imdbID,
-                                title: widget.title.title,
-                                poster: widget.title.poster,
-                                type: widget.title.type,
-                                watchlist: "false",
-                                year: widget.title.year);
-                            final Database db = await initializeDB();
-                            int code = await insert(db, rec, false);
-                            if (code == 0) {
-                              debugPrint("added to DB");
-                              showToast(
-                                  context, "Added ${widget.title.title} to WatchD!");
-                            } else if (code == -1) {
-                              showToast(context,
-                                  "${rec.title} was in your watchlist! Moving it to the WatchD list!");
-                            } else if (code == -2) {
-                              showToast(context,
-                                  "${rec.title} already exists in your WatchD list!");
-                            }
-                            Navigator.pop(context);
-                          },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color(0xFF4B39EF)),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: const BorderSide(
-                                          color: Colors.transparent)))),
-                          child: Row(children: <Widget>[
-                            const Icon(Icons.add, size: 15),
-                            Text("\t Add to WatchD",
-                                style: GoogleFonts.poppins(fontSize: 14))
-                          ]))
-                      : Container()
-                ]),
-          ),
-          Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
-              child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    (widget.showButtons)
-                        ? ElevatedButton(
-                            onPressed: () async {
-                              debugPrint("Add to Watchlist");
-                              Record rec = Record(
-                                  imdbID: widget.title.imdbID,
-                                  title: widget.title.title,
-                                  poster: widget.title.poster,
-                                  type: widget.title.type,
-                                  watchlist: "true",
-                                  year: widget.title.year);
-                              int code =
-                                  await insert(await initializeDB(), rec, true);
-                              if (code == 0) {
-                                showToast(context,
-                                    "Added ${widget.title.title} to your Watchlist!");
-                              } else if (code == -2) {
-                                showToast(context,
-                                    "${widget.title.title} already exists in WatchD list!");
-                              } else if (code == -3) {
-                                showToast(context,
-                                    "${widget.title.title} already exists in your watchlist!");
-                              }
-                              Navigator.pop(context);
-                            },
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    const Color(0xFF4B39EF)),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        side: const BorderSide(
-                                            color: Colors.transparent)))),
-                            child: Row(children: <Widget>[
-                              const Icon(Icons.bookmark_add, size: 15),
-                              Text("\t Add to Watchlist",
-                                  style: GoogleFonts.poppins(fontSize: 14))
-                            ]))
-                        : Container()
-                  ])),
+              (widget.showButtons) ? addToWatchlistButton() : Container()
+            ]));
+  }
+
+  Widget buildDetails(
+      BuildContext context, Map<String, String> ratings, String posterURL) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          showTopDrawer(posterURL),
+          showTitle(),
+          showDetails(),
+          showBG(),
+          createRatingsRow(),
+          addRatingImages(ratings),
+          genreRow(),
+          showWatchD(),
+          showWatchlist(),
         ],
       ),
     );
