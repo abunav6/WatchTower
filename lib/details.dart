@@ -565,6 +565,12 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
   Widget addToWatchDButton() {
     return ElevatedButton(
         onPressed: () async {
+          String rat = "";
+          for (Ratings r in widget.title.ratings) {
+            if (r.source == "Internet Movie Database") {
+              rat = r.value;
+            }
+          }
           debugPrint("Add to WatchD");
           Record rec = Record(
               imdbID: widget.title.imdbID,
@@ -572,7 +578,10 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               poster: widget.title.poster,
               type: widget.title.type,
               watchlist: "false",
-              year: widget.title.year);
+              year: widget.title.year,
+              director: widget.title.director,
+              runtime: widget.title.runtime,
+              imdbRating: rat);
           final Database db = await initializeDB();
           int code = await insert(db, rec, false);
           if (code == 0) {
@@ -603,13 +612,22 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     return ElevatedButton(
         onPressed: () async {
           debugPrint("Add to Watchlist");
+          String rat = "";
+          for (Ratings r in widget.title.ratings) {
+            if (r.source == "Internet Movie Database") {
+              rat = r.value;
+            }
+          }
           Record rec = Record(
               imdbID: widget.title.imdbID,
               title: widget.title.title,
               poster: widget.title.poster,
               type: widget.title.type,
               watchlist: "true",
-              year: widget.title.year);
+              year: widget.title.year,
+              director: widget.title.director,
+              runtime: widget.title.runtime,
+              imdbRating: rat);
           int code = await insert(await initializeDB(), rec, true);
           if (code == 0) {
             showToast(

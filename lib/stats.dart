@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class StatsWidget extends StatefulWidget {
-  const StatsWidget({Key? key}) : super(key: key);
+  final List<Map<String, Object?>> data;
+  const StatsWidget({Key? key, required this.data}) : super(key: key);
 
   @override
   _StatsWidgetState createState() => _StatsWidgetState();
@@ -14,6 +15,10 @@ class _StatsWidgetState extends State<StatsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    for (Map m in widget.data) {
+      debugPrint(m.toString());
+      break;
+    }
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.black,

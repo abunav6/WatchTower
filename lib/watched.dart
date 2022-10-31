@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:mtvdb/services/database_handler.dart';
 import 'package:mtvdb/stats.dart';
+import 'package:sqflite/sqflite.dart';
 import "helper.dart";
 import "details.dart";
 
@@ -291,11 +292,15 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         });
   }
 
-  void handleClick(int item) {
+  void handleClick(int item) async {
     switch (item) {
       case 0:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => StatsWidget()));
+        final Database db = await initializeDB();
+
+        List<Map<String, Object?>> data = await db.query("watchD");
+
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => StatsWidget(data: data)));
     }
   }
 

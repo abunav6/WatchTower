@@ -11,6 +11,9 @@ class Record {
   String type = "";
   String watchlist = "";
   String year = "";
+  String? director = "";
+  String? runtime = '';
+  String? imdbRating = '';
 
   Record(
       {required this.imdbID,
@@ -18,7 +21,10 @@ class Record {
       required this.poster,
       required this.type,
       required this.watchlist,
-      required this.year});
+      required this.year,
+      required this.director,
+      required this.runtime,
+      required this.imdbRating});
 
   Record.fromMap(Map<String, dynamic> res)
       : imdbID = res["imdbID"],
@@ -26,7 +32,10 @@ class Record {
         poster = res["poster"],
         type = res["type"],
         watchlist = res["watchlist"],
-        year = res["year"];
+        year = res["year"],
+        director = res["director"],
+        runtime = res["runtime"],
+        imdbRating = res["imdbRating"];
 
   Map<String, Object> toMap() {
     return {
@@ -35,7 +44,10 @@ class Record {
       "poster": poster,
       "type": type,
       "watchlist": watchlist,
-      "year": year
+      "year": year,
+      "director": director as String,
+      "runtime": runtime as String,
+      "imdbRating": imdbRating as String
     };
   }
 }

@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +13,11 @@ Future<Database> initializeDB() async {
   // String dbPath = join(path, "watch.db");
   // deleteDatabase(dbPath);
 
-  // ByteData data = await rootBundle.load("assets/mtv.db");
+  // ByteData data = await rootBundle.load("assets/watch.db");
   // List<int> bytes =
   //     data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
   // await File(dbPath).writeAsBytes(bytes);
-  // return openDatabase(dbPath)
+  // return openDatabase(dbPath);
 
   return openDatabase(
     join(path, 'watch.db'),
@@ -33,9 +37,9 @@ Future<int> insert(Database db, Record rec, bool fw) async {
     await db.insert("watchD", rec.toMap());
     return 0;
   } on DatabaseException {
-    // need to check if DB is empty lol
-    // if watchlist is true, make it false and show Toast( return -1)
-    // if watchlist is false, show Toast( return -2)
+    // need to check if DB is empty lol                                   --> if table is empty
+    // if watchlist is true, make it false and show Toast( return -1)     --> if exists in watchlist, move to watchD
+    // if watchlist is false, show Toast( return -2)                      -->> if aleady exists in WatchD
     final List<Map<String, Object?>> queryResult =
         await db.query('watchD', where: 'imdbID=?', whereArgs: [imdbID]);
 
@@ -48,13 +52,17 @@ Future<int> insert(Database db, Record rec, bool fw) async {
 
       if (rec.watchlist == "true") {
         if (!fw) {
+          // coming from the WatchD page
           Record newrec = Record(
               imdbID: rec.imdbID,
               title: rec.title,
               poster: rec.poster,
               type: rec.type,
               watchlist: "false",
-              year: rec.year);
+              year: rec.year,
+              director: rec.director,
+              imdbRating: rec.imdbRating,
+              runtime: rec.runtime);
           await db.update("watchD", newrec.toMap(),
               where: "imdbID=?", whereArgs: [newrec.imdbID]);
           return -1;

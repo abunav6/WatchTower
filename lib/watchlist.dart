@@ -91,12 +91,17 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                       debugPrint(
                                           "watched ${widget.movies[index].title}!");
                                       Record rec = Record(
-                                          imdbID: widget.movies[index].imdbID,
-                                          title: widget.movies[index].title,
-                                          poster: widget.movies[index].poster,
-                                          type: widget.movies[index].type,
-                                          watchlist: "false",
-                                          year: widget.movies[index].year);
+                                        imdbID: widget.movies[index].imdbID,
+                                        title: widget.movies[index].title,
+                                        poster: widget.movies[index].poster,
+                                        type: widget.movies[index].type,
+                                        watchlist: "false",
+                                        year: widget.movies[index].year,
+                                        director: widget.movies[index].director,
+                                        runtime: widget.movies[index].runtime,
+                                        imdbRating:
+                                            widget.movies[index].imdbRating,
+                                      );
                                       changeWatchlist(
                                           await initializeDB(), rec);
                                       showToast(context,
@@ -163,12 +168,17 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                       debugPrint(
                                           "watched ${widget.shows[index].title}!");
                                       Record rec = Record(
-                                          imdbID: widget.shows[index].imdbID,
-                                          title: widget.shows[index].title,
-                                          poster: widget.shows[index].poster,
-                                          type: widget.shows[index].type,
-                                          watchlist: "false",
-                                          year: widget.shows[index].year);
+                                        imdbID: widget.shows[index].imdbID,
+                                        title: widget.shows[index].title,
+                                        poster: widget.shows[index].poster,
+                                        type: widget.shows[index].type,
+                                        watchlist: "false",
+                                        year: widget.shows[index].year,
+                                        director: widget.shows[index].director,
+                                        runtime: widget.shows[index].runtime,
+                                        imdbRating:
+                                            widget.shows[index].imdbRating,
+                                      );
                                       changeWatchlist(
                                           await initializeDB(), rec);
                                       showToast(context,
@@ -262,12 +272,18 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                       debugPrint(
                                           "watched ${_searchResultM[index].title}!");
                                       Record rec = Record(
-                                          imdbID: _searchResultM[index].imdbID,
-                                          title: _searchResultM[index].title,
-                                          poster: _searchResultM[index].poster,
-                                          type: _searchResultM[index].type,
-                                          watchlist: "false",
-                                          year: _searchResultM[index].year);
+                                        imdbID: _searchResultM[index].imdbID,
+                                        title: _searchResultM[index].title,
+                                        poster: _searchResultM[index].poster,
+                                        type: _searchResultM[index].type,
+                                        watchlist: "false",
+                                        year: _searchResultM[index].year,
+                                        director:
+                                            _searchResultM[index].director,
+                                        runtime: _searchResultM[index].runtime,
+                                        imdbRating:
+                                            _searchResultM[index].imdbRating,
+                                      );
                                       changeWatchlist(
                                           await initializeDB(), rec);
                                       showToast(context,
@@ -334,12 +350,18 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                       debugPrint(
                                           "watched ${_searchResultS[index].title}!");
                                       Record rec = Record(
-                                          imdbID: _searchResultS[index].imdbID,
-                                          title: _searchResultS[index].title,
-                                          poster: _searchResultS[index].poster,
-                                          type: _searchResultS[index].type,
-                                          watchlist: "false",
-                                          year: _searchResultS[index].year);
+                                        imdbID: _searchResultS[index].imdbID,
+                                        title: _searchResultS[index].title,
+                                        poster: _searchResultS[index].poster,
+                                        type: _searchResultS[index].type,
+                                        watchlist: "false",
+                                        year: _searchResultS[index].year,
+                                        director:
+                                            _searchResultS[index].director,
+                                        runtime: _searchResultS[index].runtime,
+                                        imdbRating:
+                                            _searchResultS[index].imdbRating,
+                                      );
                                       changeWatchlist(
                                           await initializeDB(), rec);
                                       showToast(context,
