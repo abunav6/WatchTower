@@ -297,10 +297,17 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
       case 0:
         final Database db = await initializeDB();
 
-        List<Map<String, Object?>> data = await db.query("watchD");
+        List<Map<String, Object?>> directorData = await db.rawQuery(
+            "select director, count('director') as c from watchD where director is not '' group by director order by count('director') desc limit 10;");
 
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => StatsWidget(data: data)));
+        List<Map<String, Object?>> runtimeData = await db.rawQuery(
+            "select max(runtime) as max, min(runtime) as min, avg(runtime) as avg from watchD where director is NOT '';");
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    StatsWidget(dd: directorData, rd: runtimeData)));
     }
   }
 
