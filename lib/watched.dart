@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mtvdb/services/database_handler.dart';
+import 'package:mtvdb/stats.dart';
 import "helper.dart";
 import "details.dart";
 
@@ -290,6 +291,14 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         });
   }
 
+  void handleClick(int item) {
+    switch (item) {
+      case 0:
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => StatsWidget()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     widget.movies.sort((a, b) => a.title.compareTo(b.title));
@@ -310,7 +319,17 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                     })),
             onPressed: () {}),
         backgroundColor: Colors.black,
-        appBar: AppBar(backgroundColor: Colors.black),
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          actions: <Widget>[
+            PopupMenuButton<int>(
+              onSelected: (item) => handleClick(item),
+              itemBuilder: (context) => [
+                PopupMenuItem<int>(value: 0, child: Text('View Stats')),
+              ],
+            ),
+          ],
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(10, 20, 10, 20),

@@ -13,6 +13,7 @@ Future<Database> initializeDB() async {
   // List<int> bytes =
   //     data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
   // await File(dbPath).writeAsBytes(bytes);
+  // return openDatabase(dbPath)
 
   return openDatabase(
     join(path, 'watch.db'),
