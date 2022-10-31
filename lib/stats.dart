@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mtvdb/helper.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class StatsWidget extends StatefulWidget {
   final List<Map<String, Object?>> dd, rd;
-  const StatsWidget({Key? key, required this.dd, required this.rd})
+  final TitleDetails max, min;
+  const StatsWidget(
+      {Key? key,
+      required this.dd,
+      required this.rd,
+      required this.max,
+      required this.min})
       : super(key: key);
 
   @override
@@ -16,12 +23,6 @@ class _StatsWidgetState extends State<StatsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    for (Map m in widget.dd) {
-      debugPrint(m.toString());
-    }
-    for (Map m in widget.rd) {
-      debugPrint(m.toString());
-    }
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.black,
@@ -116,20 +117,12 @@ class _StatsWidgetState extends State<StatsWidget> {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     0, 4, 0, 0),
                                             child: Text(
-                                                '{}', // replace with name of longest movie
-                                                style: GoogleFonts.lexendDeca(
-                                                  color:
-                                                      const Color(0xFF8B97A2),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.normal,
-                                                )),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 4, 0, 0),
-                                            child: Text(
-                                                '{} min', // replace with duration of longest movie
+                                                widget.max.title +
+                                                    "\n" +
+                                                    widget.max.runtime,
+                                                softWrap: true,
+                                                maxLines:
+                                                    2, // replace with name of longest movie
                                                 style: GoogleFonts.lexendDeca(
                                                   color:
                                                       const Color(0xFF8B97A2),
@@ -204,7 +197,11 @@ class _StatsWidgetState extends State<StatsWidget> {
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           0, 4, 0, 0),
                                       child: Text(
-                                          '{}', // Replace with average IMDb Rating
+                                          double.parse(widget.rd
+                                                      .elementAt(0)['avg']
+                                                      .toString())
+                                                  .toStringAsFixed(2) +
+                                              "/10.0", // Replace with average IMDb Rating
                                           style: GoogleFonts.lexendDeca(
                                             color: const Color(0xFF8B97A2),
                                             fontSize: 14,
@@ -341,7 +338,13 @@ class _StatsWidgetState extends State<StatsWidget> {
                                               EdgeInsetsDirectional.fromSTEB(
                                                   0, 4, 0, 0),
                                           child: Text(
-                                              '1. {}', // replace with name of most viewed director
+                                              widget.dd
+                                                      .elementAt(0)['director']
+                                                      .toString() +
+                                                  " - " +
+                                                  widget.dd
+                                                      .elementAt(0)['c']
+                                                      .toString(), // replace with name of most viewed director
                                               style: GoogleFonts.lexendDeca(
                                                 color: const Color(0xFF8B97A2),
                                                 fontSize: 14,
@@ -359,7 +362,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Image.network(
-                                            'https://picsum.photos/seed/348/600', // replace with Image URL of director
+                                            // TODO: use TMDB API to get a pic of the top viewed dir
+                                            'https://upload.wikimedia.org/wikipedia/commons/9/95/Christopher_Nolan_Cannes_2018.jpg', // replace with Image URL of director
                                             width: 100,
                                             height: 100,
                                             fit: BoxFit.cover,
@@ -418,20 +422,10 @@ class _StatsWidgetState extends State<StatsWidget> {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     0, 4, 0, 0),
                                             child: Text(
-                                                '{}', // replace with name of shortest movie
-                                                style: GoogleFonts.lexendDeca(
-                                                  color:
-                                                      const Color(0xFF8B97A2),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.normal,
-                                                )),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 4, 0, 0),
-                                            child: Text(
-                                                '{}  min', // replace with duration of shortest movie
+                                                widget.min.title +
+                                                    "\n" +
+                                                    widget.min
+                                                        .runtime, // replace with name of shortest movie
                                                 style: GoogleFonts.lexendDeca(
                                                   color:
                                                       const Color(0xFF8B97A2),
@@ -478,7 +472,9 @@ class _StatsWidgetState extends State<StatsWidget> {
                       padding: EdgeInsetsDirectional.fromSTEB(20, 10, 0, 0),
                       child: SelectionArea(
                           child: Text(
-                              'You\'ve spent {} minutes\n watching movies!',
+                              'You\'ve spent ' +
+                                  widget.rd.elementAt(0)['sum'].toString() +
+                                  ' minutes\n watching movies!',
                               style: GoogleFonts.poppins(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,

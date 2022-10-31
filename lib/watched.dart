@@ -301,13 +301,25 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
             "select director, count('director') as c from watchD where director is not '' group by director order by count('director') desc limit 10;");
 
         List<Map<String, Object?>> runtimeData = await db.rawQuery(
-            "select max(runtime) as max, min(runtime) as min, avg(runtime) as avg from watchD where director is NOT '';");
+            "select avg(imdbRating) as avg, sum(runtime) as sum from watchD where director is NOT '';");
+
+        List<Map<String, Object?>> maxrun = await db.rawQuery(
+            "select imdbID from watchD where director is not '' order by cast(runtime as int) desc limit 1;");
+
+        List<Map<String, Object?>> minrun = await db.rawQuery(
+            "select imdbID from watchD where director is not '' order by cast(runtime as int) asc limit 1;");
+
+        String maxi = maxrun.elementAt(0)['imdbID'].toString();
+        TitleDetails max = await getDetails(maxi);
+
+        String mini = minrun.elementAt(0)['imdbID'].toString();
+        TitleDetails min = await getDetails(mini);
 
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    StatsWidget(dd: directorData, rd: runtimeData)));
+                builder: (context) => StatsWidget(
+                    dd: directorData, rd: runtimeData, max: max, min: min)));
     }
   }
 
