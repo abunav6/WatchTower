@@ -8,9 +8,17 @@ import "helper.dart";
 import "details.dart";
 
 class WatchedScreenWidget extends StatefulWidget {
-  final List<Record> movies, shows;
+  final List<Record> movies;
+
+  final List<Record> shows;
+
+  final bool fromStats;
+
   const WatchedScreenWidget(
-      {Key? key, required this.movies, required this.shows})
+      {Key? key,
+      required this.movies,
+      required this.shows,
+      required this.fromStats})
       : super(key: key);
 
   @override
@@ -332,7 +340,9 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
   @override
   Widget build(BuildContext context) {
     widget.movies.sort((a, b) => a.title.compareTo(b.title));
-    widget.shows.sort((a, b) => a.title.compareTo(b.title));
+    if (widget.shows.isNotEmpty) {
+      widget.shows.sort((a, b) => a.title.compareTo(b.title));
+    }
 
     return Scaffold(
         floatingActionButton: FloatingActionButton(
@@ -351,14 +361,16 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: Colors.black,
-          actions: <Widget>[
-            PopupMenuButton<int>(
-              onSelected: (item) => handleClick(item),
-              itemBuilder: (context) => [
-                PopupMenuItem<int>(value: 0, child: Text('View Stats')),
-              ],
-            ),
-          ],
+          actions: !widget.fromStats
+              ? <Widget>[
+                  PopupMenuButton<int>(
+                    onSelected: (item) => handleClick(item),
+                    itemBuilder: (context) => [
+                      PopupMenuItem<int>(value: 0, child: Text('View Stats')),
+                    ],
+                  ),
+                ]
+              : [],
         ),
         body: SafeArea(
           child: Padding(
@@ -367,18 +379,20 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                 length: 2,
                 initialIndex: 0,
                 child: Column(children: [
-                  TabBar(
-                    labelColor: Colors.white,
-                    indicatorColor: const Color(0xFF673AB7),
-                    tabs: [
-                      Tab(
-                        text: 'Movies -  ${widget.movies.length}',
-                      ),
-                      Tab(
-                        text: 'Shows - ${widget.shows.length}',
-                      ),
-                    ],
-                  ),
+                  !widget.fromStats
+                      ? TabBar(
+                          labelColor: Colors.white,
+                          indicatorColor: const Color(0xFF673AB7),
+                          tabs: [
+                            Tab(
+                              text: 'Movies -  ${widget.movies.length}',
+                            ),
+                            Tab(
+                              text: 'Shows - ${widget.shows.length}',
+                            ),
+                          ],
+                        )
+                      : Container(),
                   buildSearchBox(),
                   Expanded(
                     child: TabBarView(
@@ -393,10 +407,12 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               5, 30, 5, 30),
-                          child: (_searchResultS.isNotEmpty ||
-                                  controller.text.isNotEmpty)
-                              ? buildSearchListSeries()
-                              : buildShowList(),
+                          child: !widget.fromStats
+                              ? ((_searchResultS.isNotEmpty ||
+                                      controller.text.isNotEmpty)
+                                  ? buildSearchListSeries()
+                                  : buildShowList())
+                              : Container(),
                         ),
                       ],
                     ),

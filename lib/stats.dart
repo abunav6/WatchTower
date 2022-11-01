@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mtvdb/directors.dart';
 import 'package:mtvdb/helper.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -321,88 +322,104 @@ class _StatsWidgetState extends State<StatsWidget> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
-                            child: Container(
-// TODO: make this container clickable to redirect to the most watched Directors page; create a new page with a listView of top 10 directors (already fetched) and onClick, the list of movies they have directed is shown
-                              width: MediaQuery.of(context).size.width * 0.44,
-                              height: 279,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4,
-                                    color: Color(0x34090F13),
-                                    offset: Offset(0, 2),
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12, 8, 12, 8),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            DirectorsScreenWidget(
+                                              directors: widget.dd,
+                                            )),
+                                  );
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.44,
+                                  height: 279,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 4,
+                                        color: Color(0x34090F13),
+                                        offset: Offset(0, 2),
+                                      )
+                                    ],
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        12, 8, 12, 8),
+                                    child: Column(
                                       mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text('Most Watched \nDirectors',
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.w700,
-                                                color: Color(0xff121212))),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Text(
+                                                'Top 10 Most \n Watched Directors',
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Color(0xff121212))),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(0, 4, 0, 0),
+                                              child: Text(
+                                                  widget.dd
+                                                          .elementAt(
+                                                              0)['director']
+                                                          .toString() +
+                                                      " - " +
+                                                      widget.dd
+                                                          .elementAt(0)['c']
+                                                          .toString(), // replace with name of most viewed director
+                                                  style: GoogleFonts.lexendDeca(
+                                                    color:
+                                                        const Color(0xFF8B97A2),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
                                         Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0, 4, 0, 0),
-                                          child: Text(
-                                              widget.dd
-                                                      .elementAt(0)['director']
-                                                      .toString() +
-                                                  " - " +
-                                                  widget.dd
-                                                      .elementAt(0)['c']
-                                                      .toString(), // replace with name of most viewed director
-                                              style: GoogleFonts.lexendDeca(
-                                                color: const Color(0xFF8B97A2),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.normal,
-                                              )),
+                                                  0, 16, 0, 16),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.network(
+                                                widget.img
+                                                    as String, // replace with Image URL of director
+                                                width: 100,
+                                                height: 100,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 16, 0, 16),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.network(
-                                            widget.img
-                                                as String, // replace with Image URL of director
-                                            width: 100,
-                                            height: 100,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
+                              )),
                           Padding(
                             // this padding when clicked should redirect to the details screen for shortest movie
                             padding:

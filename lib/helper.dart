@@ -71,7 +71,6 @@ Future<String> getDirectorImageURL(String name) async {
       "&tbm=isch&api_key=9f7c6788261509bb6931f427d47ab60439351f252b6067b5022804839f2c1294";
 
   final response = await http.read(Uri.parse(url));
-  // debugPrint(response);
   final jsonData = json.decode(response);
   return ImageSearch.fromJson(jsonData).imagesResults?.elementAt(0).original
       as String;
