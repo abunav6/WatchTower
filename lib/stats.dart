@@ -23,6 +23,7 @@ class _StatsWidgetState extends State<StatsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(widget.rd.elementAt(0).toString());
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.black,
@@ -72,6 +73,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Padding(
+                            // this padding when pressed should redirect to the longest movie details screen
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
                             child: Container(
@@ -377,6 +379,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                             ),
                           ),
                           Padding(
+                            // this padding when clicked should redirect to the details screen for shortest movie
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
                             child: Container(
@@ -473,7 +476,10 @@ class _StatsWidgetState extends State<StatsWidget> {
                       child: SelectionArea(
                           child: Text(
                               'You\'ve spent ' +
-                                  widget.rd.elementAt(0)['sum'].toString() +
+                                  double.parse(widget.rd
+                                          .elementAt(0)['sum']
+                                          .toString())
+                                      .toStringAsFixed(0) +
                                   ' minutes\n watching movies!',
                               style: GoogleFonts.poppins(
                                   fontSize: 20,
