@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'img_src_helper.dart';
+
 class Record {
   String imdbID = "";
   String title = "";
@@ -61,6 +63,18 @@ void showToast(BuildContext context, String s) {
           SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
     ),
   );
+}
+
+Future<String> getDirectorImageURL(String name) async {
+  String url = "https://serpapi.com/search.json?engine=google&q=" +
+      name +
+      "&tbm=isch&api_key=9f7c6788261509bb6931f427d47ab60439351f252b6067b5022804839f2c1294";
+
+  final response = await http.read(Uri.parse(url));
+  // debugPrint(response);
+  final jsonData = json.decode(response);
+  return ImageSearch.fromJson(jsonData).imagesResults?.elementAt(0).original
+      as String;
 }
 
 Future<TitleDetails> getDetails(String imdbID) async {

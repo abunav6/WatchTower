@@ -8,12 +8,14 @@ import 'details.dart';
 class StatsWidget extends StatefulWidget {
   final List<Map<String, Object?>> dd, rd;
   final TitleDetails max, min;
+  final String? img;
   const StatsWidget(
       {Key? key,
       required this.dd,
       required this.rd,
       required this.max,
-      required this.min})
+      required this.min,
+      required this.img})
       : super(key: key);
 
   @override
@@ -232,6 +234,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                           )),
                                     ),
                                     Expanded(
+                                      // TODO: get rid of these graph things and make a copy of this average rating box to show movies through the years
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -321,6 +324,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
                             child: Container(
+// TODO: make this container clickable to redirect to the most watched Directors page; create a new page with a listView of top 10 directors (already fetched) and onClick, the list of movies they have directed is shown
                               width: MediaQuery.of(context).size.width * 0.44,
                               height: 279,
                               decoration: BoxDecoration(
@@ -385,8 +389,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Image.network(
-                                            // TODO: use TMDB API to get a pic of the top viewed dir
-                                            'https://upload.wikimedia.org/wikipedia/commons/9/95/Christopher_Nolan_Cannes_2018.jpg', // replace with Image URL of director
+                                            widget.img
+                                                as String, // replace with Image URL of director
                                             width: 100,
                                             height: 100,
                                             fit: BoxFit.cover,
