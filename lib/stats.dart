@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/helper.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import 'details.dart';
+
 class StatsWidget extends StatefulWidget {
   final List<Map<String, Object?>> dd, rd;
   final TitleDetails max, min;
@@ -23,7 +25,6 @@ class _StatsWidgetState extends State<StatsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(widget.rd.elementAt(0).toString());
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.black,
@@ -76,88 +77,108 @@ class _StatsWidgetState extends State<StatsWidget> {
                             // this padding when pressed should redirect to the longest movie details screen
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.44,
-                              height: 190,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4,
-                                    color: Color(0x34090F13),
-                                    offset: Offset(0, 2),
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12, 8, 12, 8),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 12, 0, 0),
-                                      child: Text('Longest Movie',
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xff121212))),
-                                    ),
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
+                            child: GestureDetector(
+                                onTap: () async {
+                                  TitleDetails title =
+                                      await getDetails(widget.max.imdbID);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            DetailsScreenWidget(
+                                              title: title,
+                                              showButtons: false,
+                                            )),
+                                  );
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.44,
+                                  height: 190,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 4,
+                                        color: Color(0x34090F13),
+                                        offset: Offset(0, 2),
+                                      )
+                                    ],
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        12, 8, 12, 8),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0, 12, 0, 0),
+                                          child: Text('Longest Movie',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xff121212))),
+                                        ),
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(0, 4, 0, 0),
+                                                child: Text(
+                                                    widget.max.title +
+                                                        "\n" +
+                                                        widget.max.runtime,
+                                                    softWrap: true,
+                                                    maxLines:
+                                                        2, // replace with name of longest movie
+                                                    style:
+                                                        GoogleFonts.lexendDeca(
+                                                      color: const Color(
+                                                          0xFF8B97A2),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    )),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    0, 4, 0, 0),
-                                            child: Text(
-                                                widget.max.title +
-                                                    "\n" +
-                                                    widget.max.runtime,
-                                                softWrap: true,
-                                                maxLines:
-                                                    2, // replace with name of longest movie
-                                                style: GoogleFonts.lexendDeca(
-                                                  color:
-                                                      const Color(0xFF8B97A2),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.normal,
-                                                )),
+                                                    0, 8, 0, 0),
+                                            child: LinearPercentIndicator(
+                                              percent: 0.95,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.38,
+                                              lineHeight: 8,
+                                              animation: true,
+                                              progressColor: Color(0xFFA43507),
+                                              backgroundColor:
+                                                  Color(0xffE0E3E7),
+                                              barRadius: Radius.circular(8),
+                                              padding: EdgeInsets.zero,
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0, 8, 0, 0),
-                                        child: LinearPercentIndicator(
-                                          percent: 0.95,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.38,
-                                          lineHeight: 8,
-                                          animation: true,
-                                          progressColor: Color(0xFFA43507),
-                                          backgroundColor: Color(0xffE0E3E7),
-                                          barRadius: Radius.circular(8),
-                                          padding: EdgeInsets.zero,
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                  ),
+                                )),
                           ),
                           Padding(
                             padding:
@@ -382,86 +403,106 @@ class _StatsWidgetState extends State<StatsWidget> {
                             // this padding when clicked should redirect to the details screen for shortest movie
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.44,
-                              height: 180,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4,
-                                    color: Color(0x34090F13),
-                                    offset: Offset(0, 2),
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12, 8, 12, 8),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 12, 0, 0),
-                                      child: Text('Shortest Movie',
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xff121212))),
-                                    ),
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
+                            child: GestureDetector(
+                                onTap: () async {
+                                  TitleDetails title =
+                                      await getDetails(widget.min.imdbID);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            DetailsScreenWidget(
+                                              title: title,
+                                              showButtons: false,
+                                            )),
+                                  );
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.44,
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 4,
+                                        color: Color(0x34090F13),
+                                        offset: Offset(0, 2),
+                                      )
+                                    ],
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        12, 8, 12, 8),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0, 12, 0, 0),
+                                          child: Text('Shortest Movie',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xff121212))),
+                                        ),
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(0, 4, 0, 0),
+                                                child: Text(
+                                                    widget.min.title +
+                                                        "\n" +
+                                                        widget.min
+                                                            .runtime, // replace with name of shortest movie
+                                                    style:
+                                                        GoogleFonts.lexendDeca(
+                                                      color: const Color(
+                                                          0xFF8B97A2),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    )),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    0, 4, 0, 0),
-                                            child: Text(
-                                                widget.min.title +
-                                                    "\n" +
-                                                    widget.min
-                                                        .runtime, // replace with name of shortest movie
-                                                style: GoogleFonts.lexendDeca(
-                                                  color:
-                                                      const Color(0xFF8B97A2),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.normal,
-                                                )),
+                                                    0, 8, 0, 0),
+                                            child: LinearPercentIndicator(
+                                              percent: 0.2,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.38,
+                                              lineHeight: 8,
+                                              animation: true,
+                                              progressColor: Color(0xFFA43507),
+                                              backgroundColor:
+                                                  Color(0xffE0E3E7),
+                                              barRadius: Radius.circular(8),
+                                              padding: EdgeInsets.zero,
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0, 8, 0, 0),
-                                        child: LinearPercentIndicator(
-                                          percent: 0.2,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.38,
-                                          lineHeight: 8,
-                                          animation: true,
-                                          progressColor: Color(0xFFA43507),
-                                          backgroundColor: Color(0xffE0E3E7),
-                                          barRadius: Radius.circular(8),
-                                          padding: EdgeInsets.zero,
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                  ),
+                                )),
                           ),
                         ],
                       ),
