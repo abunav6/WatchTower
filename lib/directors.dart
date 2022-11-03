@@ -20,6 +20,22 @@ class DirectorsScreenWidget extends StatefulWidget {
 class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
   ScrollController listScrollController = ScrollController();
 
+  void navigateToWatchedScreen(index) async {
+    // pass to Watched Screen with a boolean saying its from here, so that the 'shows' list does not get built
+
+    Database db = await initializeDB();
+    List<Map<String, Object?>> res = await db.query("watchD",
+        where: "director=? and type='movie' and watchlist='false'",
+        whereArgs: [widget.directors.elementAt(index)['director'].toString()]);
+    List<Record> movies = res.map((e) => Record.fromMap(e)).toList();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => WatchedScreenWidget(
+              movies: movies, shows: const [], fromStats: true)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,27 +59,7 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                       onTap: () async {
-                        Database db = await initializeDB();
-                        List<Map<String, Object?>> res = await db.query(
-                            "watchD",
-                            where:
-                                "director=? and type='movie' and watchlist='false'",
-                            whereArgs: [
-                              widget.directors
-                                  .elementAt(index)['director']
-                                  .toString()
-                            ]);
-                        List<Record> movies =
-                            res.map((e) => Record.fromMap(e)).toList();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WatchedScreenWidget(
-                                  movies: movies,
-                                  shows: const [],
-                                  fromStats: true)),
-                        );
-                        // pass to Watched Screen with a boolean saying its from here, so that the shows list does not get built
+                        navigateToWatchedScreen(index);
                       },
                       child: Card(
                           shape: RoundedRectangleBorder(
@@ -72,18 +68,26 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   5, 30, 5, 30),
                               child: ListTile(
-                                  leading: CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage: NetworkImage(
-                                          widget.images.elementAt(index))),
-                                  title: Text(
-                                      widget.directors[index]['director']
-                                          .toString(),
-                                      style: GoogleFonts.poppins(fontSize: 22)),
-                                  subtitle: Text(
-                                      widget.directors[index]['c'].toString(),
-                                      style:
-                                          GoogleFonts.poppins(fontSize: 16))))));
+                                leading: ClipOval(
+                                    child: Image.network(
+                                        widget.images.elementAt(index),
+                                        width: 60,
+                                        height: 60,
+                                        fit: BoxFit.cover)),
+                                title: Text(
+                                    widget.directors[index]['director']
+                                        .toString(),
+                                    style: GoogleFonts.poppins(fontSize: 20)),
+                                subtitle: Text(
+                                    widget.directors[index]['c'].toString(),
+                                    style: GoogleFonts.poppins(fontSize: 16)),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.arrow_right_sharp),
+                                  onPressed: () {
+                                    navigateToWatchedScreen(index);
+                                  },
+                                ),
+                              ))));
                 })));
   }
 }

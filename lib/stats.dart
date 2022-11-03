@@ -187,7 +187,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                 EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.44,
-                              height: 270,
+                              height: 120,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 boxShadow: [
@@ -220,7 +220,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                     ),
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 4, 0, 0),
+                                          0, 20, 0, 0),
                                       child: Text(
                                           double.parse(widget.rd
                                                       .elementAt(0)['avg']
@@ -229,92 +229,62 @@ class _StatsWidgetState extends State<StatsWidget> {
                                               "/10.0", // Replace with average IMDb Rating
                                           style: GoogleFonts.lexendDeca(
                                             color: const Color(0xFF8B97A2),
-                                            fontSize: 14,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.normal,
                                           )),
-                                    ),
-                                    Expanded(
-                                      // TODO: get rid of these graph things and make a copy of this average rating box to show movies through the years
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 0, 4, 0),
-                                            child: Container(
-                                              width: 16,
-                                              height: 90,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFF4B39EF),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 0, 4, 0),
-                                            child: Container(
-                                              width: 16,
-                                              height: 60,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFF4B39EF),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 0, 4, 0),
-                                            child: Container(
-                                              width: 16,
-                                              height: 110,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFF4B39EF),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 0, 4, 0),
-                                            child: Container(
-                                              width: 16,
-                                              height: 60,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFF4B39EF),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 16,
-                                            height: 90,
-                                            decoration: BoxDecoration(
-                                              color: Color(0xFF4B39EF),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
+                            child: GestureDetector(
+                                onTap: () {
+                                  debugPrint(
+                                      "show movies on a graph for each year");
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.44,
+                                  height: 135,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 4,
+                                        color: Color(0x34090F13),
+                                        offset: Offset(0, 2),
+                                      )
+                                    ],
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        12, 8, 12, 8),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0, 12, 0, 0),
+                                          child: Text(
+                                              'Your Movies \nThrough the Years',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xff121212))),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )),
+                          )
                         ],
                       ),
                       Column(
@@ -370,7 +340,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
                                             Text(
-                                                'Top 10 Most \n Watched Directors',
+                                                'Top 10 Most \nWatched Directors',
                                                 style: GoogleFonts.poppins(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w700,
@@ -414,8 +384,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                                               Image.network(
                                                 widget.img
                                                     as String, // replace with Image URL of director
-                                                width: 100,
-                                                height: 100,
+                                                width: 140,
+                                                height: 140,
                                                 fit: BoxFit.cover,
                                               ),
                                             ],
