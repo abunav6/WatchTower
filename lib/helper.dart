@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'img_src_helper.dart';
+
 class Record {
   String imdbID = "";
   String title = "";
@@ -11,6 +13,9 @@ class Record {
   String type = "";
   String watchlist = "";
   String year = "";
+  String? director = "";
+  String? runtime = '';
+  String? imdbRating = '';
 
   Record(
       {required this.imdbID,
@@ -18,7 +23,10 @@ class Record {
       required this.poster,
       required this.type,
       required this.watchlist,
-      required this.year});
+      required this.year,
+      required this.director,
+      required this.runtime,
+      required this.imdbRating});
 
   Record.fromMap(Map<String, dynamic> res)
       : imdbID = res["imdbID"],
@@ -26,7 +34,10 @@ class Record {
         poster = res["poster"],
         type = res["type"],
         watchlist = res["watchlist"],
-        year = res["year"];
+        year = res["year"],
+        director = res["director"],
+        runtime = res["runtime"],
+        imdbRating = res["imdbRating"];
 
   Map<String, Object> toMap() {
     return {
@@ -35,7 +46,10 @@ class Record {
       "poster": poster,
       "type": type,
       "watchlist": watchlist,
-      "year": year
+      "year": year,
+      "director": director as String,
+      "runtime": runtime as String,
+      "imdbRating": imdbRating as String
     };
   }
 }
@@ -49,6 +63,17 @@ void showToast(BuildContext context, String s) {
           SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
     ),
   );
+}
+
+Future<String> getDirectorImageURL(String name) async {
+  String url = "https://serpapi.com/search.json?engine=google&q=" +
+      name +
+      "&tbm=isch&api_key=9f7c6788261509bb6931f427d47ab60439351f252b6067b5022804839f2c1294";
+
+  final response = await http.read(Uri.parse(url));
+  final jsonData = json.decode(response);
+  return ImageSearch.fromJson(jsonData).imagesResults?.elementAt(0).original
+      as String;
 }
 
 Future<TitleDetails> getDetails(String imdbID) async {

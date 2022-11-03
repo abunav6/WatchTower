@@ -2,13 +2,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:mtvdb/services/database_handler.dart';
+import 'package:mtvdb/stats.dart';
+import 'package:sqflite/sqflite.dart';
 import "helper.dart";
 import "details.dart";
 
 class WatchedScreenWidget extends StatefulWidget {
-  final List<Record> movies, shows;
+  final List<Record> movies;
+
+  final List<Record> shows;
+
+  final bool fromStats;
+
   const WatchedScreenWidget(
-      {Key? key, required this.movies, required this.shows})
+      {Key? key,
+      required this.movies,
+      required this.shows,
+      required this.fromStats})
       : super(key: key);
 
   @override
@@ -29,7 +39,6 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
     }
 
     for (var movie in widget.movies) {
-      debugPrint(movie.title);
       if (movie.title
           .toLowerCase()
           .trim()
@@ -290,10 +299,50 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         });
   }
 
+  void handleClick(int item) async {
+    switch (item) {
+      case 0:
+        final Database db = await initializeDB();
+
+        List<Map<String, Object?>> directorData = await db.rawQuery(
+            "select director, count('director') as c from watchD where watchlist='false' AND type='movie' group by director order by count('director') desc limit 10;");
+
+        String imageURL = await getDirectorImageURL(
+            directorData.elementAt(0)['director'].toString());
+
+        List<Map<String, Object?>> runtimeData = await db.rawQuery(
+            "select avg(imdbRating) as avg, sum(runtime) as sum from watchD where watchlist='false' AND type='movie';");
+
+        List<Map<String, Object?>> maxrun = await db.rawQuery(
+            "select imdbID from watchD where watchlist='false' AND type='movie' order by cast(runtime as int) desc limit 1;");
+
+        List<Map<String, Object?>> minrun = await db.rawQuery(
+            "select imdbID from watchD where watchlist='false' AND type='movie' order by cast(runtime as int) asc limit 1;");
+
+        String maxi = maxrun.elementAt(0)['imdbID'].toString();
+        TitleDetails max = await getDetails(maxi);
+
+        String mini = minrun.elementAt(0)['imdbID'].toString();
+        TitleDetails min = await getDetails(mini);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => StatsWidget(
+                    dd: directorData,
+                    rd: runtimeData,
+                    max: max,
+                    min: min,
+                    img: imageURL)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     widget.movies.sort((a, b) => a.title.compareTo(b.title));
-    widget.shows.sort((a, b) => a.title.compareTo(b.title));
+    if (widget.shows.isNotEmpty) {
+      widget.shows.sort((a, b) => a.title.compareTo(b.title));
+    }
 
     return Scaffold(
         floatingActionButton: FloatingActionButton(
@@ -310,7 +359,19 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                     })),
             onPressed: () {}),
         backgroundColor: Colors.black,
-        appBar: AppBar(backgroundColor: Colors.black),
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          actions: !widget.fromStats
+              ? <Widget>[
+                  PopupMenuButton<int>(
+                    onSelected: (item) => handleClick(item),
+                    itemBuilder: (context) => [
+                      PopupMenuItem<int>(value: 0, child: Text('View Stats')),
+                    ],
+                  ),
+                ]
+              : [],
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(10, 20, 10, 20),
@@ -318,18 +379,20 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                 length: 2,
                 initialIndex: 0,
                 child: Column(children: [
-                  TabBar(
-                    labelColor: Colors.white,
-                    indicatorColor: const Color(0xFF673AB7),
-                    tabs: [
-                      Tab(
-                        text: 'Movies -  ${widget.movies.length}',
-                      ),
-                      Tab(
-                        text: 'Shows - ${widget.shows.length}',
-                      ),
-                    ],
-                  ),
+                  !widget.fromStats
+                      ? TabBar(
+                          labelColor: Colors.white,
+                          indicatorColor: const Color(0xFF673AB7),
+                          tabs: [
+                            Tab(
+                              text: 'Movies -  ${widget.movies.length}',
+                            ),
+                            Tab(
+                              text: 'Shows - ${widget.shows.length}',
+                            ),
+                          ],
+                        )
+                      : Container(),
                   buildSearchBox(),
                   Expanded(
                     child: TabBarView(
@@ -344,10 +407,12 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               5, 30, 5, 30),
-                          child: (_searchResultS.isNotEmpty ||
-                                  controller.text.isNotEmpty)
-                              ? buildSearchListSeries()
-                              : buildShowList(),
+                          child: !widget.fromStats
+                              ? ((_searchResultS.isNotEmpty ||
+                                      controller.text.isNotEmpty)
+                                  ? buildSearchListSeries()
+                                  : buildShowList())
+                              : Container(),
                         ),
                       ],
                     ),

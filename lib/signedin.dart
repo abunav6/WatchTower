@@ -101,8 +101,10 @@ class _SignedInWidgetState extends State<SignedInWidget> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => WatchedScreenWidget(
-                                      movies: movieResponse,
-                                      shows: showResponse)),
+                                        movies: movieResponse,
+                                        shows: showResponse,
+                                        fromStats: false,
+                                      )),
                             );
                           },
                           style: ButtonStyle(
