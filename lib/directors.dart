@@ -8,7 +8,9 @@ import 'helper.dart';
 
 class DirectorsScreenWidget extends StatefulWidget {
   final List<Map<String, Object?>> directors;
-  const DirectorsScreenWidget({Key? key, required this.directors})
+  final List<String> images;
+  const DirectorsScreenWidget(
+      {Key? key, required this.directors, required this.images})
       : super(key: key);
 
   @override
@@ -70,20 +72,18 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   5, 30, 5, 30),
                               child: ListTile(
-                                  // leading: CircleAvatar(
-                                  //     radius: 30,
-                                  //     backgroundImage: NetworkImage(
-                                  //         getDirectorImageURL(widget.directors
-                                  //             .elementAt(index)['director']
-                                  //             .toString()))),
+                                  leading: CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: NetworkImage(
+                                          widget.images.elementAt(index))),
                                   title: Text(
                                       widget.directors[index]['director']
                                           .toString(),
                                       style: GoogleFonts.poppins(fontSize: 22)),
                                   subtitle: Text(
                                       widget.directors[index]['c'].toString(),
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 16))))));
+                                      style:
+                                          GoogleFonts.poppins(fontSize: 16))))));
                 })));
   }
 }

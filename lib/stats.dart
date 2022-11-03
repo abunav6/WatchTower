@@ -77,7 +77,6 @@ class _StatsWidgetState extends State<StatsWidget> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Padding(
-                            // this padding when pressed should redirect to the longest movie details screen
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
                             child: GestureDetector(
@@ -325,14 +324,21 @@ class _StatsWidgetState extends State<StatsWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
                               child: GestureDetector(
-                                onTap: () {
+                                onTap: () async {
+                                  List<String> imgurls = [];
+                                  for (Map m in widget.dd) {
+                                    debugPrint("fetching image for " +
+                                        m['director'].toString());
+                                    imgurls.add(await getDirectorImageURL(
+                                        m['director'].toString()));
+                                  }
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             DirectorsScreenWidget(
-                                              directors: widget.dd,
-                                            )),
+                                                directors: widget.dd,
+                                                images: imgurls)),
                                   );
                                 },
                                 child: Container(
@@ -421,7 +427,6 @@ class _StatsWidgetState extends State<StatsWidget> {
                                 ),
                               )),
                           Padding(
-                            // this padding when clicked should redirect to the details screen for shortest movie
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
                             child: GestureDetector(
