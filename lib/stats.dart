@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/directors.dart';
+import 'package:mtvdb/graph.dart';
 import 'package:mtvdb/helper.dart';
+import 'package:mtvdb/services/database_handler.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'details.dart';
 
@@ -239,12 +242,36 @@ class _StatsWidgetState extends State<StatsWidget> {
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                2, 2, 2, 12),
                             child: GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   debugPrint(
                                       "show movies on a graph for each year");
+                                  Database db = await initializeDB();
+                                  List<
+                                      Map<String,
+                                          Object?>> yeardata = await db.rawQuery(
+                                      "select year from watchD where type='movie' AND watchlist='false'");
+                                  Map<int, int> yearMap = {};
+                                  for (Map m in yeardata) {
+                                    yearMap[int.parse(m['year'])] = 0;
+                                  }
+                                  for (int year in yearMap.keys) {
+                                    yearMap[year] = yeardata
+                                        .where((element) =>
+                                            int.parse(
+                                                element['year'].toString()) ==
+                                            year)
+                                        .length;
+                                  }
+
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => GraphWidget(
+                                                yearcount: yearMap,
+                                              )));
                                 },
                                 child: Container(
                                   width:
@@ -252,7 +279,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                   height: 135,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         blurRadius: 4,
                                         color: Color(0x34090F13),
@@ -262,8 +289,9 @@ class _StatsWidgetState extends State<StatsWidget> {
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12, 8, 12, 8),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            12, 8, 12, 8),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       crossAxisAlignment:

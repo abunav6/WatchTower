@@ -62,17 +62,6 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
                     snapshot.hasData == null) {
                   return Container();
                 }
-                Map images;
-                try {
-                  images = snapshot.data as Map;
-                } catch (e) {
-                  return const Center(
-                      child: CircularProgressIndicator(
-                    valueColor:
-                        const AlwaysStoppedAnimation<Color>(Colors.white),
-                  ));
-                }
-                debugPrint(images.toString());
                 return ListView.separated(
                     separatorBuilder: (BuildContext context, int index) {
                       return const SizedBox(
@@ -96,14 +85,23 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       5, 30, 5, 30),
                                   child: ListTile(
-                                    leading: ClipOval(
-                                        child: Image.network(
-                                            images[widget.directors
-                                                .elementAt(index)['director']
-                                                .toString()],
-                                            width: 60,
-                                            height: 60,
-                                            fit: BoxFit.cover)),
+                                    leading: snapshot.hasData
+                                        ? ClipOval(
+                                            child: Image.network(
+                                                (snapshot.data as Map)[widget
+                                                    .directors
+                                                    .elementAt(
+                                                        index)['director']
+                                                    .toString()],
+                                                width: 60,
+                                                height: 60,
+                                                fit: BoxFit.cover))
+                                        : const ClipOval(
+                                            child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.white),
+                                          )),
                                     title: Text(
                                         widget.directors[index]['director']
                                             .toString(),

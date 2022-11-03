@@ -49,19 +49,4 @@ class ImagesResults {
     isProduct = json['is_product'];
     inStock = json['in_stock'];
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['position'] = this.position;
-    data['thumbnail'] = this.thumbnail;
-    data['source'] = this.source;
-    data['title'] = this.title;
-    data['link'] = this.link;
-    data['original'] = this.original;
-    data['original_width'] = this.originalWidth;
-    data['original_height'] = this.originalHeight;
-    data['is_product'] = this.isProduct;
-    data['in_stock'] = this.inStock;
-    return data;
-  }
 }
