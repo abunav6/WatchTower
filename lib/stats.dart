@@ -295,21 +295,12 @@ class _StatsWidgetState extends State<StatsWidget> {
                                   EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
                               child: GestureDetector(
                                 onTap: () async {
-                                  List<String> imgurls = [];
-                                  for (Map m in widget.dd) {
-                                    debugPrint("fetching image for " +
-                                        m['director'].toString());
-                                    imgurls.add(await getDirectorImageURL(
-                                        m['director'].toString()));
-                                  }
                                   Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            DirectorsScreenWidget(
-                                                directors: widget.dd,
-                                                images: imgurls)),
-                                  );
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DirectorsScreenWidget(
+                                                  directors: widget.dd)));
                                 },
                                 child: Container(
                                   width:
