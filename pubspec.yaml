@@ -38,8 +38,10 @@ dependencies:
   cupertino_icons: ^1.0.5
   google_fonts: ^3.0.1
   youtube_api: ^1.0.4
+
   font_awesome_flutter: ^10.2.1
   url_launcher: ^6.0.20
+
   percent_indicator: ^4.2.2
   syncfusion_flutter_charts: ^20.3.52
 
