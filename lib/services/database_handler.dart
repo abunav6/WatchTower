@@ -91,8 +91,22 @@ Future<List<Record>> retrieveData(
 }
 
 void changeWatchlist(Database db, Record rec) async {
-  await db.update("watchD", rec.toMap(),
-      where: "imdbID= ?", whereArgs: [rec.imdbID]);
+  if (rec.type == 'series') {
+    await db.update("watchD", rec.toMap(),
+        where: "imdbID= ?", whereArgs: [rec.imdbID]);
+  } else {
+    await db.update("watchD", rec.toMap(),
+        where: "imdbID= ?", whereArgs: [rec.imdbID]);
+    await db.rawQuery("update watchD set director='" +
+        rec.director.toString() +
+        "', runtime='" +
+        rec.runtime.toString().replaceAll("min", "") +
+        "', imdbRating='" +
+        rec.imdbRating.toString() +
+        "' where imdbID='" +
+        rec.imdbID +
+        "'");
+  }
 }
 
 void delete(Database db, String imdbID) async {

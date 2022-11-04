@@ -181,6 +181,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                       );
                                       changeWatchlist(
                                           await initializeDB(), rec);
+
                                       showToast(context,
                                           "Added ${widget.shows[index].title} to WatchD!");
                                       Navigator.pop(context);

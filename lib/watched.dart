@@ -307,9 +307,6 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         List<Map<String, Object?>> directorData = await db.rawQuery(
             "select director, count('director') as c from watchD where watchlist='false' AND type='movie' group by director order by count('director') desc limit 10;");
 
-        // String imageURL = await getDirectorImageURL(
-        //     directorData.elementAt(0)['director'].toString());
-
         List<Map<String, Object?>> runtimeData = await db.rawQuery(
             "select avg(imdbRating) as avg, sum(runtime) as sum from watchD where watchlist='false' AND type='movie';");
 
