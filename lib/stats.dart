@@ -12,15 +12,16 @@ import 'details.dart';
 class StatsWidget extends StatefulWidget {
   final List<Map<String, Object?>> dd, rd;
   final TitleDetails max, min;
-  final String? img;
-  const StatsWidget(
-      {Key? key,
-      required this.dd,
-      required this.rd,
-      required this.max,
-      required this.min,
-      required this.img})
-      : super(key: key);
+  // final String? img;
+  const StatsWidget({
+    Key? key,
+    required this.dd,
+    required this.rd,
+    required this.max,
+    required this.min,
+  })
+  // required this.img})
+  : super(key: key);
 
   @override
   _StatsWidgetState createState() => _StatsWidgetState();
@@ -28,6 +29,11 @@ class StatsWidget extends StatefulWidget {
 
 class _StatsWidgetState extends State<StatsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<String> getTopDirImage() async {
+    return await (getDirectorImageURL(
+        widget.dd.elementAt(0)['director'].toString()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -400,13 +406,34 @@ class _StatsWidgetState extends State<StatsWidget> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Image.network(
-                                                widget.img
-                                                    as String, // replace with Image URL of director
-                                                width: 140,
-                                                height: 140,
-                                                fit: BoxFit.cover,
-                                              ),
+                                              FutureBuilder(
+                                                future: getTopDirImage(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .none &&
+                                                      snapshot.hasData ==
+                                                          null) {
+                                                    return Container();
+                                                  }
+                                                  return snapshot.hasData
+                                                      ? Image.network(
+                                                          snapshot.data
+                                                              as String, // replace with Image URL of director
+                                                          width: 140,
+                                                          height: 140,
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                      : const ClipOval(
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                          valueColor:
+                                                              AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                  Colors.black),
+                                                        ));
+                                                },
+                                              )
                                             ],
                                           ),
                                         ),

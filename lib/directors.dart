@@ -100,7 +100,7 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
                                             child: CircularProgressIndicator(
                                             valueColor:
                                                 AlwaysStoppedAnimation<Color>(
-                                                    Colors.white),
+                                                    Colors.black),
                                           )),
                                     title: Text(
                                         widget.directors[index]['director']
