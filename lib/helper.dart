@@ -2,9 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mtvdb/person_helper.dart';
 import 'dart:convert';
-
-import 'img_src_helper.dart';
 
 class Record {
   String imdbID = "";
@@ -65,19 +64,42 @@ void showToast(BuildContext context, String s) {
   );
 }
 
-Future<String> getDirectorImageURL(String name) async {
-  String url = "https://serpapi.com/search.json?engine=google&q=" +
-      name +
-      "&tbm=isch&api_key=9f7c6788261509bb6931f427d47ab60439351f252b6067b5022804839f2c1294";
+Future<String> getPersonID(String name) async {
+  String search_person_by_string =
+      "https://api.themoviedb.org/3/search/person?api_key=8a9290d1f274942a13564a4a24fc7be6&language=en-US&query=${Uri.encodeComponent(name)}&page=1&include_adult=false";
 
-  final response = await http.read(Uri.parse(url));
-  final jsonData = json.decode(response);
-  return ImageSearch.fromJson(jsonData).imagesResults?.elementAt(0).original
-      as String;
+  var response = await http.read(Uri.parse(search_person_by_string));
+  var jsonData = json.decode(response);
+  Person p = Person.fromJson(jsonData);
+  int personID = p.results![0].id as int;
+
+  return "https://api.themoviedb.org/3/person/$personID/images?api_key=8a9290d1f274942a13564a4a24fc7be6";
+}
+
+Future<String> getDirectorImageURL(String name) async {
+  // replace with TMDb API call, this is not at all needed
+  // Use search person by string API from TMDB, get person ID, and then get Image URL Path
+
+  String pURL = await getPersonID(name);
+
+  String image_path_base = "https://image.tmdb.org/t/p/original";
+
+  final response = await http.read(Uri.parse(pURL));
+  String url = image_path_base +
+      ImageSearch.fromJson(json.decode(response))
+          .profiles!
+          .elementAt(0)
+          .filePath
+          .toString();
+  if (url.isEmpty) {
+    return "";
+  } else {
+    return url;
+  }
 }
 
 Future<TitleDetails> getDetails(String imdbID) async {
-  String url = "http://www.omdbapi.com/?apikey=b9fb2464&i=" + imdbID;
+  String url = "http://www.omdbapi.com/?apikey=b9fb2464&i=$imdbID";
   final response = await http.read(Uri.parse(url));
   // debugPrint(response);
   final jsonData = json.decode(response);
@@ -247,12 +269,12 @@ Future<List<SearchDetails>> searchByName(
       debugPrint("not possible");
       return [];
     } else if (movie && !series) {
-      titleData = await http
-          .read(Uri.parse(urlBase + "s=" + searchElement + "&type=movie"));
+      titleData =
+          await http.read(Uri.parse("${urlBase}s=$searchElement&type=movie"));
       return getSearchList(titleData);
     } else if (series && !movie) {
-      titleData = await http
-          .read(Uri.parse(urlBase + "s=" + searchElement + "&type=series"));
+      titleData =
+          await http.read(Uri.parse("${urlBase}s=$searchElement&type=series"));
 
       return getSearchList(titleData);
     } else {

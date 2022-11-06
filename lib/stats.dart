@@ -31,6 +31,7 @@ class _StatsWidgetState extends State<StatsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<String> getTopDirImage() async {
+    debugPrint("I am here");
     return await (getDirectorImageURL(
         widget.dd.elementAt(0)['director'].toString()));
   }
