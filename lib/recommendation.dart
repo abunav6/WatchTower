@@ -72,6 +72,25 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> genres = [
+      'action',
+      'adventure',
+      'animation',
+      'biography',
+      'comedy',
+      'crime',
+      'drama',
+      'family',
+      'fantasy',
+      'horror',
+      'mystery',
+      'sci-fi',
+      'sport',
+      'thriller',
+      'war'
+    ];
+    ScrollController controller = ScrollController();
+
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -93,374 +112,50 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
               decoration: const BoxDecoration(
                 color: Colors.black,
               ),
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: const AlignmentDirectional(0, 0),
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text('Click a Genre to get a Recommendation:',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                fontStyle: FontStyle.italic,
-                                fontSize: 14,
-                                color: const Color(0xFFB2B0B0),
-                              )),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(10, 80, 10, 10),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 305,
-                      decoration: const BoxDecoration(
-                        color: Colors.black,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            10, 100, 10, 50),
-                        child: GridView(
-                          padding: EdgeInsets.zero,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 2.5,
-                          ),
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            ElevatedButton(
-                                onPressed: () async {
-                                  debugPrint('action pressed ...');
-                                  showDetails("action", context);
-                                },
-                                child: Text('Action',
+              child: ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(
+                      height: 10,
+                    );
+                  },
+                  itemCount: genres.length,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  controller: controller,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                        onTap: () async {
+                          showToast(context,
+                              "Searching for " + genres[index] + " movies!");
+                          showDetails(genres[index], context);
+                        },
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0)),
+                            child: Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    5, 30, 5, 30),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: Colors.white,
+                                      child: Image.asset(
+                                          "assets/genre_images/" +
+                                              genres[index] +
+                                              ".png",
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.cover)),
+                                  title: Text(
+                                    "${genres[index][0].toUpperCase()}${(genres[index].substring(1).toLowerCase())}",
                                     style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('adventure pressed ...');
-                                  showDetails("adventure", context);
-                                },
-                                child: Text('Adventure',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('animation pressed ...');
-                                  showDetails("animation", context);
-                                },
-                                child: Text('Animation',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('biography pressed ...');
-                                  showDetails("biography", context);
-                                },
-                                child: Text('Biography',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('comedy pressed ...');
-                                  showDetails("comedy", context);
-                                },
-                                child: Text('Comedy',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('crime pressed ...');
-                                  showDetails("crime", context);
-                                },
-                                child: Text('Crime',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('drama pressed ...');
-                                  showDetails("drama", context);
-                                },
-                                child: Text('Drama',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('family pressed ...');
-                                  showDetails("family", context);
-                                },
-                                child: Text('Family',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('fantasy pressed ...');
-                                  showDetails("fantasy", context);
-                                },
-                                child: Text('Fantasy',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('horror pressed ...');
-                                  showDetails("horror", context);
-                                },
-                                child: Text('Horror',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('mystery pressed ...');
-                                  showDetails("mystery", context);
-                                },
-                                child: Text('Mystery',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('scifi pressed ...');
-                                  showDetails("scifi", context);
-                                },
-                                child: Text('Sci-Fi',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('sport pressed ...');
-                                  showDetails("sport", context);
-                                },
-                                child: Text('Sport',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('thriller pressed ...');
-                                  showDetails("thriller", context);
-                                },
-                                child: Text('Thriller',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                            ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('war pressed ...');
-                                  showDetails("war", context);
-                                },
-                                child: Text('War',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                    )),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        const Color(0xFF4B39EF)),
-                                    minimumSize: MaterialStateProperty.all(
-                                        const Size(80, 40)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.transparent))))),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.black),
+                                  ),
+                                  trailing: const Icon(Icons.arrow_right),
+                                ))));
+                  }),
             ),
           ),
         ),
