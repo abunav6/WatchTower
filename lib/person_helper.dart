@@ -7,16 +7,16 @@ class Person {
     if (json['results'] != null) {
       results = <Results>[];
       json['results'].forEach((v) {
-        results!.add(new Results.fromJson(v));
+        results!.add(Results.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
 
-    if (this.results != null) {
-      data['results'] = this.results!.map((v) => v.toJson()).toList();
+    if (results != null) {
+      data['results'] = results!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -34,9 +34,9 @@ class Results {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
 
-    data['id'] = this.id;
+    data['id'] = id;
 
     return data;
   }
@@ -53,16 +53,16 @@ class ImageSearch {
     if (json['profiles'] != null) {
       profiles = <Profiles>[];
       json['profiles'].forEach((v) {
-        profiles!.add(new Profiles.fromJson(v));
+        profiles!.add(Profiles.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.profiles != null) {
-      data['profiles'] = this.profiles!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (profiles != null) {
+      data['profiles'] = profiles!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -78,8 +78,8 @@ class Profiles {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['file_path'] = this.filePath;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['file_path'] = filePath;
     return data;
   }
 }

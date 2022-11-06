@@ -1,5 +1,8 @@
+// ignore_for_file: library_private_types_in_public_api, deprecated_member_use, use_build_context_synchronously, depend_on_referenced_packages, prefer_interpolation_to_compose_strings, duplicate_ignore
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mtvdb/person_helper.dart';
 
 import "helper.dart";
 import 'services/database_handler.dart';
@@ -33,52 +36,155 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
   List<YouTubeVideo> videoResult = [];
   YoutubeAPI youtube = YoutubeAPI("AIzaSyA3WxLx51sMfthV99wJ7hkpDAufnEu3Sck");
 
-  Future<void> _launchYoutubeVideo(String _youtubeUrl) async {
-    if (_youtubeUrl.isNotEmpty) {
-      if (await canLaunch(_youtubeUrl)) {
-        final bool _nativeAppLaunchSucceeded = await launch(
-          _youtubeUrl,
+  Future<void> _launchYoutubeVideo(String youtubeUrl) async {
+    if (youtubeUrl.isNotEmpty) {
+      if (await canLaunch(youtubeUrl)) {
+        final bool nativeAppLaunchSucceeded = await launch(
+          youtubeUrl,
           forceSafariVC: false,
           universalLinksOnly: true,
         );
-        if (!_nativeAppLaunchSucceeded) {
-          await launch(_youtubeUrl, forceSafariVC: true);
+        if (!nativeAppLaunchSucceeded) {
+          await launch(youtubeUrl, forceSafariVC: true);
         }
       }
     }
   }
 
-  Future<void> _launchIMDbPage(String _imdbURL) async {
-    if (_imdbURL.isNotEmpty) {
-      if (await canLaunch(_imdbURL)) {
-        final bool _nativeAppLaunchSucceeded = await launch(
-          _imdbURL,
+  Future<void> _launchIMDbPage(String imdbURL) async {
+    if (imdbURL.isNotEmpty) {
+      if (await canLaunch(imdbURL)) {
+        final bool nativeAppLaunchSucceeded = await launch(
+          imdbURL,
           forceSafariVC: false,
           universalLinksOnly: true,
         );
-        if (!_nativeAppLaunchSucceeded) {
-          await launch(_imdbURL, forceSafariVC: true);
+        if (!nativeAppLaunchSucceeded) {
+          await launch(imdbURL, forceSafariVC: true);
         }
       }
     }
+  }
+
+  Widget doHorList(List<String> list, String type) {
+    ScrollController controller = ScrollController();
+
+    return SizedBox(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: 100,
+        child: FutureBuilder(
+            future: type == "a"
+                ? getActorImages()
+                : (type == "d" ? getDirImages() : getWriterImages()),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.none &&
+                  snapshot.hasData == null) {
+                return Container();
+              }
+              return ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(
+                      width: 10,
+                    );
+                  },
+                  itemCount: list.length,
+                  controller: controller,
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                        onTap: () {},
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0)),
+                            child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                height: 20,
+                                child: Padding(
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            20, 15, 20, 0),
+                                    child: ListTile(
+                                      leading: snapshot.hasData
+                                          ? ClipOval(
+                                              child: Image.network(
+                                                  (snapshot.data
+                                                      as Map)[list[index]],
+                                                  width: 60,
+                                                  height: 60,
+                                                  fit: BoxFit.cover))
+                                          : const ClipOval(
+                                              child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Colors.black),
+                                            )),
+                                      title: Text(
+                                        list[index],
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      trailing: const Icon(Icons.arrow_right),
+                                    )))));
+                  });
+            }));
+  }
+
+  Future<Map<String, String>> getActorImages() async {
+    Map<String, String> urls = {};
+    for (String name in widget.title.actors.split(",")) {
+      String pURL = await getPersonID(name);
+      final re = await http.read(Uri.parse(pURL));
+      String imageURL = "https://image.tmdb.org/t/p/original" +
+          (ImageSearch.fromJson(json.decode(re)).profiles!.elementAt(0).filePath
+              as String);
+
+      urls[name] = imageURL;
+    }
+    return urls;
+  }
+
+  Future<Map<String, String>> getDirImages() async {
+    Map<String, String> urls = {};
+    for (String name in widget.title.director.split(",")) {
+      String pURL = await getPersonID(name);
+      final re = await http.read(Uri.parse(pURL));
+      String imageURL = "https://image.tmdb.org/t/p/original" +
+          (ImageSearch.fromJson(json.decode(re)).profiles!.elementAt(0).filePath
+              as String);
+
+      urls[name] = imageURL;
+    }
+    return urls;
+  }
+
+  Future<Map<String, String>> getWriterImages() async {
+    Map<String, String> urls = {};
+    for (String name in widget.title.writer.split(",")) {
+      String pURL = await getPersonID(name);
+      final re = await http.read(Uri.parse(pURL));
+
+      String imageURL = "https://image.tmdb.org/t/p/original" +
+          (ImageSearch.fromJson(json.decode(re)).profiles!.elementAt(0).filePath
+              as String);
+
+      urls[name] = imageURL;
+    }
+    return urls;
   }
 
   void getResults(String title, String year, String type) async {
-    String query =
-        Uri.encodeComponent(title + " " + year + " " + type + " " + " trailer");
+    String query = Uri.encodeComponent("$title $year $type  trailer");
     String url =
-        "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=" +
-            query +
-            "&key=AIzaSyA3WxLx51sMfthV99wJ7hkpDAufnEu3Sck";
+        "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=$query&key=AIzaSyA3WxLx51sMfthV99wJ7hkpDAufnEu3Sck";
 
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       SearchResult sr = SearchResult.fromJson(json.decode(response.body));
       List<Items>? items = sr.items;
       if (items!.isNotEmpty) {
-        debugPrint("https://youtube.com/watch/" + items[0].id!.videoId!);
+        debugPrint("https://youtube.com/watch/${items[0].id!.videoId!}");
         _launchYoutubeVideo(
-            "https://youtube.com/watch/" + items[0].id!.videoId!);
+            "https://youtube.com/watch/${items[0].id!.videoId!}");
       }
     } else {
       showToast(context, "Error fetching trailer");
@@ -170,6 +276,10 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
   }
 
   Widget buildMoreInfo(BuildContext context, TitleDetails title) {
+    List<String> actors = title.actors.split(",");
+    List<String> writers = title.writer.split(",");
+    List<String> directors = title.director.split(",");
+
     return Column(
       children: [
         Padding(
@@ -218,13 +328,51 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                 ),
               ],
             )),
+        title.type == "movie"
+            ? Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 30, 16, 0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Expanded(
+                        child: Text("Directors",
+                            style: GoogleFonts.lexendDeca(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white))),
+                  ],
+                ),
+              )
+            : Container(),
+        title.type == "movie"
+            ? Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: 1,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF353D43),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Container(),
+        title.type == "movie"
+            ? Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 30, 16, 0),
+                child: doHorList(directors, "d"))
+            : Container(),
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(16, 30, 16, 0),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Expanded(
-                  child: Text("Director",
+                  child: Text("Writers",
                       style: GoogleFonts.lexendDeca(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -249,67 +397,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
         ),
         Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title.director,
-                  textAlign: TextAlign.start,
-                  style: GoogleFonts.lexendDeca(
-                    color: const Color(0xFF8B97A2),
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
-            )),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(16, 30, 16, 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Expanded(
-                  child: Text("Writer",
-                      style: GoogleFonts.lexendDeca(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white))),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 1,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF353D43),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title.writer,
-                  textAlign: TextAlign.start,
-                  style: GoogleFonts.lexendDeca(
-                    color: const Color(0xFF8B97A2),
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
-            )),
+            child: doHorList(writers, "w")),
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(16, 30, 16, 0),
           child: Row(
@@ -341,21 +429,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
         ),
         Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title.actors,
-                  textAlign: TextAlign.start,
-                  style: GoogleFonts.lexendDeca(
-                    color: const Color(0xFF8B97A2),
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
-            )),
+            child: doHorList(actors, "a")),
       ],
     );
   }
@@ -502,7 +576,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               child: InkWell(
                 onTap: () {
                   _launchIMDbPage(
-                      "https://www.imdb.com/title/" + widget.title.imdbID);
+                      "https://www.imdb.com/title/${widget.title.imdbID}");
                 },
                 child: buildIMDB(ratings),
               )),
@@ -587,28 +661,14 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
           if (code == 0) {
             debugPrint("added to DB");
             if (widget.title.type == "movie") {
-              await db.rawQuery("update watchD set director='" +
-                  widget.title.director +
-                  "', runtime='" +
-                  widget.title.runtime.replaceAll("min", "") +
-                  "', imdbRating='" +
-                  rat +
-                  "' where imdbID='" +
-                  widget.title.imdbID +
-                  "'");
+              await db.rawQuery(
+                  "update watchD set director='${widget.title.director}', runtime='${widget.title.runtime.replaceAll("min", "")}', imdbRating='$rat' where imdbID='${widget.title.imdbID}'");
             }
             showToast(context, "Added ${widget.title.title} to WatchD!");
           } else if (code == -1) {
             if (widget.title.type == "movie") {
-              await db.rawQuery("update watchD set director='" +
-                  widget.title.director +
-                  "', runtime='" +
-                  widget.title.runtime.replaceAll("min", "") +
-                  "', imdbRating='" +
-                  rat +
-                  "' where imdbID='" +
-                  widget.title.imdbID +
-                  "'");
+              await db.rawQuery(
+                  "update watchD set director='${widget.title.director}', runtime='${widget.title.runtime.replaceAll("min", "")}', imdbRating='$rat' where imdbID='${widget.title.imdbID}'");
             }
             showToast(context,
                 "${rec.title} was in your watchlist! Moving it to the WatchD list!");
