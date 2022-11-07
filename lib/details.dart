@@ -96,7 +96,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0)),
                             child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.7,
+                                width: MediaQuery.of(context).size.width * 0.8,
                                 height: 20,
                                 child: Padding(
                                     padding:
@@ -130,6 +130,8 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
   Future<Map<String, String>> getImages(String type) async {
     Map<String, String> urls = {};
     List<String> list;
+    // verified that the strings coming from widget.title are NEVER empty, but still there's an issue ahead
+
     if (type == "a") {
       list = widget.title.actors.split(",");
     } else if (type == "d") {
@@ -137,14 +139,27 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     } else {
       list = widget.title.writer.split(",");
     }
+    // even if the list is not empty, there is an issue ahead
     for (String name in list) {
       String pURL = await getPersonID(name);
-      final re = await http.read(Uri.parse(pURL));
-      String imageURL = "https://image.tmdb.org/t/p/original" +
-          (ImageSearch.fromJson(json.decode(re)).profiles!.elementAt(0).filePath
-              as String);
+      if (pURL.isNotEmpty) {
+        final re = await http.read(Uri.parse(pURL));
+        String imageURL = "";
+        List<Profiles>? profiles =
+            ImageSearch.fromJson(json.decode(re)).profiles;
 
-      urls[name] = imageURL;
+        if (profiles != null) {
+          try {
+            imageURL = "https://image.tmdb.org/t/p/original" +
+                (profiles.elementAt(0).filePath as String);
+            urls[name] = imageURL;
+          } catch (e) {
+            //rangeError
+            urls[name] =
+                "https://p.kindpng.com/picc/s/21-211168_transparent-person-icon-png-png-download.png";
+          }
+        }
+      }
     }
     return urls;
   }
