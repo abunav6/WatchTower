@@ -13,7 +13,7 @@ class WatchD extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _cleanUpTemporaryDirectory();
+    // _cleanUpTemporaryDirectory();
     return MaterialApp(
         title: 'WatchD',
         theme: ThemeData(
@@ -24,16 +24,20 @@ class WatchD extends StatelessWidget {
 
   void _cleanUpTemporaryDirectory() async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
-    documentsDirectory.parent.list().forEach((child) async {
-      if (child is Directory && child.path.endsWith('/tmp')) {
-        debugPrint('Deleting temp folder at ${child.path}...');
-        try {
-          await child.delete(recursive: true);
-          debugPrint('Temp folder was deleted with success');
-        } catch (error) {
-          debugPrint('Temp folder could not be deleted: $error');
+    try {
+      documentsDirectory.parent.list().forEach((child) async {
+        if (child is Directory && child.path.endsWith('/tmp')) {
+          debugPrint('Deleting temp folder at ${child.path}...');
+          try {
+            await child.delete(recursive: true);
+            debugPrint('Temp folder was deleted with success');
+          } catch (error) {
+            debugPrint('Temp folder could not be deleted: $error');
+          }
         }
-      }
-    });
+      });
+    } catch (error) {
+      debugPrint("$error");
+    }
   }
 }

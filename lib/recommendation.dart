@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, use_build_context_synchronously
+
 import 'dart:collection';
 import 'dart:convert';
 
@@ -29,7 +31,7 @@ Future<int> checkIfExists(String imdbID) async {
 
 void showDetails(String genre, BuildContext context) async {
   final response =
-      await http.get(Uri.parse("http://flaskmtv-abunav6.vercel.app/" + genre));
+      await http.get(Uri.parse("http://flaskmtv-abunav6.vercel.app/$genre"));
 
   if (response.statusCode == 200) {
     LinkedHashMap object = json.decode(response.body)[0];
@@ -42,7 +44,7 @@ void showDetails(String genre, BuildContext context) async {
 
       while (true) {
         final response = await http
-            .get(Uri.parse("http://flaskmtv-abunav6.vercel.app/" + genre));
+            .get(Uri.parse("http://flaskmtv-abunav6.vercel.app/$genre"));
 
         if (response.statusCode == 200) {
           LinkedHashMap object = json.decode(response.body)[0];
@@ -127,7 +129,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
                     return GestureDetector(
                         onTap: () async {
                           showToast(context,
-                              "Searching for " + genres[index] + " movies!");
+                              "Searching for ${genres[index]} movies!");
                           showDetails(genres[index], context);
                         },
                         child: Card(
@@ -141,9 +143,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
                                       radius: 30,
                                       backgroundColor: Colors.white,
                                       child: Image.asset(
-                                          "assets/genre_images/" +
-                                              genres[index] +
-                                              ".png",
+                                          "assets/genre_images/${genres[index]}.png",
                                           width: 100,
                                           height: 100,
                                           fit: BoxFit.cover)),

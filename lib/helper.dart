@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_this
+// ignore_for_file: unnecessary_this, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -65,10 +65,10 @@ void showToast(BuildContext context, String s) {
 }
 
 Future<String> getPersonID(String name) async {
-  String search_person_by_string =
+  String searchPersonByString =
       "https://api.themoviedb.org/3/search/person?api_key=8a9290d1f274942a13564a4a24fc7be6&language=en-US&query=${Uri.encodeComponent(name)}&page=1&include_adult=false";
 
-  var response = await http.read(Uri.parse(search_person_by_string));
+  var response = await http.read(Uri.parse(searchPersonByString));
   var jsonData = json.decode(response);
   Person p = Person.fromJson(jsonData);
   int personID = p.results![0].id as int;
@@ -82,10 +82,10 @@ Future<String> getDirectorImageURL(String name) async {
 
   String pURL = await getPersonID(name);
 
-  String image_path_base = "https://image.tmdb.org/t/p/original";
+  String imagePathBase = "https://image.tmdb.org/t/p/original";
 
   final response = await http.read(Uri.parse(pURL));
-  String url = image_path_base +
+  String url = imagePathBase +
       ImageSearch.fromJson(json.decode(response))
           .profiles!
           .elementAt(0)

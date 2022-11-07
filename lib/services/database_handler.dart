@@ -1,7 +1,4 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
@@ -97,15 +94,8 @@ void changeWatchlist(Database db, Record rec) async {
   } else {
     await db.update("watchD", rec.toMap(),
         where: "imdbID= ?", whereArgs: [rec.imdbID]);
-    await db.rawQuery("update watchD set director='" +
-        rec.director.toString() +
-        "', runtime='" +
-        rec.runtime.toString().replaceAll("min", "") +
-        "', imdbRating='" +
-        rec.imdbRating.toString() +
-        "' where imdbID='" +
-        rec.imdbID +
-        "'");
+    await db.rawQuery(
+        "update watchD set director='${rec.director}', runtime='${rec.runtime.toString().replaceAll("min", "")}', imdbRating='${rec.imdbRating}' where imdbID='${rec.imdbID}'");
   }
 }
 

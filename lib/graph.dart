@@ -1,10 +1,9 @@
-import 'dart:ffi';
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math';
+
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:intl/intl.dart';
 
 class GraphWidget extends StatefulWidget {
@@ -52,7 +51,7 @@ class _GraphWidgetState extends State<GraphWidget> {
                 child: Container(
                   width: double.infinity,
                   height: double.infinity,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.black,
                   ),
                   child: Padding(
@@ -68,10 +67,10 @@ class _GraphWidgetState extends State<GraphWidget> {
                         ),
                       ),
                       primaryXAxis: DateTimeAxis(
-                        majorGridLines: MajorGridLines(width: 0),
+                        majorGridLines: const MajorGridLines(width: 0),
                       ),
-                      primaryYAxis:
-                          NumericAxis(majorGridLines: MajorGridLines(width: 0)),
+                      primaryYAxis: NumericAxis(
+                          majorGridLines: const MajorGridLines(width: 0)),
                       tooltipBehavior: TooltipBehavior(enable: true),
                       zoomPanBehavior: ZoomPanBehavior(
                           enablePinching: true, enablePanning: true),
@@ -81,7 +80,7 @@ class _GraphWidgetState extends State<GraphWidget> {
                           color: const Color(0xFF4B39EF),
                           width: 3,
                           enableTooltip: true,
-                          markerSettings: MarkerSettings(isVisible: true),
+                          markerSettings: const MarkerSettings(isVisible: true),
                           xValueMapper: (ChartData data, _) =>
                               DateFormat("yyyy").parse(data.xval.toString()),
                           yValueMapper: (ChartData data, _) => data.yval,

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/recommendation.dart';
@@ -6,7 +8,6 @@ import "helper.dart";
 import 'services/database_handler.dart';
 import "watched.dart";
 import "watchlist.dart";
-import "recommendation.dart";
 
 import 'package:sqflite/sqflite.dart';
 

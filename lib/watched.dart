@@ -1,4 +1,4 @@
-// ignore_for_file: no_logic_in_create_state
+// ignore_for_file: no_logic_in_create_state, library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:mtvdb/services/database_handler.dart';
@@ -359,7 +359,8 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                   PopupMenuButton<int>(
                     onSelected: (item) => handleClick(item),
                     itemBuilder: (context) => [
-                      PopupMenuItem<int>(value: 0, child: Text('View Stats')),
+                      const PopupMenuItem<int>(
+                          value: 0, child: Text('View Stats')),
                     ],
                   ),
                 ]

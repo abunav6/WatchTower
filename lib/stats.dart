@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/directors.dart';
@@ -50,18 +52,19 @@ class _StatsWidgetState extends State<StatsWidget> {
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Align(
-          alignment: AlignmentDirectional(0, 0),
+          alignment: const AlignmentDirectional(0, 0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                         child: Text('Here are your WatchD stats!',
                             style: GoogleFonts.poppins(
                                 fontSize: 20,
@@ -72,7 +75,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 8),
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 8),
                   child: Wrap(
                     spacing: 8,
                     runSpacing: 0,
@@ -87,8 +90,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                2, 2, 2, 12),
                             child: GestureDetector(
                                 onTap: () async {
                                   TitleDetails title =
@@ -109,7 +112,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                   height: 190,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         blurRadius: 4,
                                         color: Color(0x34090F13),
@@ -119,22 +122,23 @@ class _StatsWidgetState extends State<StatsWidget> {
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12, 8, 12, 8),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            12, 8, 12, 8),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 12, 0, 0),
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0, 12, 0, 0),
                                           child: Text('Longest Movie',
                                               style: GoogleFonts.poppins(
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.w700,
-                                                  color: Color(0xff121212))),
+                                                  color:
+                                                      const Color(0xff121212))),
                                         ),
                                         Expanded(
                                           child: Row(
@@ -145,12 +149,11 @@ class _StatsWidgetState extends State<StatsWidget> {
                                                 CrossAxisAlignment.end,
                                             children: [
                                               Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(0, 4, 0, 0),
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(0, 4, 0, 0),
                                                 child: Text(
-                                                    widget.max.title +
-                                                        "\n" +
-                                                        widget.max.runtime,
+                                                    "${widget.max.title}\n${widget.max.runtime}",
                                                     softWrap: true,
                                                     maxLines:
                                                         2, // replace with name of longest movie
@@ -168,9 +171,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                                         ),
                                         Expanded(
                                           child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 8, 0, 0),
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(0, 8, 0, 0),
                                             child: LinearPercentIndicator(
                                               percent: 0.95,
                                               width: MediaQuery.of(context)
@@ -179,10 +181,12 @@ class _StatsWidgetState extends State<StatsWidget> {
                                                   0.38,
                                               lineHeight: 8,
                                               animation: true,
-                                              progressColor: Color(0xFFA43507),
+                                              progressColor:
+                                                  const Color(0xFFA43507),
                                               backgroundColor:
-                                                  Color(0xffE0E3E7),
-                                              barRadius: Radius.circular(8),
+                                                  const Color(0xffE0E3E7),
+                                              barRadius:
+                                                  const Radius.circular(8),
                                               padding: EdgeInsets.zero,
                                             ),
                                           ),
@@ -193,14 +197,14 @@ class _StatsWidgetState extends State<StatsWidget> {
                                 )),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                2, 2, 2, 12),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.44,
                               height: 120,
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
                                     blurRadius: 4,
                                     color: Color(0x34090F13),
@@ -210,33 +214,32 @@ class _StatsWidgetState extends State<StatsWidget> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
                                     12, 8, 12, 8),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 12, 0, 0),
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0, 12, 0, 0),
                                       child: InkWell(
                                         onTap: () async {},
                                         child: Text('Average Rating',
                                             style: GoogleFonts.poppins(
                                                 fontSize: 17,
                                                 fontWeight: FontWeight.w700,
-                                                color: Color(0xff121212))),
+                                                color:
+                                                    const Color(0xff121212))),
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 20, 0, 0),
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0, 20, 0, 0),
                                       child: Text(
-                                          double.parse(widget.rd
-                                                      .elementAt(0)['avg']
-                                                      .toString())
-                                                  .toStringAsFixed(2) +
-                                              "/10.0", // Replace with average IMDb Rating
+                                          "${double.parse(widget.rd.elementAt(0)['avg'].toString()).toStringAsFixed(2)}/10.0", // Replace with average IMDb Rating
                                           style: GoogleFonts.lexendDeca(
                                             color: const Color(0xFF8B97A2),
                                             fontSize: 16,
@@ -305,15 +308,15 @@ class _StatsWidgetState extends State<StatsWidget> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 12, 0, 0),
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0, 12, 0, 0),
                                           child: Text(
                                               'Your Movies \nThrough the Years',
                                               style: GoogleFonts.poppins(
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.w700,
-                                                  color: Color(0xff121212))),
+                                                  color:
+                                                      const Color(0xff121212))),
                                         ),
                                       ],
                                     ),
@@ -326,8 +329,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  2, 2, 2, 12),
                               child: GestureDetector(
                                 onTap: () async {
                                   Navigator.push(
@@ -343,7 +346,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                   height: 279,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         blurRadius: 4,
                                         color: Color(0x34090F13),
@@ -353,8 +356,9 @@ class _StatsWidgetState extends State<StatsWidget> {
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12, 8, 12, 8),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            12, 8, 12, 8),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
@@ -370,24 +374,19 @@ class _StatsWidgetState extends State<StatsWidget> {
                                                 style: GoogleFonts.poppins(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w700,
-                                                    color: Color(0xff121212))),
+                                                    color: const Color(
+                                                        0xff121212))),
                                           ],
                                         ),
                                         Row(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
                                             Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 4, 0, 0),
+                                              padding:
+                                                  const EdgeInsetsDirectional
+                                                      .fromSTEB(0, 4, 0, 0),
                                               child: Text(
-                                                  widget.dd
-                                                          .elementAt(
-                                                              0)['director']
-                                                          .toString() +
-                                                      " - " +
-                                                      widget.dd
-                                                          .elementAt(0)['c']
-                                                          .toString(), // replace with name of most viewed director
+                                                  "${widget.dd.elementAt(0)['director']} - ${widget.dd.elementAt(0)['c']}", // replace with name of most viewed director
                                                   style: GoogleFonts.lexendDeca(
                                                     color:
                                                         const Color(0xFF8B97A2),
@@ -399,9 +398,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                                           ],
                                         ),
                                         Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 16, 0, 16),
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0, 16, 0, 16),
                                           child: Row(
                                             mainAxisSize: MainAxisSize.max,
                                             mainAxisAlignment:
@@ -414,7 +412,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                                           ConnectionState
                                                               .none &&
                                                       snapshot.hasData ==
-                                                          null) {
+                                                          false) {
                                                     return Container();
                                                   }
                                                   return snapshot.hasData
@@ -444,8 +442,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                                 ),
                               )),
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(2, 2, 2, 12),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                2, 2, 2, 12),
                             child: GestureDetector(
                                 onTap: () async {
                                   TitleDetails title =
@@ -466,7 +464,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                   height: 180,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         blurRadius: 4,
                                         color: Color(0x34090F13),
@@ -476,22 +474,23 @@ class _StatsWidgetState extends State<StatsWidget> {
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12, 8, 12, 8),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            12, 8, 12, 8),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 12, 0, 0),
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0, 12, 0, 0),
                                           child: Text('Shortest Movie',
                                               style: GoogleFonts.poppins(
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.w700,
-                                                  color: Color(0xff121212))),
+                                                  color:
+                                                      const Color(0xff121212))),
                                         ),
                                         Expanded(
                                           child: Row(
@@ -502,13 +501,11 @@ class _StatsWidgetState extends State<StatsWidget> {
                                                 CrossAxisAlignment.end,
                                             children: [
                                               Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(0, 4, 0, 0),
+                                                padding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(0, 4, 0, 0),
                                                 child: Text(
-                                                    widget.min.title +
-                                                        "\n" +
-                                                        widget.min
-                                                            .runtime, // replace with name of shortest movie
+                                                    "${widget.min.title}\n${widget.min.runtime}", // replace with name of shortest movie
                                                     style:
                                                         GoogleFonts.lexendDeca(
                                                       color: const Color(
@@ -523,9 +520,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                                         ),
                                         Expanded(
                                           child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0, 8, 0, 0),
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(0, 8, 0, 0),
                                             child: LinearPercentIndicator(
                                               percent: 0.2,
                                               width: MediaQuery.of(context)
@@ -534,10 +530,12 @@ class _StatsWidgetState extends State<StatsWidget> {
                                                   0.38,
                                               lineHeight: 8,
                                               animation: true,
-                                              progressColor: Color(0xFFA43507),
+                                              progressColor:
+                                                  const Color(0xFFA43507),
                                               backgroundColor:
-                                                  Color(0xffE0E3E7),
-                                              barRadius: Radius.circular(8),
+                                                  const Color(0xffE0E3E7),
+                                              barRadius:
+                                                  const Radius.circular(8),
                                               padding: EdgeInsets.zero,
                                             ),
                                           ),
@@ -556,15 +554,11 @@ class _StatsWidgetState extends State<StatsWidget> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(20, 10, 0, 0),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(20, 10, 0, 0),
                       child: SelectionArea(
                           child: Text(
-                              'You\'ve spent ' +
-                                  double.parse(widget.rd
-                                          .elementAt(0)['sum']
-                                          .toString())
-                                      .toStringAsFixed(0) +
-                                  ' minutes\n watching movies!',
+                              'You\'ve spent ${double.parse(widget.rd.elementAt(0)['sum'].toString()).toStringAsFixed(0)} minutes\n watching movies!',
                               style: GoogleFonts.poppins(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
