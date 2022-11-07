@@ -73,9 +73,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
         width: MediaQuery.of(context).size.width * 0.9,
         height: 100,
         child: FutureBuilder(
-            future: type == "a"
-                ? getActorImages()
-                : (type == "d" ? getDirImages() : getWriterImages()),
+            future: getImages(type),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.none &&
                   snapshot.hasData == null) {
@@ -129,40 +127,19 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
             }));
   }
 
-  Future<Map<String, String>> getActorImages() async {
+  Future<Map<String, String>> getImages(String type) async {
     Map<String, String> urls = {};
-    for (String name in widget.title.actors.split(",")) {
-      String pURL = await getPersonID(name);
-      final re = await http.read(Uri.parse(pURL));
-      String imageURL = "https://image.tmdb.org/t/p/original" +
-          (ImageSearch.fromJson(json.decode(re)).profiles!.elementAt(0).filePath
-              as String);
-
-      urls[name] = imageURL;
+    List<String> list;
+    if (type == "a") {
+      list = widget.title.actors.split(",");
+    } else if (type == "d") {
+      list = widget.title.director.split(",");
+    } else {
+      list = widget.title.writer.split(",");
     }
-    return urls;
-  }
-
-  Future<Map<String, String>> getDirImages() async {
-    Map<String, String> urls = {};
-    for (String name in widget.title.director.split(",")) {
+    for (String name in list) {
       String pURL = await getPersonID(name);
       final re = await http.read(Uri.parse(pURL));
-      String imageURL = "https://image.tmdb.org/t/p/original" +
-          (ImageSearch.fromJson(json.decode(re)).profiles!.elementAt(0).filePath
-              as String);
-
-      urls[name] = imageURL;
-    }
-    return urls;
-  }
-
-  Future<Map<String, String>> getWriterImages() async {
-    Map<String, String> urls = {};
-    for (String name in widget.title.writer.split(",")) {
-      String pURL = await getPersonID(name);
-      final re = await http.read(Uri.parse(pURL));
-
       String imageURL = "https://image.tmdb.org/t/p/original" +
           (ImageSearch.fromJson(json.decode(re)).profiles!.elementAt(0).filePath
               as String);
