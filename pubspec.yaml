@@ -30,7 +30,8 @@ dependencies:
   flutter:
     sdk: flutter
   sqflite: ^2.2.0+3
-  path: 
+  path:
+  path_provider: 
 
 
   # The following adds the Cupertino Icons font to your application.
