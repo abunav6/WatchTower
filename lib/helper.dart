@@ -39,6 +39,23 @@ class Record {
         imdbRating = res["imdbRating"];
 
   Map<String, Object> toMap() {
+    if (runtime == "N/A") {
+      runtime = "";
+    }
+    if (imdbRating == "N/A") {
+      imdbRating = "";
+    }
+    debugPrint({
+      "imdbID": imdbID,
+      "title": title,
+      "poster": poster,
+      "type": type,
+      "watchlist": watchlist,
+      "year": year,
+      "director": director as String,
+      "runtime": runtime as String,
+      "imdbRating": imdbRating as String
+    }.toString());
     return {
       "imdbID": imdbID,
       "title": title,

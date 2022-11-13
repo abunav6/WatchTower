@@ -308,13 +308,13 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
             "select director, count('director') as c from watchD where watchlist='false' AND type='movie' group by director order by count('director') desc limit 10;");
 
         List<Map<String, Object?>> runtimeData = await db.rawQuery(
-            "select avg(imdbRating) as avg, sum(runtime) as sum from watchD where watchlist='false' AND type='movie';");
+            "select avg(imdbRating) as avg, sum(runtime) as sum from watchD where watchlist='false' AND type='movie' AND imdbRating!='' AND runtime!='';");
 
         List<Map<String, Object?>> maxrun = await db.rawQuery(
-            "select imdbID from watchD where watchlist='false' AND type='movie' order by cast(runtime as int) desc limit 1;");
+            "select imdbID from watchD where watchlist='false' AND type='movie' AND runtime!='' order by cast(runtime as int) desc limit 1;");
 
         List<Map<String, Object?>> minrun = await db.rawQuery(
-            "select imdbID from watchD where watchlist='false' AND type='movie' order by cast(runtime as int) asc limit 1;");
+            "select imdbID from watchD where watchlist='false' AND type='movie' AND runtime!='' order by cast(runtime as int) asc limit 1;");
 
         String maxi = maxrun.elementAt(0)['imdbID'].toString();
         TitleDetails max = await getDetails(maxi);

@@ -31,11 +31,12 @@ Future<int> insert(Database db, Record rec, bool fw) async {
   String imdbID = rec.imdbID;
   try {
     //database has no entry corresponding to the IMDB ID, either cuz there's no match or its just empty
+
     await db.insert("watchD", rec.toMap());
     return 0;
   } on DatabaseException {
-    // need to check if DB is empty lol                                   --> if table is empty
-    // if watchlist is true, make it false and show Toast( return -1)     --> if exists in watchlist, move to watchD
+    // need to check if DB is empty lol                                   -->> if table is empty
+    // if watchlist is true, make it false and show Toast( return -1)     -->> if exists in watchlist, move to watchD
     // if watchlist is false, show Toast( return -2)                      -->> if aleady exists in WatchD
     final List<Map<String, Object?>> queryResult =
         await db.query('watchD', where: 'imdbID=?', whereArgs: [imdbID]);
@@ -94,8 +95,6 @@ void changeWatchlist(Database db, Record rec) async {
   } else {
     await db.update("watchD", rec.toMap(),
         where: "imdbID= ?", whereArgs: [rec.imdbID]);
-    await db.rawQuery(
-        "update watchD set director='${rec.director}', runtime='${rec.runtime.toString().replaceAll("min", "")}', imdbRating='${rec.imdbRating}' where imdbID='${rec.imdbID}'");
   }
 }
 

@@ -650,21 +650,13 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               imdbRating: rat);
           final Database db = await initializeDB();
           int code = await insert(db, rec, false);
+
           if (code == 0) {
-            debugPrint("added to DB");
-            if (widget.title.type == "movie") {
-              await db.rawQuery(
-                  "update watchD set director='${widget.title.director}', runtime='${widget.title.runtime.replaceAll("min", "")}', imdbRating='$rat' where imdbID='${widget.title.imdbID}'");
-            }
             showToast(context, "Added ${widget.title.title} to WatchD!");
           } else if (code == -1) {
-            if (widget.title.type == "movie") {
-              await db.rawQuery(
-                  "update watchD set director='${widget.title.director}', runtime='${widget.title.runtime.replaceAll("min", "")}', imdbRating='$rat' where imdbID='${widget.title.imdbID}'");
-            }
             showToast(context,
                 "${rec.title} was in your watchlist! Moving it to the WatchD list!");
-          } else if (code == -2) {
+          } else {
             showToast(
                 context, "${rec.title} already exists in your WatchD list!");
           }
