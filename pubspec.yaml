@@ -44,8 +44,6 @@ dependencies:
   url_launcher: ^6.0.20
 
   percent_indicator: ^4.2.2
-  syncfusion_flutter_charts: ^20.3.52
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
