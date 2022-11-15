@@ -308,7 +308,10 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
             "select director, count('director') as c from watchD where watchlist='false' AND type='movie' group by director order by count('director') desc limit 10;");
 
         List<Map<String, Object?>> runtimeData = await db.rawQuery(
-            "select avg(imdbRating) as avg, sum(runtime) as sum from watchD where watchlist='false' AND type='movie' AND imdbRating!='' AND runtime!='';");
+            "select sum(runtime) as sum from watchD where watchlist='false' AND type='movie' AND runtime!='';");
+
+        List<Map<String, Object?>> imdbRatingData = await db.rawQuery(
+            "select avg(imdbRating) as avg from watchD where watchlist='false' AND type='movie' AND imdbRating!='';");
 
         List<Map<String, Object?>> maxrun = await db.rawQuery(
             "select imdbID from watchD where watchlist='false' AND type='movie' AND runtime!='' order by cast(runtime as int) desc limit 1;");
@@ -326,7 +329,11 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
             context,
             MaterialPageRoute(
                 builder: (context) => StatsWidget(
-                    dd: directorData, rd: runtimeData, max: max, min: min)));
+                    dd: directorData,
+                    rd: runtimeData,
+                    max: max,
+                    min: min,
+                    id: imdbRatingData)));
     }
   }
 

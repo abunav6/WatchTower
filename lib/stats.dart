@@ -12,18 +12,18 @@ import 'package:sqflite/sqflite.dart';
 import 'details.dart';
 
 class StatsWidget extends StatefulWidget {
-  final List<Map<String, Object?>> dd, rd;
+  final List<Map<String, Object?>> dd, rd, id;
   final TitleDetails max, min;
   // final String? img;
-  const StatsWidget({
-    Key? key,
-    required this.dd,
-    required this.rd,
-    required this.max,
-    required this.min,
-  })
-  // required this.img})
-  : super(key: key);
+  const StatsWidget(
+      {Key? key,
+      required this.dd,
+      required this.rd,
+      required this.max,
+      required this.min,
+      required this.id})
+      // required this.img})
+      : super(key: key);
 
   @override
   _StatsWidgetState createState() => _StatsWidgetState();
@@ -239,7 +239,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                           const EdgeInsetsDirectional.fromSTEB(
                                               0, 20, 0, 0),
                                       child: Text(
-                                          "${double.parse(widget.rd.elementAt(0)['avg'].toString()).toStringAsFixed(2)}/10.0", // Replace with average IMDb Rating
+                                          "${double.parse(widget.id.elementAt(0)['avg'].toString()).toStringAsFixed(2)}/10.0", // Replace with average IMDb Rating
                                           style: GoogleFonts.lexendDeca(
                                             color: const Color(0xFF8B97A2),
                                             fontSize: 16,
