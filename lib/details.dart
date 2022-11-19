@@ -33,7 +33,6 @@ class DetailsScreenWidget extends StatefulWidget {
 }
 
 class _DetailsScreenWidget extends State<DetailsScreenWidget> {
-  List<YouTubeVideo> videoResult = [];
   YoutubeAPI youtube = YoutubeAPI("AIzaSyA3WxLx51sMfthV99wJ7hkpDAufnEu3Sck");
 
   Future<void> _launchYoutubeVideo(String youtubeUrl) async {

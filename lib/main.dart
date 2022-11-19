@@ -13,7 +13,7 @@ class WatchD extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // _cleanUpTemporaryDirectory();
+    _cleanUpTemporaryDirectory();
     return MaterialApp(
         title: 'WatchD',
         theme: ThemeData(
