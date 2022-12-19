@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mtvdb/person_helper.dart';
 import 'dart:convert';
+import 'package:mtvdb/secrets.dart';
 
 class Record {
   String imdbID = "";
@@ -83,14 +84,14 @@ void showToast(BuildContext context, String s) {
 
 Future<String> getPersonID(String name) async {
   String searchPersonByString =
-      "https://api.themoviedb.org/3/search/person?api_key=8a9290d1f274942a13564a4a24fc7be6&language=en-US&query=${Uri.encodeComponent(name)}&page=1&include_adult=false";
+      "https://api.themoviedb.org/3/search/person?api_key=$tmdb&language=en-US&query=${Uri.encodeComponent(name)}&page=1&include_adult=false";
 
   var response = await http.read(Uri.parse(searchPersonByString));
   var jsonData = json.decode(response);
   Person p = Person.fromJson(jsonData);
   int personID = p.results![0].id as int;
 
-  return "https://api.themoviedb.org/3/person/$personID/images?api_key=8a9290d1f274942a13564a4a24fc7be6";
+  return "https://api.themoviedb.org/3/person/$personID/images?api_key=$tmdb";
 }
 
 Future<String> getDirectorImageURL(String name) async {
@@ -116,7 +117,7 @@ Future<String> getDirectorImageURL(String name) async {
 }
 
 Future<TitleDetails> getDetails(String imdbID) async {
-  String url = "http://www.omdbapi.com/?apikey=b9fb2464&i=$imdbID";
+  String url = "http://www.omdbapi.com/?apikey=$omdb&i=$imdbID";
   final response = await http.read(Uri.parse(url));
   // debugPrint(response);
   final jsonData = json.decode(response);
@@ -268,7 +269,7 @@ List<SearchDetails> getSearchList(final data) {
 
 Future<TitleDetails> searchByID(String imdbID) async {
   imdbID.toLowerCase().trim();
-  String url = "http://www.omdbapi.com/?apikey=b9fb2464&i=$imdbID";
+  String url = "http://www.omdbapi.com/?apikey=$omdb&i=$imdbID";
 
   final String titleData = await http.read(Uri.parse(url));
   final jsonData = json.decode(titleData);
