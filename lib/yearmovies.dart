@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/details.dart';
@@ -19,12 +21,12 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
       String imdbId = m['imdbID'];
       titles.insert(0, await getDetails(imdbId));
     }
+    titles.sort((a, b) => a.title.compareTo(b.title));
     return titles;
   }
 
   @override
   Widget build(BuildContext context) {
-    // return Container();
     ScrollController listScrollController = ScrollController();
 
     return Scaffold(
@@ -38,8 +40,7 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
               future: getList(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  debugPrint("still fetching?");
-                  return Center(
+                  return const Center(
                       child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(
                     Colors.white,
