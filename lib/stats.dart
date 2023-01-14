@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/directors.dart';
-import 'package:mtvdb/graph.dart';
+import 'package:mtvdb/moviesthroughyears.dart';
 import 'package:mtvdb/helper.dart';
 import 'package:mtvdb/services/database_handler.dart';
 import 'package:percent_indicator/percent_indicator.dart';
