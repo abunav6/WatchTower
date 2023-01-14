@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/details.dart';
@@ -15,11 +17,15 @@ class YearMoviesWidget extends StatefulWidget {
 }
 
 class _YearMoviesWidget extends State<YearMoviesWidget> {
-  Future<List<TitleDetails>> getList() async {
+  Future<List<TitleDetails>> getList(StreamSink<double> progress) async {
     List<TitleDetails> titles = [];
+    int count = 0;
+    int total = widget.movies.length;
     for (Map m in widget.movies) {
       String imdbId = m['imdbID'];
       titles.insert(0, await getDetails(imdbId));
+      count++;
+      progress.add(count / total);
     }
     titles.sort((a, b) => a.title.compareTo(b.title));
     return titles;
@@ -28,7 +34,7 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
   @override
   Widget build(BuildContext context) {
     ScrollController listScrollController = ScrollController();
-
+    StreamController<double> _progress = StreamController.broadcast();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
@@ -37,15 +43,47 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
         body: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(10, 50, 10, 50),
             child: FutureBuilder(
-              future: getList(),
+              future: getList(_progress.sink),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(
-                      child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.white,
-                  )));
+                  // return const Center(
+                  //     child: CircularProgressIndicator(
+                  //         valueColor: AlwaysStoppedAnimation<Color>(
+                  //   Colors.white,
+                  // )));
+                  return StreamBuilder<double>(
+                    stream: _progress.stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                value: snapshot.data,
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
+                              ),
+                              StreamBuilder(
+                                  stream: _progress.stream,
+                                  builder: (context, snapshot) {
+                                    return Text(
+                                      snapshot.hasData
+                                          ? "${((double.parse(snapshot.data.toString())) * 100).round()}%"
+                                          : "",
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.white, fontSize: 12),
+                                    );
+                                  }),
+                            ],
+                          ),
+                        );
+                      }
+                      return Container();
+                    },
+                  );
                 } else {
+                  _progress.close();
                   return ListView.separated(
                       separatorBuilder: (BuildContext context, int index) {
                         return const SizedBox(
