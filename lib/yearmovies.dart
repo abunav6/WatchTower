@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
 import 'dart:async';
 
@@ -34,7 +34,7 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
   @override
   Widget build(BuildContext context) {
     ScrollController listScrollController = ScrollController();
-    StreamController<double> _progress = StreamController.broadcast();
+    StreamController<double> progress = StreamController.broadcast();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
@@ -43,16 +43,11 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
         body: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(10, 50, 10, 50),
             child: FutureBuilder(
-              future: getList(_progress.sink),
+              future: getList(progress.sink),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  // return const Center(
-                  //     child: CircularProgressIndicator(
-                  //         valueColor: AlwaysStoppedAnimation<Color>(
-                  //   Colors.white,
-                  // )));
                   return StreamBuilder<double>(
-                    stream: _progress.stream,
+                    stream: progress.stream,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Center(
@@ -65,7 +60,7 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
                                     Colors.white),
                               ),
                               StreamBuilder(
-                                  stream: _progress.stream,
+                                  stream: progress.stream,
                                   builder: (context, snapshot) {
                                     return Text(
                                       snapshot.hasData
@@ -83,7 +78,7 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
                     },
                   );
                 } else {
-                  _progress.close();
+                  progress.close();
                   return ListView.separated(
                       separatorBuilder: (BuildContext context, int index) {
                         return const SizedBox(
