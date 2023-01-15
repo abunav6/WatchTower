@@ -82,7 +82,7 @@ void showToast(BuildContext context, String s) {
   );
 }
 
-Future<String> getPersonID(String name) async {
+Future<int> getPersonID(String name) async {
   String searchPersonByString =
       "https://api.themoviedb.org/3/search/person?api_key=$tmdb&language=en-US&query=${Uri.encodeComponent(name)}&page=1&include_adult=false";
 
@@ -91,6 +91,12 @@ Future<String> getPersonID(String name) async {
   Person p = Person.fromJson(jsonData);
   int personID = p.results![0].id as int;
 
+  return personID;
+}
+
+Future<String> getPersonImage(String name) async {
+  int personID = await getPersonID(name);
+
   return "https://api.themoviedb.org/3/person/$personID/images?api_key=$tmdb";
 }
 
@@ -98,7 +104,7 @@ Future<String> getDirectorImageURL(String name) async {
   // replace with TMDb API call, this is not at all needed
   // Use search person by string API from TMDB, get person ID, and then get Image URL Path
 
-  String pURL = await getPersonID(name);
+  String pURL = await getPersonImage(name);
 
   String imagePathBase = "https://image.tmdb.org/t/p/original";
 
@@ -279,7 +285,7 @@ Future<TitleDetails> searchByID(String imdbID) async {
 Future<List<SearchDetails>> searchByName(
     bool? movie, bool? series, String searchElement) async {
   if (movie != null && series != null) {
-    String urlBase = "http://www.omdbapi.com/?apikey=b9fb2464&";
+    String urlBase = "http://www.omdbapi.com/?apikey=$omdb&";
     final String titleData;
     searchElement.trim();
     searchElement = searchElement.replaceAll(" ", "%20");
@@ -311,4 +317,160 @@ Future<List<TitleDetails>> getList(List<Record> rec) async {
     result.add(temp);
   }
   return result;
+}
+
+class Credits {
+  List<Cast>? cast;
+  List<Crew>? crew;
+  int? id;
+
+  Credits({this.cast, this.crew, this.id});
+
+  Credits.fromJson(Map<String, dynamic> json) {
+    if (json['cast'] != null) {
+      cast = <Cast>[];
+      json['cast'].forEach((v) {
+        cast!.add(new Cast.fromJson(v));
+      });
+    }
+    if (json['crew'] != null) {
+      crew = <Crew>[];
+      json['crew'].forEach((v) {
+        crew!.add(new Crew.fromJson(v));
+      });
+    }
+    id = json['id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.cast != null) {
+      data['cast'] = this.cast!.map((v) => v.toJson()).toList();
+    }
+    if (this.crew != null) {
+      data['crew'] = this.crew!.map((v) => v.toJson()).toList();
+    }
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+class Cast {
+  int? id;
+  double? popularity;
+  String? posterPath;
+  String? title;
+  String? releaseDate;
+
+  Cast({
+    this.id,
+    this.popularity,
+    this.posterPath,
+    this.releaseDate,
+    this.title,
+  });
+
+  Cast.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+
+    popularity = json['popularity'];
+    posterPath = json['poster_path'];
+    releaseDate = json['release_date'];
+
+    title = json['title'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['id'] = this.id;
+
+    data['popularity'] = this.popularity;
+    data['poster_path'] = this.posterPath;
+    data['release_date'] = this.releaseDate;
+
+    data['title'] = this.title;
+    return data;
+  }
+}
+
+class Crew {
+  int? id;
+
+  double? popularity;
+  String? posterPath;
+  String? releaseDate;
+
+  String? title;
+
+  Crew({
+    this.id,
+    this.popularity,
+    this.posterPath,
+    this.releaseDate,
+    this.title,
+  });
+
+  Crew.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+
+    posterPath = json['poster_path'];
+    popularity = json['popularity'];
+    releaseDate = json['release_date'];
+
+    title = json['title'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['id'] = this.id;
+
+    data['popularity'] = this.popularity;
+    data['poster_path'] = this.posterPath;
+    data['release_date'] = this.releaseDate;
+
+    data['title'] = this.title;
+
+    return data;
+  }
+}
+
+Future<dynamic> getMovieCredits(int personID) async {
+  String url =
+      "https://api.themoviedb.org/3/person/$personID/movie_credits?api_key=$tmdb&language=en-US";
+  final String credits = await http.read(Uri.parse(url));
+  final jsonData = json.decode(credits);
+  return Credits.fromJson(jsonData);
+}
+
+class IMDBIDGetter {
+  int? id;
+  String? imdbId;
+
+  IMDBIDGetter({
+    this.id,
+    this.imdbId,
+  });
+
+  IMDBIDGetter.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    imdbId = json['imdb_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['imdb_id'] = this.imdbId;
+
+    return data;
+  }
+}
+
+Future<String> getIMDBID(int tmdbID) async {
+  String url =
+      "https://api.themoviedb.org/3/movie/$tmdbID/external_ids?api_key=$tmdb";
+  final String credits = await http.read(Uri.parse(url));
+  final jsonData = json.decode(credits);
+  return IMDBIDGetter.fromJson(jsonData).imdbId as String;
 }

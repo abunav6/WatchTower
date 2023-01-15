@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mtvdb/options.dart';
 import 'package:mtvdb/person_helper.dart';
 
 import "helper.dart";
@@ -90,7 +91,75 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          int personID = await getPersonID(list[index]);
+                          // Use personID to get the movie credits
+                          Credits c = await getMovieCredits(personID);
+
+                          // Then, for actor, use the cast list, and for others, use the crew list
+
+                          if (type == "a") {
+                            List<Cast>? credits = c.cast;
+                            credits!;
+
+                            credits.sort((a, b) =>
+                                b.popularity!.compareTo(a.popularity as num));
+
+                            credits = credits.sublist(0, 10);
+
+                            List<SearchDetails> options = [];
+
+                            for (var c in credits) {
+                              String? title = c.title as String;
+                              String? poster =
+                                  "https://image.tmdb.org/t/p/original${c.posterPath as String}";
+                              String imdbID = await getIMDBID(c.id as int);
+                              String year = c.releaseDate!.split("-")[0];
+
+                              options.add(SearchDetails(
+                                  title: title,
+                                  year: year,
+                                  imdbID: imdbID,
+                                  poster: poster));
+                            }
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        OptionsScreen(options: options)));
+                          } else {
+                            // List<Crew>? credits = c.crew;
+                            // credits!;
+                            // credits.sort((a, b) =>
+                            //     b.popularity!.compareTo(a.popularity as num));
+
+                            // // then, truncate that to top 5 / 10
+
+                            // credits = credits.sublist(0, 5);
+
+                            // List<SearchDetails> options = [];
+
+                            // for (var c in credits) {
+                            //   String? title = c.title as String;
+                            //   String? poster =
+                            //       "https://image.tmdb.org/t/p/original${c.posterPath as String}";
+                            //   String imdbID = await getIMDBID(c.id as int);
+                            //   String year = c.releaseDate!.split("-")[0];
+
+                            //   options.add(SearchDetails(
+                            //       title: title,
+                            //       year: year,
+                            //       imdbID: imdbID,
+                            //       poster: poster));
+                            // }
+
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             OptionsScreen(options: options)));
+                          }
+                        },
                         child: Card(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0)),
@@ -102,7 +171,6 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                                         const EdgeInsetsDirectional.fromSTEB(
                                             20, 15, 20, 0),
                                     child: ListTile(
-                                      // TODO: create a gesture detector so that I see a new page with two tabs - Known For, and You've Seen Them In (names self explanatory)
                                       leading: snapshot.hasData
                                           ? ClipOval(
                                               child: Image.network(
@@ -141,7 +209,8 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     }
     // ... but even if the list is not empty, there is an issue ahead
     for (String name in list) {
-      String pURL = await getPersonID(name); // this is the TMDb API Person ID
+      String pURL =
+          await getPersonImage(name); // this is the TMDb API Person ID
       if (pURL.isNotEmpty) {
         final re = await http.read(Uri.parse(pURL));
         String imageURL = "";
