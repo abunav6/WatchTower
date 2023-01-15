@@ -65,7 +65,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     }
   }
 
-  Widget doHorList(List<String> list, String type) {
+  Widget buildCrewList(List<String> list, String type) {
     ScrollController controller = ScrollController();
 
     return SizedBox(
@@ -102,6 +102,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                                         const EdgeInsetsDirectional.fromSTEB(
                                             20, 15, 20, 0),
                                     child: ListTile(
+                                      // TODO: create a gesture detector so that I see a new page with two tabs - Known For, and You've Seen Them In (names self explanatory)
                                       leading: snapshot.hasData
                                           ? ClipOval(
                                               child: Image.network(
@@ -129,7 +130,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
   Future<Map<String, String>> getImages(String type) async {
     Map<String, String> urls = {};
     List<String> list;
-    // verified that the strings coming from widget.title are NEVER empty, but still there's an issue ahead
+    // verified that the strings coming from widget.title are NEVER empty...
 
     if (type == "a") {
       list = widget.title.actors.split(",");
@@ -138,9 +139,9 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     } else {
       list = widget.title.writer.split(",");
     }
-    // even if the list is not empty, there is an issue ahead
+    // ... but even if the list is not empty, there is an issue ahead
     for (String name in list) {
-      String pURL = await getPersonID(name);
+      String pURL = await getPersonID(name); // this is the TMDb API Person ID
       if (pURL.isNotEmpty) {
         final re = await http.read(Uri.parse(pURL));
         String imageURL = "";
@@ -163,7 +164,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     return urls;
   }
 
-  void getResults(String title, String year, String type) async {
+  void getTrailerSearchResults(String title, String year, String type) async {
     String query = Uri.encodeComponent("$title $year $type  trailer");
     String url =
         "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=$query&key=AIzaSyA3WxLx51sMfthV99wJ7hkpDAufnEu3Sck";
@@ -182,7 +183,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     }
   }
 
-  Widget buildIMDB(Map<String, String> ratings) {
+  Widget createIMDB(Map<String, String> ratings) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -355,7 +356,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
         title.type == "movie"
             ? Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 30, 16, 0),
-                child: doHorList(directors, "d"))
+                child: buildCrewList(directors, "d"))
             : Container(),
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(16, 30, 16, 0),
@@ -388,7 +389,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
         ),
         Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
-            child: doHorList(writers, "w")),
+            child: buildCrewList(writers, "w")),
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(16, 30, 16, 0),
           child: Row(
@@ -420,7 +421,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
         ),
         Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
-            child: doHorList(actors, "a")),
+            child: buildCrewList(actors, "a")),
       ],
     );
   }
@@ -448,7 +449,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                   color: Colors.white, size: 30),
               onPressed: () {
                 debugPrint('trailer pressed ...');
-                getResults(
+                getTrailerSearchResults(
                     widget.title.title, widget.title.year, widget.title.type);
               },
             ),
@@ -569,7 +570,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                   _launchIMDbPage(
                       "https://www.imdb.com/title/${widget.title.imdbID}");
                 },
-                child: buildIMDB(ratings),
+                child: createIMDB(ratings),
               )),
         ),
         Expanded(
