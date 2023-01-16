@@ -29,7 +29,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sqflite: ^2.2.2
+  sqflite: ^2.2.3
   path:
   path_provider: ^2.0.11 
 
