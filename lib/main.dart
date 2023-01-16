@@ -13,7 +13,11 @@ class WatchD extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // _cleanUpTemporaryDirectory();
+    bool isRelease =
+        const bool.fromEnvironment('dart.vm.product', defaultValue: false);
+    if (isRelease) {
+      _cleanUpTemporaryDirectory();
+    }
     return MaterialApp(
         title: 'WatchD',
         theme: ThemeData(
