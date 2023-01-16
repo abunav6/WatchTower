@@ -93,10 +93,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                     return GestureDetector(
                         onTap: () async {
                           int personID = await getPersonID(list[index]);
-                          // Use personID to get the movie credits
                           Credits c = await getMovieCredits(personID);
-
-                          // Then, for actor, use the cast list, and for others, use the crew list
 
                           if (type == "a") {
                             List<Cast>? credits = c.cast;
@@ -114,6 +111,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                               String? poster =
                                   "https://image.tmdb.org/t/p/original${c.posterPath as String}";
                               String imdbID = await getIMDBID(c.id as int);
+
                               String year = c.releaseDate!.split("-")[0];
 
                               options.add(SearchDetails(
@@ -128,36 +126,40 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                                     builder: (context) =>
                                         OptionsScreen(options: options)));
                           } else {
-                            // List<Crew>? credits = c.crew;
-                            // credits!;
-                            // credits.sort((a, b) =>
-                            //     b.popularity!.compareTo(a.popularity as num));
+                            List<Crew>? credits = c.crew;
+                            credits!;
 
-                            // // then, truncate that to top 5 / 10
+                            credits.sort((a, b) =>
+                                b.popularity!.compareTo(a.popularity as num));
 
-                            // credits = credits.sublist(0, 5);
+                            credits = credits.sublist(0, 10);
 
-                            // List<SearchDetails> options = [];
+                            List<SearchDetails> options = [];
 
-                            // for (var c in credits) {
-                            //   String? title = c.title as String;
-                            //   String? poster =
-                            //       "https://image.tmdb.org/t/p/original${c.posterPath as String}";
-                            //   String imdbID = await getIMDBID(c.id as int);
-                            //   String year = c.releaseDate!.split("-")[0];
+                            for (var c in credits) {
+                              String? title = c.title as String;
+                              String? poster =
+                                  "https://image.tmdb.org/t/p/original${c.posterPath as String}";
+                              String imdbID = await getIMDBID(c.id as int);
+                              if (options
+                                  .map((e) => e.imdbID)
+                                  .contains(imdbID)) {
+                                continue;
+                              }
+                              String year = c.releaseDate!.split("-")[0];
 
-                            //   options.add(SearchDetails(
-                            //       title: title,
-                            //       year: year,
-                            //       imdbID: imdbID,
-                            //       poster: poster));
-                            // }
+                              options.add(SearchDetails(
+                                  title: title,
+                                  year: year,
+                                  imdbID: imdbID,
+                                  poster: poster));
+                            }
 
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //             OptionsScreen(options: options)));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        OptionsScreen(options: options)));
                           }
                         },
                         child: Card(

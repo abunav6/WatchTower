@@ -439,6 +439,7 @@ class Crew {
 Future<dynamic> getMovieCredits(int personID) async {
   String url =
       "https://api.themoviedb.org/3/person/$personID/movie_credits?api_key=$tmdb&language=en-US";
+  debugPrint(url);
   final String credits = await http.read(Uri.parse(url));
   final jsonData = json.decode(credits);
   return Credits.fromJson(jsonData);
