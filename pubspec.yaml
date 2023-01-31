@@ -41,7 +41,7 @@ dependencies:
   youtube_api: ^1.0.4
 
   font_awesome_flutter: ^10.3.0
-  url_launcher: ^6.1.7
+  url_launcher: ^6.1.8
 
   percent_indicator: ^4.2.2
   bezier_chart: ^1.0.17+1
