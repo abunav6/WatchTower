@@ -120,7 +120,7 @@ packages:
       name: font_awesome_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "10.3.0"
+    version: "10.4.0"
   google_fonts:
     dependency: "direct main"
     description:
