@@ -717,8 +717,8 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               watchlist: "false",
               year: widget.title.year,
               director: widget.title.director,
-              runtime: widget.title.runtime,
-              imdbRating: rat);
+              runtime: widget.title.runtime.replaceAll("min", ""),
+              imdbRating: rat.replaceAll("/10", ""));
           final Database db = await initializeDB();
           int code = await insert(db, rec, false);
 
