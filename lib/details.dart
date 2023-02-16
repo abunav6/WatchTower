@@ -763,8 +763,8 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               watchlist: "true",
               year: widget.title.year,
               director: widget.title.director,
-              runtime: widget.title.runtime,
-              imdbRating: rat);
+              runtime: widget.title.runtime.replaceAll("min", ""),
+              imdbRating: rat.replaceAll("/10", ""));
           int code = await insert(await initializeDB(), rec, true);
           if (code == 0) {
             showToast(

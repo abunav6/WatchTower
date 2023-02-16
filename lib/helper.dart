@@ -46,17 +46,7 @@ class Record {
     if (imdbRating == "N/A") {
       imdbRating = "";
     }
-    debugPrint({
-      "imdbID": imdbID,
-      "title": title,
-      "poster": poster,
-      "type": type,
-      "watchlist": watchlist,
-      "year": year,
-      "director": director as String,
-      "runtime": runtime as String,
-      "imdbRating": imdbRating as String
-    }.toString());
+
     return {
       "imdbID": imdbID,
       "title": title,
