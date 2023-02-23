@@ -325,6 +325,10 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         String mini = minrun.elementAt(0)['imdbID'].toString();
         TitleDetails min = await getDetails(mini);
 
+        debugPrint(directorData.toString());
+        debugPrint(runtimeData.toString());
+        debugPrint(imdbRatingData.toString());
+
         Navigator.push(
             context,
             MaterialPageRoute(
