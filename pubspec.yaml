@@ -45,7 +45,7 @@ dependencies:
 
 
 
-  percent_indicator: ^4.2.2
+  percent_indicator: ^4.2.3
   bezier_chart: ^1.0.17+1
   fl_chart: ^0.61.0
 
