@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import "./signedin.dart";
+import 'homepage.dart';
 
 void main() async {
   runApp(const WatchD());
@@ -23,7 +23,7 @@ class WatchD extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.blue, unselectedWidgetColor: Colors.white),
         initialRoute: "/",
-        routes: {"/": (context) => const SignedInWidget()});
+        routes: {"/": (context) => const HomePageWidget()});
   }
 
   void _cleanUpTemporaryDirectory() async {

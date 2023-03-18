@@ -11,14 +11,14 @@ import "watchlist.dart";
 
 import 'package:sqflite/sqflite.dart';
 
-class SignedInWidget extends StatefulWidget {
-  const SignedInWidget({Key? key}) : super(key: key);
+class HomePageWidget extends StatefulWidget {
+  const HomePageWidget({Key? key}) : super(key: key);
 
   @override
-  _SignedInWidgetState createState() => _SignedInWidgetState();
+  _HomePageWidgetState createState() => _HomePageWidgetState();
 }
 
-class _SignedInWidgetState extends State<SignedInWidget> {
+class _HomePageWidgetState extends State<HomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
