@@ -168,6 +168,21 @@ void changeWatchlist(Database db, Record rec) async {
   }
 }
 
+void fChangeWatchlist(Record rec) async {
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
+  for (var key in nodes.keys) {
+    Record r = Record.fromMap(json.decode(jsonEncode(nodes[key])));
+    if (r.imdbID == rec.imdbID) {
+      FirebaseDatabase.instance
+          .ref()
+          .child("/$key")
+          .update({"watchlist": "false"});
+    }
+  }
+}
+
 void delete(Database db, String imdbID) async {
   await db.delete("watchD", where: "imdbId=?", whereArgs: [imdbID]);
 }
