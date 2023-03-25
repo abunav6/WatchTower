@@ -311,11 +311,18 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         List<Map<String, Object?>> directorData = await db.rawQuery(
             "select director, count('director') as c from watchD where watchlist='false' AND type='movie' group by director order by count('director') desc limit 10;");
 
-        List<Map<String, Object?>> runtimeData = await db.rawQuery(
-            "select sum(runtime) as sum from watchD where watchlist='false' AND type='movie' AND runtime!='';");
+        // List<Map<String, Object?>> runtimeData = await db.rawQuery(
+        //     "select sum(runtime) as sum from watchD where watchlist='false' AND type='movie' AND runtime!='';");
 
-        List<Map<String, Object?>> imdbRatingData = await db.rawQuery(
-            "select avg(imdbRating) as avg from watchD where watchlist='false' AND type='movie' AND imdbRating!='';");
+        String totalRuntime = await getTotalRuntime();
+
+        debugPrint("Total runtimg $totalRuntime");
+
+        // List<Map<String, Object?>> imdbRatingData = await db.rawQuery(
+        //     "select avg(imdbRating) as avg from watchD where watchlist='false' AND type='movie' AND imdbRating!='';");
+
+        String averageImdbRating = await getAverageRating();
+        debugPrint("Avg Rating $averageImdbRating");
 
         List<Map<String, Object?>> maxrun = await db.rawQuery(
             "select imdbID from watchD where watchlist='false' AND type='movie' AND runtime!='' order by cast(runtime as int) desc limit 1;");
@@ -330,18 +337,16 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         TitleDetails min = await getDetails(mini);
 
         debugPrint(directorData.toString());
-        debugPrint(runtimeData.toString());
-        debugPrint(imdbRatingData.toString());
 
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => StatsWidget(
                     dd: directorData,
-                    rd: runtimeData,
+                    rd: totalRuntime,
                     max: max,
                     min: min,
-                    id: imdbRatingData)));
+                    id: averageImdbRating)));
     }
   }
 

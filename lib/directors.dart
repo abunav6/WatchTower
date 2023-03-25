@@ -27,7 +27,10 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
     List<Map<String, Object?>> res = await db.query("watchD",
         where: "director=? and type='movie' and watchlist='false'",
         whereArgs: [widget.directors.elementAt(index)['director'].toString()]);
-    List<Record> movies = res.map((e) => Record.fromMap(e)).toList();
+
+    List<Record> movies = await getMoviesbyDirector(
+        widget.directors.elementAt(index)['director'].toString());
+    // List<Record> movies = res.map((e) => Record.fromMap(e)).toList();
     Navigator.push(
       context,
       MaterialPageRoute(

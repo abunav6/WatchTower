@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
@@ -201,4 +202,61 @@ void fDelete(String imdbID) async {
       ref.child("/$key").remove();
     }
   });
+}
+
+Future<List<Record>> getMoviesbyDirector(String directorName) async {
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
+
+  List<Record> records = [];
+  nodes.forEach((key, value) {
+    Record r = Record.fromMap(json.decode(jsonEncode(value)));
+    if (r.director == directorName &&
+        r.type == "movie" &&
+        r.watchlist == "false") {
+      records.add(r);
+    }
+  });
+
+  return records;
+}
+
+Future<String> getAverageRating() async {
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
+
+  List<Record> records = [];
+  double sum = 0.0;
+  int count = 0;
+  nodes.forEach((key, value) {
+    Record r = Record.fromMap(json.decode(jsonEncode(value)));
+    if (r.watchlist == "false" && r.type == "movie" && r.imdbRating != '') {
+      sum += double.parse(r.imdbRating as String);
+      count += 1;
+    }
+  });
+  double average = sum / count;
+  return average.toStringAsFixed(2);
+}
+
+Future<String> getTotalRuntime() async {
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
+
+  List<Record> records = [];
+  int sum = 0;
+  int count = 0;
+  nodes.forEach((key, value) {
+    Record r = Record.fromMap(json.decode(jsonEncode(value)));
+    if (r.watchlist == "false" && r.type == "movie" && r.runtime != '') {
+      try {
+        sum += int.parse(r.runtime as String);
+      } catch (e) {
+        sum += int.parse((r.runtime as String).split("min")[0].trim());
+      }
+      count += 1;
+    }
+  });
+
+  return sum.toString();
 }

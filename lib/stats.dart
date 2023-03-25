@@ -12,7 +12,8 @@ import 'package:sqflite/sqflite.dart';
 import 'details.dart';
 
 class StatsWidget extends StatefulWidget {
-  final List<Map<String, Object?>> dd, rd, id;
+  final List<Map<String, Object?>> dd;
+  final String id, rd;
   final TitleDetails max, min;
   // final String? img;
   const StatsWidget(
@@ -238,8 +239,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                       padding:
                                           const EdgeInsetsDirectional.fromSTEB(
                                               0, 20, 0, 0),
-                                      child: Text(
-                                          "${double.parse(widget.id.elementAt(0)['avg'].toString()).toStringAsFixed(2)}/10.0", // Replace with average IMDb Rating
+                                      child: Text("${widget.id}/10.0",
                                           style: GoogleFonts.lexendDeca(
                                             color: const Color(0xFF8B97A2),
                                             fontSize: 16,
@@ -558,7 +558,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                           const EdgeInsetsDirectional.fromSTEB(20, 10, 0, 0),
                       child: SelectionArea(
                           child: Text(
-                              'You\'ve spent ${double.parse(widget.rd.elementAt(0)['sum'].toString()).toStringAsFixed(0)} minutes\n watching movies!',
+                              'You\'ve spent ${widget.rd} minutes\n watching movies!',
                               style: GoogleFonts.poppins(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
