@@ -239,24 +239,39 @@ Future<String> getAverageRating() async {
   return average.toStringAsFixed(2);
 }
 
-Future<String> getTotalRuntime() async {
+Future<List<String>> getRuntimeData() async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
   Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
 
   List<Record> records = [];
   int sum = 0;
   int count = 0;
+
+  int max = -1;
+  int min = 10000;
+
+  String maxIMDBId = '', minIMDBId = '';
+
   nodes.forEach((key, value) {
     Record r = Record.fromMap(json.decode(jsonEncode(value)));
     if (r.watchlist == "false" && r.type == "movie" && r.runtime != '') {
+      int x;
       try {
-        sum += int.parse(r.runtime as String);
+        x = int.parse(r.runtime as String);
       } catch (e) {
-        sum += int.parse((r.runtime as String).split("min")[0].trim());
+        x = int.parse((r.runtime as String).split("min")[0].trim());
       }
+      if (x > max) {
+        max = x;
+        maxIMDBId = r.imdbID;
+      } else if (x < min) {
+        min = x;
+        minIMDBId = r.imdbID;
+      }
+
+      sum += x;
       count += 1;
     }
   });
-
-  return sum.toString();
+  return [sum.toString(), maxIMDBId, minIMDBId];
 }

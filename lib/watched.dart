@@ -314,27 +314,18 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         // List<Map<String, Object?>> runtimeData = await db.rawQuery(
         //     "select sum(runtime) as sum from watchD where watchlist='false' AND type='movie' AND runtime!='';");
 
-        String totalRuntime = await getTotalRuntime();
+        List<String> runtimeData = await getRuntimeData();
+        String totalRuntime = runtimeData[0];
+        String maxRuntimeID = runtimeData[1];
+        String minRuntimeID = runtimeData[2];
 
         debugPrint("Total runtimg $totalRuntime");
-
-        // List<Map<String, Object?>> imdbRatingData = await db.rawQuery(
-        //     "select avg(imdbRating) as avg from watchD where watchlist='false' AND type='movie' AND imdbRating!='';");
 
         String averageImdbRating = await getAverageRating();
         debugPrint("Avg Rating $averageImdbRating");
 
-        List<Map<String, Object?>> maxrun = await db.rawQuery(
-            "select imdbID from watchD where watchlist='false' AND type='movie' AND runtime!='' order by cast(runtime as int) desc limit 1;");
-
-        List<Map<String, Object?>> minrun = await db.rawQuery(
-            "select imdbID from watchD where watchlist='false' AND type='movie' AND runtime!='' order by cast(runtime as int) asc limit 1;");
-
-        String maxi = maxrun.elementAt(0)['imdbID'].toString();
-        TitleDetails max = await getDetails(maxi);
-
-        String mini = minrun.elementAt(0)['imdbID'].toString();
-        TitleDetails min = await getDetails(mini);
+        TitleDetails max = await getDetails(maxRuntimeID);
+        TitleDetails min = await getDetails(minRuntimeID);
 
         debugPrint(directorData.toString());
 
