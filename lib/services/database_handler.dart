@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:sqflite/sqflite.dart';
@@ -32,7 +31,38 @@ Future<Database> initializeDB() async {
   );
 }
 
-Future<int> insert(Database db, Record rec, bool fw) async {
+Future<int> fInsert(Record toAdd, bool fromWatchlist) async {
+  // 1. check if imdbID exists in DB
+  // 2. if exists -> check if coming fromWatchlist page. If yes, change watchlist to "false". else, return code to show attempted duplicate insert
+  // 3. if not exists -> add to DB
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
+  for (var key in nodes.keys) {
+    Record r = Record.fromMap(json.decode(jsonEncode(nodes[key])));
+    if (r.imdbID == toAdd.imdbID) {
+      //exists in the DB, need to check if it's in watchlist or not
+      if (toAdd.watchlist == "true") {
+        // exists in the watchlist, need to check if we are coming from the wachlist page or not
+        if (!fromWatchlist) {
+          // coming from the WatchD page
+          debugPrint("Need to toggle rec's watchlist to false and update DB");
+          return -1;
+        } else {
+          debugPrint("Already exists in watchlist");
+          return -3;
+        }
+      } else {
+        debugPrint("Already exists in WatchD list");
+        return -2;
+      }
+    }
+  }
+  FirebaseDatabase.instance.ref().push().set(toAdd.toMap());
+  return 0;
+}
+
+Future<int> insert(Database db, Record rec, bool fromWatchlist) async {
   String imdbID = rec.imdbID;
   debugPrint(rec.toMap().toString());
   try {
@@ -54,7 +84,7 @@ Future<int> insert(Database db, Record rec, bool fw) async {
       Record rec = queryResult.map((e) => Record.fromMap(e)).toList()[0];
 
       if (rec.watchlist == "true") {
-        if (!fw) {
+        if (!fromWatchlist) {
           // coming from the WatchD page
           Record newrec = Record(
               imdbID: rec.imdbID,
@@ -109,15 +139,15 @@ Future<List<Record>> fRetrieveAll() async {
 Future<List<Record>> fRetrieveData(String type, String watchlistValue) async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
 
-  List nodes = snap.snapshot.value as List;
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
 
   List<Record> records = [];
-  for (Object node in nodes) {
-    Record tmp = Record.fromMap(json.decode(jsonEncode(node)));
-    if (tmp.watchlist == watchlistValue && tmp.type == type) {
-      records.add(tmp);
+  nodes.forEach((key, value) {
+    Record r = Record.fromMap(json.decode(jsonEncode(value)));
+    if (r.type == type && r.watchlist == watchlistValue) {
+      records.add(r);
     }
-  }
+  });
 
   return records;
 }

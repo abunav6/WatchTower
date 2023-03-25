@@ -719,8 +719,8 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               director: widget.title.director,
               runtime: widget.title.runtime.replaceAll("min", ""),
               imdbRating: rat.replaceAll("/10", ""));
-          final Database db = await initializeDB();
-          int code = await insert(db, rec, false);
+
+          int code = await fInsert(rec, true);
 
           if (code == 0) {
             showToast(context, "Added ${widget.title.title} to WatchD!");
@@ -765,7 +765,10 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               director: widget.title.director,
               runtime: widget.title.runtime.replaceAll("min", ""),
               imdbRating: rat.replaceAll("/10", ""));
-          int code = await insert(await initializeDB(), rec, true);
+          debugPrint("trying to add ${rec.title} to watchlist");
+          int code = await fInsert(rec, true);
+          // int code = await insert(await initializeDB(), rec, true);
+
           if (code == 0) {
             showToast(
                 context, "Added ${widget.title.title} to your Watchlist!");
