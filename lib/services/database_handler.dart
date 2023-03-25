@@ -275,3 +275,27 @@ Future<List<String>> getRuntimeData() async {
   });
   return [sum.toString(), maxIMDBId, minIMDBId];
 }
+
+Future<Map<String, int>> getTopTenDirectors() async {
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
+
+  Map<String, int> ttd = {};
+
+  nodes.forEach((key, value) {
+    Record r = Record.fromMap(json.decode(jsonEncode(value)));
+    if (r.watchlist == "false" && r.type == "movie") {
+      try {
+        ttd[r.director as String] = ttd[r.director as String]! + 1;
+      } catch (e) {
+        ttd[r.director as String] = 1;
+      }
+    }
+  });
+  var mapEntries = ttd.entries.toList()
+    ..sort((b, a) => a.value.compareTo(b.value));
+  ttd
+    ..clear()
+    ..addEntries(mapEntries.sublist(0, 10));
+  return ttd;
+}

@@ -12,7 +12,7 @@ import 'package:sqflite/sqflite.dart';
 import 'details.dart';
 
 class StatsWidget extends StatefulWidget {
-  final List<Map<String, Object?>> dd;
+  final Map<String, int> dd;
   final String id, rd;
   final TitleDetails max, min;
   // final String? img;
@@ -35,8 +35,7 @@ class _StatsWidgetState extends State<StatsWidget> {
 
   Future<String> getTopDirImage() async {
     debugPrint("I am here");
-    return await (getDirectorImageURL(
-        widget.dd.elementAt(0)['director'].toString()));
+    return await (getDirectorImageURL(widget.dd.keys.elementAt(0).toString()));
   }
 
   @override
@@ -386,7 +385,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                                   const EdgeInsetsDirectional
                                                       .fromSTEB(0, 4, 0, 0),
                                               child: Text(
-                                                  "${widget.dd.elementAt(0)['director']} - ${widget.dd.elementAt(0)['c']}", // replace with name of most viewed director
+                                                  "${widget.dd.keys.elementAt(0)} - ${widget.dd.values.elementAt(0)}", // replace with name of most viewed director
                                                   style: GoogleFonts.lexendDeca(
                                                     color:
                                                         const Color(0xFF8B97A2),

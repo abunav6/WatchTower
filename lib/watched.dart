@@ -308,12 +308,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
       case 0:
         final Database db = await initializeDB();
 
-        List<Map<String, Object?>> directorData = await db.rawQuery(
-            "select director, count('director') as c from watchD where watchlist='false' AND type='movie' group by director order by count('director') desc limit 10;");
-
-        // List<Map<String, Object?>> runtimeData = await db.rawQuery(
-        //     "select sum(runtime) as sum from watchD where watchlist='false' AND type='movie' AND runtime!='';");
-
+        Map<String, int> topTenDirectors = await getTopTenDirectors();
         List<String> runtimeData = await getRuntimeData();
         String totalRuntime = runtimeData[0];
         String maxRuntimeID = runtimeData[1];
@@ -327,13 +322,11 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         TitleDetails max = await getDetails(maxRuntimeID);
         TitleDetails min = await getDetails(minRuntimeID);
 
-        debugPrint(directorData.toString());
-
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => StatsWidget(
-                    dd: directorData,
+                    dd: topTenDirectors,
                     rd: totalRuntime,
                     max: max,
                     min: min,

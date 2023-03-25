@@ -9,7 +9,7 @@ import 'package:sqflite/sqflite.dart';
 import 'helper.dart';
 
 class DirectorsScreenWidget extends StatefulWidget {
-  final List<Map<String, Object?>> directors;
+  final Map<String, int> directors;
   const DirectorsScreenWidget({Key? key, required this.directors})
       : super(key: key);
 
@@ -24,12 +24,9 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
     // pass to Watched Screen with a boolean saying its from here, so that the 'shows' list does not get built
 
     Database db = await initializeDB();
-    List<Map<String, Object?>> res = await db.query("watchD",
-        where: "director=? and type='movie' and watchlist='false'",
-        whereArgs: [widget.directors.elementAt(index)['director'].toString()]);
 
     List<Record> movies = await getMoviesbyDirector(
-        widget.directors.elementAt(index)['director'].toString());
+        widget.directors.keys.elementAt(index).toString());
     // List<Record> movies = res.map((e) => Record.fromMap(e)).toList();
     Navigator.push(
       context,
@@ -41,8 +38,7 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
 
   Future<Map<String, String>> getImageURLs() async {
     Map<String, String> imageURLs = {};
-    for (Map m in widget.directors) {
-      String dirname = m['director'].toString();
+    for (String dirname in widget.directors.keys) {
       String url = await getDirectorImageURL(dirname);
       imageURLs[dirname] = url;
     }
@@ -92,9 +88,8 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
                                         ? ClipOval(
                                             child: Image.network(
                                                 (snapshot.data as Map)[widget
-                                                    .directors
-                                                    .elementAt(
-                                                        index)['director']
+                                                    .directors.keys
+                                                    .elementAt(index)
                                                     .toString()],
                                                 width: 60,
                                                 height: 60,
@@ -106,12 +101,15 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
                                                     Colors.black),
                                           )),
                                     title: Text(
-                                        widget.directors[index]['director']
+                                        widget.directors.keys
+                                            .elementAt(index)
                                             .toString(),
                                         style:
                                             GoogleFonts.poppins(fontSize: 20)),
                                     subtitle: Text(
-                                        widget.directors[index]['c'].toString(),
+                                        widget.directors.values
+                                            .elementAt(index)
+                                            .toString(),
                                         style:
                                             GoogleFonts.poppins(fontSize: 16)),
                                     trailing: IconButton(
