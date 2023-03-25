@@ -89,15 +89,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       child: ElevatedButton(
                           onPressed: () async {
                             debugPrint("View your watched stuff");
-                            fRetrieveAll();
-
-                            Database db = await initializeDB();
 
                             List<Record> movieResponse =
-                                await retrieveData(db, "movie", "false");
+                                await fRetrieveData("movie", "false");
 
                             List<Record> showResponse =
-                                await retrieveData(db, "series", "false");
+                                await fRetrieveData("series", "false");
 
                             Navigator.push(
                               context,

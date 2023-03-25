@@ -106,13 +106,20 @@ Future<List<Record>> retrieveData(
   return queryResult.map((e) => Record.fromMap(e)).toList();
 }
 
-void fRetrieveData() {
-  FirebaseDatabase.instance.ref().child("/").once().then((DataSnapshot snap) {
-        (snap.value as Map).forEach((key, values) {
-          debugPrint(key);
-          debugPrint(values);
-        });
-      } as FutureOr Function(DatabaseEvent value));
+Future<List<Record>> fRetrieveData(String type, String watchlistValue) async {
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+
+  List nodes = snap.snapshot.value as List;
+
+  List<Record> records = [];
+  for (Object node in nodes) {
+    Record tmp = Record.fromMap(json.decode(jsonEncode(node)));
+    if (tmp.watchlist == watchlistValue && tmp.type == type) {
+      records.add(tmp);
+    }
+  }
+
+  return records;
 }
 
 void changeWatchlist(Database db, Record rec) async {
