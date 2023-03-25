@@ -100,8 +100,9 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                             onPressed: () async {
                               debugPrint(
                                   "delete ${widget.movies[index].imdbID}");
-                              delete(await initializeDB(),
-                                  widget.movies[index].imdbID);
+                              // delete(await initializeDB(),
+                              //     widget.movies[index].imdbID);
+                              fDelete(widget.movies[index].imdbID);
                               showToast(context,
                                   "Deleted ${widget.movies[index].title} from WatchD!");
                               Navigator.pop(context);
@@ -154,8 +155,9 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                               debugPrint(
                                   "delete ${widget.shows[index].imdbID}");
 
-                              delete(await initializeDB(),
-                                  widget.shows[index].imdbID);
+                              // delete(await initializeDB(),
+                              //     widget.shows[index].imdbID);
+                              fDelete(widget.shows[index].imdbID);
                               showToast(context,
                                   "Deleted ${widget.shows[index].title} from WatchD!");
                               Navigator.pop(context);
@@ -234,8 +236,9 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                             onPressed: () async {
                               debugPrint(
                                   "delete ${_searchResultM[index].imdbID}");
-                              delete(await initializeDB(),
-                                  _searchResultM[index].imdbID);
+                              // delete(await initializeDB(),
+                              //     _searchResultM[index].imdbID);
+                              fDelete(_searchResultM[index].imdbID);
                               showToast(context,
                                   "Deleted ${_searchResultM[index].title} from WatchD!");
                               Navigator.pop(context);
@@ -288,8 +291,9 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                               debugPrint(
                                   "delete ${_searchResultS[index].imdbID}");
 
-                              delete(await initializeDB(),
-                                  _searchResultS[index].imdbID);
+                              // delete(await initializeDB(),
+                              //     _searchResultS[index].imdbID);
+                              fDelete(_searchResultS[index].imdbID);
                               showToast(context,
                                   "Deleted ${_searchResultS[index].title} from WatchD!");
                               Navigator.pop(context);

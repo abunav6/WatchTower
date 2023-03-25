@@ -42,14 +42,21 @@ Future<int> fInsert(Record toAdd, bool fromWatchlist) async {
     Record r = Record.fromMap(json.decode(jsonEncode(nodes[key])));
     if (r.imdbID == toAdd.imdbID) {
       //exists in the DB, need to check if it's in watchlist or not
-      if (toAdd.watchlist == "true") {
+      if (r.watchlist == "true") {
         // exists in the watchlist, need to check if we are coming from the wachlist page or not
         if (!fromWatchlist) {
-          // coming from the WatchD page
+          // coming from the search page
+          // toggle watchlist var, delete from DB, add to DB
           debugPrint("Need to toggle rec's watchlist to false and update DB");
+          FirebaseDatabase.instance
+              .ref()
+              .child("/$key")
+              .update({"watchlist": "false"});
+
           return -1;
         } else {
-          debugPrint("Already exists in watchlist");
+          debugPrint(
+              "Already exists in watchlist, trying to add to watchlist!");
           return -3;
         }
       } else {
@@ -62,52 +69,52 @@ Future<int> fInsert(Record toAdd, bool fromWatchlist) async {
   return 0;
 }
 
-Future<int> insert(Database db, Record rec, bool fromWatchlist) async {
-  String imdbID = rec.imdbID;
-  debugPrint(rec.toMap().toString());
-  try {
-    //database has no entry corresponding to the IMDB ID, either cuz there's no match or its just empty
-    await db.insert("watchD", rec.toMap());
-    return 0;
-  } on DatabaseException {
-    // need to check if DB is empty                                       -->> if table is empty
-    // if watchlist is true, make it false and show Toast( return -1)     -->> if exists in watchlist, move to watchD
-    // if watchlist is false, show Toast( return -2)                      -->> if aleady exists in WatchD
-    final List<Map<String, Object?>> queryResult =
-        await db.query('watchD', where: 'imdbID=?', whereArgs: [imdbID]);
+// Future<int> insert(Database db, Record rec, bool fromWatchlist) async {
+//   String imdbID = rec.imdbID;
+//   debugPrint(rec.toMap().toString());
+//   try {
+//     //database has no entry corresponding to the IMDB ID, either cuz there's no match or its just empty
+//     await db.insert("watchD", rec.toMap());
+//     return 0;
+//   } on DatabaseException {
+//     // need to check if DB is empty                                       -->> if table is empty
+//     // if watchlist is true, make it false and show Toast( return -1)     -->> if exists in watchlist, move to watchD
+//     // if watchlist is false, show Toast( return -2)                      -->> if aleady exists in WatchD
+//     final List<Map<String, Object?>> queryResult =
+//         await db.query('watchD', where: 'imdbID=?', whereArgs: [imdbID]);
 
-    if (queryResult.isEmpty) {
-      // DB doesn't contain the IMDB ID, or, is empty
-      await db.insert("watchD", rec.toMap());
-      return 0;
-    } else {
-      Record rec = queryResult.map((e) => Record.fromMap(e)).toList()[0];
+//     if (queryResult.isEmpty) {
+//       // DB doesn't contain the IMDB ID, or, is empty
+//       await db.insert("watchD", rec.toMap());
+//       return 0;
+//     } else {
+//       Record rec = queryResult.map((e) => Record.fromMap(e)).toList()[0];
 
-      if (rec.watchlist == "true") {
-        if (!fromWatchlist) {
-          // coming from the WatchD page
-          Record newrec = Record(
-              imdbID: rec.imdbID,
-              title: rec.title,
-              poster: rec.poster,
-              type: rec.type,
-              watchlist: "false",
-              year: rec.year,
-              director: rec.director,
-              imdbRating: rec.imdbRating,
-              runtime: rec.runtime);
-          await db.update("watchD", newrec.toMap(),
-              where: "imdbID=?", whereArgs: [newrec.imdbID]);
-          return -1;
-        } else {
-          return -3;
-        }
-      } else {
-        return -2;
-      }
-    }
-  }
-}
+//       if (rec.watchlist == "true") {
+//         if (!fromWatchlist) {
+//           // coming from the WatchD page
+//           Record newrec = Record(
+//               imdbID: rec.imdbID,
+//               title: rec.title,
+//               poster: rec.poster,
+//               type: rec.type,
+//               watchlist: "false",
+//               year: rec.year,
+//               director: rec.director,
+//               imdbRating: rec.imdbRating,
+//               runtime: rec.runtime);
+//           await db.update("watchD", newrec.toMap(),
+//               where: "imdbID=?", whereArgs: [newrec.imdbID]);
+//           return -1;
+//         } else {
+//           return -3;
+//         }
+//       } else {
+//         return -2;
+//       }
+//     }
+//   }
+// }
 
 // Future<List<Record>> retrieveAll(Database db) async {
 //   final List<Map<String, Object?>> queryResult = await db.query('watchD');
@@ -138,7 +145,6 @@ Future<List<Record>> fRetrieveAll() async {
 
 Future<List<Record>> fRetrieveData(String type, String watchlistValue) async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
-
   Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
 
   List<Record> records = [];
@@ -164,4 +170,20 @@ void changeWatchlist(Database db, Record rec) async {
 
 void delete(Database db, String imdbID) async {
   await db.delete("watchD", where: "imdbId=?", whereArgs: [imdbID]);
+}
+
+void fDelete(String imdbID) async {
+  debugPrint("here");
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
+  DatabaseEvent snap = await ref.once();
+  Map<dynamic, dynamic> map = snap.snapshot.value as Map;
+
+  debugPrint("need to delete");
+
+  map.forEach((key, value) {
+    Record r = Record.fromMap(json.decode(jsonEncode(value)));
+    if (r.imdbID == imdbID) {
+      ref.child("/$key").remove();
+    }
+  });
 }
