@@ -79,10 +79,10 @@ Future<int> insert(Database db, Record rec, bool fw) async {
   }
 }
 
-Future<List<Record>> retrieveAll(Database db) async {
-  final List<Map<String, Object?>> queryResult = await db.query('watchD');
-  return queryResult.map((e) => Record.fromMap(e)).toList();
-}
+// Future<List<Record>> retrieveAll(Database db) async {
+//   final List<Map<String, Object?>> queryResult = await db.query('watchD');
+//   return queryResult.map((e) => Record.fromMap(e)).toList();
+// }
 
 Future<List<Record>> fRetrieveAll() async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
@@ -97,14 +97,14 @@ Future<List<Record>> fRetrieveAll() async {
   return allTitles;
 }
 
-Future<List<Record>> retrieveData(
-    Database db, String type, String watchlist) async {
-  debugPrint("starting retrieval");
-  final List<Map<String, Object?>> queryResult = await db.query('watchD',
-      where: 'type=? AND watchlist=?', whereArgs: [type, watchlist]);
-  debugPrint("ending retrieval");
-  return queryResult.map((e) => Record.fromMap(e)).toList();
-}
+// Future<List<Record>> retrieveData(
+//     Database db, String type, String watchlist) async {
+//   debugPrint("starting retrieval");
+//   final List<Map<String, Object?>> queryResult = await db.query('watchD',
+//       where: 'type=? AND watchlist=?', whereArgs: [type, watchlist]);
+//   debugPrint("ending retrieval");
+//   return queryResult.map((e) => Record.fromMap(e)).toList();
+// }
 
 Future<List<Record>> fRetrieveData(String type, String watchlistValue) async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();

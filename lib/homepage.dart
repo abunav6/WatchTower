@@ -125,12 +125,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                       child: ElevatedButton(
                           onPressed: () async {
-                            Database db = await initializeDB();
                             List<Record> movies =
-                                await retrieveData(db, "movie", "true");
+                                await fRetrieveData("movie", "true");
 
                             List<Record> shows =
-                                await retrieveData(db, "series", "true");
+                                await fRetrieveData("series", "true");
                             Navigator.push(
                               context,
                               MaterialPageRoute(
