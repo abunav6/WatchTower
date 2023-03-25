@@ -1,8 +1,13 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import "package:mtvdb/helper.dart";
+import 'dart:convert';
 
 Future<Database> initializeDB() async {
   String path = await getDatabasesPath();
@@ -79,6 +84,19 @@ Future<List<Record>> retrieveAll(Database db) async {
   return queryResult.map((e) => Record.fromMap(e)).toList();
 }
 
+Future<List<Record>> fRetrieveAll() async {
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+
+  List nodes = snap.snapshot.value as List;
+
+  List<Record> allTitles = [];
+  for (Object node in nodes) {
+    Map<String, dynamic> tmp = json.decode(jsonEncode(node));
+    allTitles.add(Record.fromMap(tmp));
+  }
+  return allTitles;
+}
+
 Future<List<Record>> retrieveData(
     Database db, String type, String watchlist) async {
   debugPrint("starting retrieval");
@@ -86,6 +104,15 @@ Future<List<Record>> retrieveData(
       where: 'type=? AND watchlist=?', whereArgs: [type, watchlist]);
   debugPrint("ending retrieval");
   return queryResult.map((e) => Record.fromMap(e)).toList();
+}
+
+void fRetrieveData() {
+  FirebaseDatabase.instance.ref().child("/").once().then((DataSnapshot snap) {
+        (snap.value as Map).forEach((key, values) {
+          debugPrint(key);
+          debugPrint(values);
+        });
+      } as FutureOr Function(DatabaseEvent value));
 }
 
 void changeWatchlist(Database db, Record rec) async {

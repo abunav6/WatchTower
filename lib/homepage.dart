@@ -89,6 +89,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       child: ElevatedButton(
                           onPressed: () async {
                             debugPrint("View your watched stuff");
+                            fRetrieveAll();
 
                             Database db = await initializeDB();
 
