@@ -18,17 +18,6 @@ class RecommendationWidget extends StatefulWidget {
   _RecommendationWidgetState createState() => _RecommendationWidgetState();
 }
 
-Future<int> checkIfExists(String imdbID) async {
-  final Database db = await initializeDB();
-  List<Map<String, Object?>> tmp =
-      await db.query("watchD", where: "imdbID=?", whereArgs: [imdbID]);
-  if (tmp.isEmpty) {
-    // element is not in watchlist or in the watchD list
-    return 0;
-  }
-  return -1;
-}
-
 void showDetails(String genre, BuildContext context) async {
   final response =
       await http.get(Uri.parse("http://flaskmtv-abunav6.vercel.app/$genre"));

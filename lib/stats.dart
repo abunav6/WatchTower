@@ -12,7 +12,8 @@ import 'package:sqflite/sqflite.dart';
 import 'details.dart';
 
 class StatsWidget extends StatefulWidget {
-  final List<Map<String, Object?>> dd, rd, id;
+  final Map<String, int> dd;
+  final String id, rd;
   final TitleDetails max, min;
   // final String? img;
   const StatsWidget(
@@ -34,8 +35,7 @@ class _StatsWidgetState extends State<StatsWidget> {
 
   Future<String> getTopDirImage() async {
     debugPrint("I am here");
-    return await (getDirectorImageURL(
-        widget.dd.elementAt(0)['director'].toString()));
+    return await (getDirectorImageURL(widget.dd.keys.elementAt(0).toString()));
   }
 
   @override
@@ -238,8 +238,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                       padding:
                                           const EdgeInsetsDirectional.fromSTEB(
                                               0, 20, 0, 0),
-                                      child: Text(
-                                          "${double.parse(widget.id.elementAt(0)['avg'].toString()).toStringAsFixed(2)}/10.0", // Replace with average IMDb Rating
+                                      child: Text("${widget.id}/10.0",
                                           style: GoogleFonts.lexendDeca(
                                             color: const Color(0xFF8B97A2),
                                             fontSize: 16,
@@ -258,23 +257,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                                 onTap: () async {
                                   debugPrint(
                                       "show movies on a graph for each year");
-                                  Database db = await initializeDB();
-                                  List<
-                                      Map<String,
-                                          Object?>> yeardata = await db.rawQuery(
-                                      "select year from watchD where type='movie' AND watchlist='false'");
-                                  Map<int, int> yearMap = {};
-                                  for (Map m in yeardata) {
-                                    yearMap[int.parse(m['year'])] = 0;
-                                  }
-                                  for (int year in yearMap.keys) {
-                                    yearMap[year] = yeardata
-                                        .where((element) =>
-                                            int.parse(
-                                                element['year'].toString()) ==
-                                            year)
-                                        .length;
-                                  }
+
+                                  Map<String, int> yearMap = await getyearMap();
 
                                   Navigator.push(
                                       context,
@@ -386,7 +370,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                                   const EdgeInsetsDirectional
                                                       .fromSTEB(0, 4, 0, 0),
                                               child: Text(
-                                                  "${widget.dd.elementAt(0)['director']} - ${widget.dd.elementAt(0)['c']}", // replace with name of most viewed director
+                                                  "${widget.dd.keys.elementAt(0)} - ${widget.dd.values.elementAt(0)}", // replace with name of most viewed director
                                                   style: GoogleFonts.lexendDeca(
                                                     color:
                                                         const Color(0xFF8B97A2),
@@ -558,7 +542,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                           const EdgeInsetsDirectional.fromSTEB(20, 10, 0, 0),
                       child: SelectionArea(
                           child: Text(
-                              'You\'ve spent ${double.parse(widget.rd.elementAt(0)['sum'].toString()).toStringAsFixed(0)} minutes\n watching movies!',
+                              'You\'ve spent ${widget.rd} minutes\n watching movies!',
                               style: GoogleFonts.poppins(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,

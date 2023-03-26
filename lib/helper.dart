@@ -1,10 +1,13 @@
 // ignore_for_file: unnecessary_this, depend_on_referenced_packages
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mtvdb/person_helper.dart';
 import 'dart:convert';
 import 'package:mtvdb/secrets.dart';
+import 'package:mtvdb/services/database_handler.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Record {
   String imdbID = "";
@@ -58,6 +61,14 @@ class Record {
       "runtime": runtime as String,
       "imdbRating": imdbRating as String
     };
+  }
+
+  void toggleWatchlist() {
+    if (this.watchlist == "false") {
+      this.watchlist = "true";
+    } else {
+      this.watchlist = "false";
+    }
   }
 }
 
@@ -464,4 +475,17 @@ Future<String> getIMDBID(int tmdbID) async {
   final String credits = await http.read(Uri.parse(url));
   final jsonData = json.decode(credits);
   return IMDBIDGetter.fromJson(jsonData).imdbId as String;
+}
+
+Future<int> checkIfExists(String imdbID) async {
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
+
+  for (String key in nodes.keys) {
+    Record r = Record.fromMap(json.decode(jsonEncode(nodes[key])));
+    if (r.imdbID == imdbID) {
+      return -1;
+    }
+  }
+  return 0;
 }

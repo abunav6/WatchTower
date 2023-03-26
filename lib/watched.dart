@@ -100,8 +100,8 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                             onPressed: () async {
                               debugPrint(
                                   "delete ${widget.movies[index].imdbID}");
-                              delete(await initializeDB(),
-                                  widget.movies[index].imdbID);
+
+                              fDelete(widget.movies[index].imdbID);
                               showToast(context,
                                   "Deleted ${widget.movies[index].title} from WatchD!");
                               Navigator.pop(context);
@@ -154,8 +154,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                               debugPrint(
                                   "delete ${widget.shows[index].imdbID}");
 
-                              delete(await initializeDB(),
-                                  widget.shows[index].imdbID);
+                              fDelete(widget.shows[index].imdbID);
                               showToast(context,
                                   "Deleted ${widget.shows[index].title} from WatchD!");
                               Navigator.pop(context);
@@ -234,8 +233,8 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                             onPressed: () async {
                               debugPrint(
                                   "delete ${_searchResultM[index].imdbID}");
-                              delete(await initializeDB(),
-                                  _searchResultM[index].imdbID);
+
+                              fDelete(_searchResultM[index].imdbID);
                               showToast(context,
                                   "Deleted ${_searchResultM[index].title} from WatchD!");
                               Navigator.pop(context);
@@ -288,8 +287,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                               debugPrint(
                                   "delete ${_searchResultS[index].imdbID}");
 
-                              delete(await initializeDB(),
-                                  _searchResultS[index].imdbID);
+                              fDelete(_searchResultS[index].imdbID);
                               showToast(context,
                                   "Deleted ${_searchResultS[index].title} from WatchD!");
                               Navigator.pop(context);
@@ -302,42 +300,29 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
   void handleClick(int item) async {
     switch (item) {
       case 0:
-        final Database db = await initializeDB();
+        Map<String, int> topTenDirectors = await getTopTenDirectors();
+        List<String> runtimeData = await getRuntimeData();
+        String totalRuntime = runtimeData[0];
+        String maxRuntimeID = runtimeData[1];
+        String minRuntimeID = runtimeData[2];
 
-        List<Map<String, Object?>> directorData = await db.rawQuery(
-            "select director, count('director') as c from watchD where watchlist='false' AND type='movie' group by director order by count('director') desc limit 10;");
+        debugPrint("Total runtimg $totalRuntime");
 
-        List<Map<String, Object?>> runtimeData = await db.rawQuery(
-            "select sum(runtime) as sum from watchD where watchlist='false' AND type='movie' AND runtime!='';");
+        String averageImdbRating = await getAverageRating();
+        debugPrint("Avg Rating $averageImdbRating");
 
-        List<Map<String, Object?>> imdbRatingData = await db.rawQuery(
-            "select avg(imdbRating) as avg from watchD where watchlist='false' AND type='movie' AND imdbRating!='';");
-
-        List<Map<String, Object?>> maxrun = await db.rawQuery(
-            "select imdbID from watchD where watchlist='false' AND type='movie' AND runtime!='' order by cast(runtime as int) desc limit 1;");
-
-        List<Map<String, Object?>> minrun = await db.rawQuery(
-            "select imdbID from watchD where watchlist='false' AND type='movie' AND runtime!='' order by cast(runtime as int) asc limit 1;");
-
-        String maxi = maxrun.elementAt(0)['imdbID'].toString();
-        TitleDetails max = await getDetails(maxi);
-
-        String mini = minrun.elementAt(0)['imdbID'].toString();
-        TitleDetails min = await getDetails(mini);
-
-        debugPrint(directorData.toString());
-        debugPrint(runtimeData.toString());
-        debugPrint(imdbRatingData.toString());
+        TitleDetails max = await getDetails(maxRuntimeID);
+        TitleDetails min = await getDetails(minRuntimeID);
 
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => StatsWidget(
-                    dd: directorData,
-                    rd: runtimeData,
+                    dd: topTenDirectors,
+                    rd: totalRuntime,
                     max: max,
                     min: min,
-                    id: imdbRatingData)));
+                    id: averageImdbRating)));
     }
   }
 
