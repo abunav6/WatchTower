@@ -9,7 +9,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class GraphWidget extends StatefulWidget {
-  final Map<int, int> yearcount;
+  final Map<String, int> yearcount;
   const GraphWidget({Key? key, required this.yearcount}) : super(key: key);
 
   @override
@@ -19,13 +19,11 @@ class GraphWidget extends StatefulWidget {
 class _GraphWidgetState extends State<GraphWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Widget buildGraph(Map<int, int> movies) {
+  Widget buildGraph(Map<String, int> movies) {
     List<FlSpot> spots = [];
-    for (int i in movies.keys) {
-      spots.insert(
-          0,
-          FlSpot(double.parse(i.toStringAsFixed(0)),
-              double.parse(movies[i]!.toStringAsFixed(0))));
+    for (String i in movies.keys) {
+      spots.insert(0,
+          FlSpot(double.parse(i), double.parse(movies[i]!.toStringAsFixed(0))));
     }
 
     Widget getLeftWidget(double value, TitleMeta meta) {
@@ -82,7 +80,7 @@ class _GraphWidgetState extends State<GraphWidget> {
                 ))));
   }
 
-  Widget buildList(Map<int, int> movies) {
+  Widget buildList(Map<String, int> movies) {
     ScrollController listScrollController = ScrollController();
     return Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(20, 10, 20, 20),
@@ -102,10 +100,12 @@ class _GraphWidgetState extends State<GraphWidget> {
                   onTap: () async {
                     debugPrint(
                         "show the list of movies from ${movies.keys.elementAt(index)}");
-                    Database db = await initializeDB();
-                    List<Map<String, Object?>> yearMovies = await db.rawQuery(
-                        "select imdbID from watchD where year=${movies.keys.elementAt(index)} AND watchlist='false' AND type='movie'");
+
+                    List<String> yearMovies = await getMoviesFromThisYear(
+                        movies.keys.elementAt(index));
+
                     debugPrint(yearMovies.toString());
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -137,7 +137,7 @@ class _GraphWidgetState extends State<GraphWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Map<int, int> sorted = Map.fromEntries(widget.yearcount.entries.toList()
+    Map<String, int> sorted = Map.fromEntries(widget.yearcount.entries.toList()
       ..sort((e1, e2) => e1.key.compareTo(e2.key)));
 
     return Scaffold(

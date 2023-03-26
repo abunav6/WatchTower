@@ -100,8 +100,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                 IconButton(
                                     onPressed: () async {
                                       debugPrint("delete from watchlist");
-                                      // delete(await initializeDB(),
-                                      //     widget.movies[index].imdbID);
+
                                       fDelete(widget.movies[index].imdbID);
                                       showToast(context,
                                           "Deleted ${widget.movies[index].title} from your watchlist!");
@@ -166,8 +165,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                 IconButton(
                                     onPressed: () async {
                                       debugPrint("delete from watchlist");
-                                      // delete(await initializeDB(),
-                                      //     widget.shows[index].imdbID);
+
                                       fDelete(widget.shows[index].imdbID);
                                       showToast(context,
                                           "Deleted ${widget.shows[index].title} from your watchlist!");
@@ -257,8 +255,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                 IconButton(
                                     onPressed: () async {
                                       debugPrint("delete from watchlist");
-                                      // delete(await initializeDB(),
-                                      //     _searchResultM[index].imdbID);
+
                                       fDelete(_searchResultM[index].imdbID);
                                       showToast(context,
                                           "Deleted ${_searchResultM[index].title} from your watchlist!");
@@ -321,8 +318,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                 IconButton(
                                     onPressed: () async {
                                       debugPrint("delete from watchlist");
-                                      // delete(await initializeDB(),
-                                      //     _searchResultS[index].imdbID);
+
                                       fDelete(_searchResultS[index].imdbID);
                                       showToast(context,
                                           "Deleted ${_searchResultS[index].title} from your watchlist!");

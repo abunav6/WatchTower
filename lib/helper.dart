@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_this, depend_on_referenced_packages
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mtvdb/person_helper.dart';
@@ -477,12 +478,14 @@ Future<String> getIMDBID(int tmdbID) async {
 }
 
 Future<int> checkIfExists(String imdbID) async {
-  final Database db = await initializeDB();
-  List<Map<String, Object?>> tmp =
-      await db.query("watchD", where: "imdbID=?", whereArgs: [imdbID]);
-  if (tmp.isEmpty) {
-    // element is not in watchlist or in the watchD list
-    return 0;
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
+
+  for (String key in nodes.keys) {
+    Record r = Record.fromMap(json.decode(jsonEncode(nodes[key])));
+    if (r.imdbID == imdbID) {
+      return -1;
+    }
   }
-  return -1;
+  return 0;
 }

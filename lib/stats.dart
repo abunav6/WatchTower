@@ -257,23 +257,8 @@ class _StatsWidgetState extends State<StatsWidget> {
                                 onTap: () async {
                                   debugPrint(
                                       "show movies on a graph for each year");
-                                  Database db = await initializeDB();
-                                  List<
-                                      Map<String,
-                                          Object?>> yeardata = await db.rawQuery(
-                                      "select year from watchD where type='movie' AND watchlist='false'");
-                                  Map<int, int> yearMap = {};
-                                  for (Map m in yeardata) {
-                                    yearMap[int.parse(m['year'])] = 0;
-                                  }
-                                  for (int year in yearMap.keys) {
-                                    yearMap[year] = yeardata
-                                        .where((element) =>
-                                            int.parse(
-                                                element['year'].toString()) ==
-                                            year)
-                                        .length;
-                                  }
+
+                                  Map<String, int> yearMap = await getyearMap();
 
                                   Navigator.push(
                                       context,

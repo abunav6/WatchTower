@@ -9,29 +9,6 @@ import 'package:flutter/material.dart';
 import "package:mtvdb/helper.dart";
 import 'dart:convert';
 
-Future<Database> initializeDB() async {
-  String path = await getDatabasesPath();
-
-  // String dbPath = join(path, "watch.db");
-  // deleteDatabase(dbPath);
-
-  // ByteData data = await rootBundle.load("assets/watch.db");
-  // List<int> bytes =
-  //     data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-  // await File(dbPath).writeAsBytes(bytes);
-  // return openDatabase(dbPath);
-
-  return openDatabase(
-    join(path, 'watch.db'),
-    onCreate: (database, version) async {
-      await database.execute(
-        "CREATE TABLE IF NOT EXISTS watchD(imdbID TEXT PRIMARY KEY, title TEXT NOT NULL, poster TEXT NOT NULL, type TEXT NOT NULL, watchlist TEXT NOT NULL, year TEXT NOT NULL)",
-      );
-    },
-    version: 1,
-  );
-}
-
 Future<int> fInsert(Record toAdd, bool fromWatchlist) async {
   // 1. check if imdbID exists in DB
   // 2. if exists -> check if coming fromWatchlist page. If yes, change watchlist to "false". else, return code to show attempted duplicate insert
@@ -70,58 +47,6 @@ Future<int> fInsert(Record toAdd, bool fromWatchlist) async {
   return 0;
 }
 
-// Future<int> insert(Database db, Record rec, bool fromWatchlist) async {
-//   String imdbID = rec.imdbID;
-//   debugPrint(rec.toMap().toString());
-//   try {
-//     //database has no entry corresponding to the IMDB ID, either cuz there's no match or its just empty
-//     await db.insert("watchD", rec.toMap());
-//     return 0;
-//   } on DatabaseException {
-//     // need to check if DB is empty                                       -->> if table is empty
-//     // if watchlist is true, make it false and show Toast( return -1)     -->> if exists in watchlist, move to watchD
-//     // if watchlist is false, show Toast( return -2)                      -->> if aleady exists in WatchD
-//     final List<Map<String, Object?>> queryResult =
-//         await db.query('watchD', where: 'imdbID=?', whereArgs: [imdbID]);
-
-//     if (queryResult.isEmpty) {
-//       // DB doesn't contain the IMDB ID, or, is empty
-//       await db.insert("watchD", rec.toMap());
-//       return 0;
-//     } else {
-//       Record rec = queryResult.map((e) => Record.fromMap(e)).toList()[0];
-
-//       if (rec.watchlist == "true") {
-//         if (!fromWatchlist) {
-//           // coming from the WatchD page
-//           Record newrec = Record(
-//               imdbID: rec.imdbID,
-//               title: rec.title,
-//               poster: rec.poster,
-//               type: rec.type,
-//               watchlist: "false",
-//               year: rec.year,
-//               director: rec.director,
-//               imdbRating: rec.imdbRating,
-//               runtime: rec.runtime);
-//           await db.update("watchD", newrec.toMap(),
-//               where: "imdbID=?", whereArgs: [newrec.imdbID]);
-//           return -1;
-//         } else {
-//           return -3;
-//         }
-//       } else {
-//         return -2;
-//       }
-//     }
-//   }
-// }
-
-// Future<List<Record>> retrieveAll(Database db) async {
-//   final List<Map<String, Object?>> queryResult = await db.query('watchD');
-//   return queryResult.map((e) => Record.fromMap(e)).toList();
-// }
-
 Future<List<Record>> fRetrieveAll() async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
 
@@ -134,15 +59,6 @@ Future<List<Record>> fRetrieveAll() async {
   }
   return allTitles;
 }
-
-// Future<List<Record>> retrieveData(
-//     Database db, String type, String watchlist) async {
-//   debugPrint("starting retrieval");
-//   final List<Map<String, Object?>> queryResult = await db.query('watchD',
-//       where: 'type=? AND watchlist=?', whereArgs: [type, watchlist]);
-//   debugPrint("ending retrieval");
-//   return queryResult.map((e) => Record.fromMap(e)).toList();
-// }
 
 Future<List<Record>> fRetrieveData(String type, String watchlistValue) async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
@@ -159,16 +75,6 @@ Future<List<Record>> fRetrieveData(String type, String watchlistValue) async {
   return records;
 }
 
-void changeWatchlist(Database db, Record rec) async {
-  if (rec.type == 'series') {
-    await db.update("watchD", rec.toMap(),
-        where: "imdbID= ?", whereArgs: [rec.imdbID]);
-  } else {
-    await db.update("watchD", rec.toMap(),
-        where: "imdbID= ?", whereArgs: [rec.imdbID]);
-  }
-}
-
 void fChangeWatchlist(Record rec) async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
 
@@ -182,10 +88,6 @@ void fChangeWatchlist(Record rec) async {
           .update({"watchlist": "false"});
     }
   }
-}
-
-void delete(Database db, String imdbID) async {
-  await db.delete("watchD", where: "imdbId=?", whereArgs: [imdbID]);
 }
 
 void fDelete(String imdbID) async {
@@ -243,10 +145,7 @@ Future<List<String>> getRuntimeData() async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
   Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
 
-  List<Record> records = [];
   int sum = 0;
-  int count = 0;
-
   int max = -1;
   int min = 10000;
 
@@ -270,7 +169,6 @@ Future<List<String>> getRuntimeData() async {
       }
 
       sum += x;
-      count += 1;
     }
   });
   return [sum.toString(), maxIMDBId, minIMDBId];
@@ -298,4 +196,40 @@ Future<Map<String, int>> getTopTenDirectors() async {
     ..clear()
     ..addEntries(mapEntries.sublist(0, 10));
   return ttd;
+}
+
+Future<Map<String, int>> getyearMap() async {
+  Map<String, int> yearMap = {};
+
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
+  nodes.forEach((key, value) {
+    Record r = Record.fromMap(json.decode(jsonEncode(value)));
+    if (r.type == "movie" && r.watchlist == "false") {
+      try {
+        yearMap[r.year] = yearMap[r.year]! + 1;
+      } catch (e) {
+        yearMap[r.year] = 1;
+      }
+    }
+  });
+
+  return yearMap;
+}
+
+Future<List<String>> getMoviesFromThisYear(String year) async {
+  List<String> imdbIDS = [];
+
+  DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
+  Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
+  nodes.forEach((key, value) {
+    Record r = Record.fromMap(json.decode(jsonEncode(value)));
+    if (r.type == "movie" && r.watchlist == "false") {
+      if (r.year == year) {
+        imdbIDS.add(r.imdbID);
+      }
+    }
+  });
+
+  return imdbIDS;
 }

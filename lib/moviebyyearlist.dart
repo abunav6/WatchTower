@@ -9,7 +9,7 @@ import 'package:mtvdb/details.dart';
 import 'helper.dart';
 
 class YearMoviesWidget extends StatefulWidget {
-  final List<Map<String, Object?>> movies;
+  final List<String> movies;
   const YearMoviesWidget({Key? key, required this.movies}) : super(key: key);
 
   @override
@@ -21,8 +21,7 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
     List<TitleDetails> titles = [];
     int count = 0;
     int total = widget.movies.length;
-    for (Map m in widget.movies) {
-      String imdbId = m['imdbID'];
+    for (String imdbId in widget.movies) {
       titles.insert(0, await getDetails(imdbId));
       count++;
       progress.add(count / total);
