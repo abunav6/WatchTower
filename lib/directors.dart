@@ -23,8 +23,6 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
   void navigateToWatchedScreen(index) async {
     // pass to Watched Screen with a boolean saying its from here, so that the 'shows' list does not get built
 
-    Database db = await initializeDB();
-
     List<Record> movies = await getMoviesbyDirector(
         widget.directors.keys.elementAt(index).toString());
     // List<Record> movies = res.map((e) => Record.fromMap(e)).toList();

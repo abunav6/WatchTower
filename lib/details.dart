@@ -766,7 +766,6 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               runtime: widget.title.runtime.replaceAll("min", ""),
               imdbRating: rat.replaceAll("/10", ""));
           int code = await fInsert(rec, true);
-          // int code = await insert(await initializeDB(), rec, true);
 
           if (code == 0) {
             showToast(
