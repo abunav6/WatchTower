@@ -157,21 +157,25 @@ Future<List<String>> getRuntimeData() async {
   nodes.forEach((key, value) {
     Record r = Record.fromMap(json.decode(jsonEncode(value)));
     if (r.watchlist == "false" && r.type == "movie" && r.runtime != '') {
-      int x;
       try {
-        x = int.parse(r.runtime as String);
-      } catch (e) {
-        x = int.parse((r.runtime as String).split("min")[0].trim());
-      }
-      if (x > max) {
-        max = x;
-        maxIMDBId = r.imdbID;
-      } else if (x < min) {
-        min = x;
-        minIMDBId = r.imdbID;
-      }
+        int x;
+        try {
+          x = int.parse(r.runtime as String);
+        } catch (e) {
+          x = int.parse((r.runtime as String).split("min")[0].trim());
+        }
+        if (x > max) {
+          max = x;
+          maxIMDBId = r.imdbID;
+        } else if (x < min) {
+          min = x;
+          minIMDBId = r.imdbID;
+        }
 
-      sum += x;
+        sum += x;
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     }
   });
   return [sum.toString(), maxIMDBId, minIMDBId];
