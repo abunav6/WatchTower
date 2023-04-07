@@ -127,14 +127,17 @@ Future<String> getAverageRating() async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
   Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
 
-  List<Record> records = [];
   double sum = 0.0;
   int count = 0;
   nodes.forEach((key, value) {
     Record r = Record.fromMap(json.decode(jsonEncode(value)));
     if (r.watchlist == "false" && r.type == "movie" && r.imdbRating != '') {
-      sum += double.parse(r.imdbRating as String);
-      count += 1;
+      try {
+        sum += double.parse(r.imdbRating as String);
+        count += 1;
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     }
   });
   double average = sum / count;

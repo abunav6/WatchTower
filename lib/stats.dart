@@ -7,7 +7,6 @@ import 'package:mtvdb/moviesthroughyears.dart';
 import 'package:mtvdb/helper.dart';
 import 'package:mtvdb/services/database_handler.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:sqflite/sqflite.dart';
 
 import 'details.dart';
 
@@ -15,7 +14,6 @@ class StatsWidget extends StatefulWidget {
   final Map<String, int> dd;
   final String id, rd;
   final TitleDetails max, min;
-  // final String? img;
   const StatsWidget(
       {Key? key,
       required this.dd,
@@ -23,7 +21,6 @@ class StatsWidget extends StatefulWidget {
       required this.max,
       required this.min,
       required this.id})
-      // required this.img})
       : super(key: key);
 
   @override
@@ -34,7 +31,6 @@ class _StatsWidgetState extends State<StatsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<String> getTopDirImage() async {
-    debugPrint("I am here");
     return await (getDirectorImageURL(widget.dd.keys.elementAt(0).toString()));
   }
 

@@ -306,7 +306,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         String maxRuntimeID = runtimeData[1];
         String minRuntimeID = runtimeData[2];
 
-        debugPrint("Total runtimg $totalRuntime");
+        debugPrint("Total runtime $totalRuntime");
 
         String averageImdbRating = await getAverageRating();
         debugPrint("Avg Rating $averageImdbRating");

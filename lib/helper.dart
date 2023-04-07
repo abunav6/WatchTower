@@ -6,8 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:mtvdb/person_helper.dart';
 import 'dart:convert';
 import 'package:mtvdb/secrets.dart';
-import 'package:mtvdb/services/database_handler.dart';
-import 'package:sqflite/sqflite.dart';
 
 class Record {
   String imdbID = "";
