@@ -482,8 +482,11 @@ Future<int> checkIfExists(String imdbID) async {
   for (String key in nodes.keys) {
     Record r = Record.fromMap(json.decode(jsonEncode(nodes[key])));
     if (r.imdbID == imdbID) {
+      // return -1 if this title exists in the DB
       return -1;
     }
   }
+
+  // does not exist in the DB
   return 0;
 }
