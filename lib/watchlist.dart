@@ -59,8 +59,16 @@ class _WatchlistWidget extends State<WatchlistWidget> {
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
               onTap: () async {
+                setState(() {
+                  isLoading = true;
+                });
                 TitleDetails title =
                     await getDetails(widget.movies[index].imdbID);
+
+                setState(() {
+                  isLoading = false;
+                });
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -125,8 +133,15 @@ class _WatchlistWidget extends State<WatchlistWidget> {
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
               onTap: () async {
+                setState(() {
+                  isLoading = true;
+                });
                 TitleDetails title =
                     await getDetails(widget.shows[index].imdbID);
+
+                setState(() {
+                  isLoading = false;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -215,8 +230,15 @@ class _WatchlistWidget extends State<WatchlistWidget> {
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
               onTap: () async {
+                setState(() {
+                  isLoading = true;
+                });
                 TitleDetails title =
                     await getDetails(_searchResultM[index].imdbID);
+
+                setState(() {
+                  isLoading = false;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -280,8 +302,14 @@ class _WatchlistWidget extends State<WatchlistWidget> {
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
               onTap: () async {
+                setState(() {
+                  isLoading = true;
+                });
                 TitleDetails title =
                     await getDetails(_searchResultS[index].imdbID);
+                setState(() {
+                  isLoading = false;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -329,6 +357,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
         });
   }
 
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     widget.movies.sort((a, b) => a.title.compareTo(b.title));
@@ -361,25 +390,35 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                 ),
                 buildSearchBox(),
                 Expanded(
-                  child: TabBarView(
-                    children: [
-                      Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              5, 30, 5, 30),
-                          child: (_searchResultM.isNotEmpty ||
-                                  controller.text.isNotEmpty)
-                              ? buildWLSearchMovies()
-                              : buildMovieWatchlist()),
-                      Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              5, 30, 5, 30),
-                          child: (_searchResultS.isNotEmpty ||
-                                  controller.text.isNotEmpty)
-                              ? buildWLSearchShows()
-                              : buildShowWatchlist()),
-                    ],
+                    child: Stack(children: [
+                  Opacity(
+                    opacity: isLoading ? 0.5 : 1,
+                    child: TabBarView(
+                      children: [
+                        Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                5, 30, 5, 30),
+                            child: (_searchResultM.isNotEmpty ||
+                                    controller.text.isNotEmpty)
+                                ? buildWLSearchMovies()
+                                : buildMovieWatchlist()),
+                        Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                5, 30, 5, 30),
+                            child: (_searchResultS.isNotEmpty ||
+                                    controller.text.isNotEmpty)
+                                ? buildWLSearchShows()
+                                : buildShowWatchlist()),
+                      ],
+                    ),
                   ),
-                ),
+                  if (isLoading)
+                    const Center(
+                      child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.black)),
+                    )
+                ])),
               ],
             ),
           ),
