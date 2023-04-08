@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:mtvdb/services/database_handler.dart';
 import 'package:mtvdb/stats.dart';
-import 'package:sqflite/sqflite.dart';
 import "helper.dart";
 import "details.dart";
 
@@ -297,9 +296,13 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
         });
   }
 
+  bool isLoading = false;
   void handleClick(int item) async {
     switch (item) {
       case 0:
+        setState(() {
+          isLoading = true;
+        });
         Map<String, int> topTenDirectors = await getTopTenDirectors();
         List<String> runtimeData = await getRuntimeData();
         String totalRuntime = runtimeData[0];
@@ -313,6 +316,10 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
 
         TitleDetails max = await getDetails(maxRuntimeID);
         TitleDetails min = await getDetails(minRuntimeID);
+
+        setState(() {
+          isLoading = false;
+        });
 
         Navigator.push(
             context,
@@ -385,28 +392,38 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
                       : Container(),
                   buildSearchBox(),
                   Expanded(
-                    child: TabBarView(
-                      children: [
-                        Padding(
+                      child: Stack(children: [
+                    Opacity(
+                      opacity: isLoading ? 0.5 : 1,
+                      child: TabBarView(
+                        children: [
+                          Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  5, 30, 5, 30),
+                              child: (_searchResultM.isNotEmpty ||
+                                      controller.text.isNotEmpty)
+                                  ? buildSearchListMovie()
+                                  : buildMovieList()),
+                          Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
                                 5, 30, 5, 30),
-                            child: (_searchResultM.isNotEmpty ||
-                                    controller.text.isNotEmpty)
-                                ? buildSearchListMovie()
-                                : buildMovieList()),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              5, 30, 5, 30),
-                          child: !widget.fromStats
-                              ? ((_searchResultS.isNotEmpty ||
-                                      controller.text.isNotEmpty)
-                                  ? buildSearchListSeries()
-                                  : buildShowList())
-                              : Container(),
-                        ),
-                      ],
+                            child: !widget.fromStats
+                                ? ((_searchResultS.isNotEmpty ||
+                                        controller.text.isNotEmpty)
+                                    ? buildSearchListSeries()
+                                    : buildShowList())
+                                : Container(),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                    if (isLoading)
+                      const Center(
+                        child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.black)),
+                      )
+                  ])),
                 ])),
           ),
         ));
