@@ -9,8 +9,6 @@ import 'services/database_handler.dart';
 import "watched.dart";
 import "watchlist.dart";
 
-import 'package:sqflite/sqflite.dart';
-
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({Key? key}) : super(key: key);
 
@@ -20,6 +18,7 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,154 +31,196 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             child: Align(
               alignment: const AlignmentDirectional(0, 0),
               child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10, 50, 10, 50),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
-                      child: Image.asset(
-                        'assets/movie_logo.png',
-                        width: MediaQuery.of(context).size.width * 2,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 70),
-                      child: Text(
-                        'WatchD',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                            fontSize: 40, color: Colors.white),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            debugPrint("Need to add a movie");
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AddTitleWidget()));
-                          },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color(0xFF4B39EF)),
-                              minimumSize: MaterialStateProperty.all(
-                                  const Size(double.infinity, 40)),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: const BorderSide(
-                                          color: Colors.transparent)))),
-                          child: Text("Search for a Movie or Show",
-                              style: GoogleFonts.poppins(fontSize: 14))),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            debugPrint("View your watched stuff");
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 50, 10, 50),
+                  child: Opacity(
+                      opacity: isLoading ? 0.5 : 1,
+                      child: Stack(
+                        children: [
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    30, 0, 30, 10),
+                                child: Image.asset(
+                                  'assets/movie_logo.png',
+                                  width: MediaQuery.of(context).size.width * 2,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0, 0, 0, 70),
+                                child: Text(
+                                  'WatchD',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 40, color: Colors.white),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    10, 10, 10, 10),
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      debugPrint("Need to add a movie");
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AddTitleWidget()));
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                const Color(0xFF4B39EF)),
+                                        minimumSize: MaterialStateProperty.all(
+                                            const Size(double.infinity, 40)),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                                side: const BorderSide(
+                                                    color:
+                                                        Colors.transparent)))),
+                                    child: Text("Search for a Movie or Show",
+                                        style:
+                                            GoogleFonts.poppins(fontSize: 14))),
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    10, 10, 10, 10),
+                                child: ElevatedButton(
+                                    onPressed: () async {
+                                      debugPrint("View your watched stuff");
 
-                            List<Record> movieResponse =
-                                await fRetrieveData("movie", "false");
+                                      setState(() {
+                                        isLoading = true;
+                                      });
 
-                            List<Record> showResponse =
-                                await fRetrieveData("series", "false");
+                                      List<Record> movieResponse =
+                                          await fRetrieveData("movie", "false");
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => WatchedScreenWidget(
-                                        movies: movieResponse,
-                                        shows: showResponse,
-                                        fromStats: false,
-                                      )),
-                            );
-                          },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color(0xFF4B39EF)),
-                              minimumSize: MaterialStateProperty.all(
-                                  const Size(double.infinity, 40)),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: const BorderSide(
-                                          color: Colors.transparent)))),
-                          child: Text("Your WatchD list",
-                              style: GoogleFonts.poppins(fontSize: 14))),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            List<Record> movies =
-                                await fRetrieveData("movie", "true");
+                                      List<Record> showResponse =
+                                          await fRetrieveData(
+                                              "series", "false");
 
-                            List<Record> shows =
-                                await fRetrieveData("series", "true");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => WatchlistWidget(
-                                      movies: movies, shows: shows)),
-                            );
-                          },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color(0xFF4B39EF)),
-                              minimumSize: MaterialStateProperty.all(
-                                  const Size(double.infinity, 40)),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: const BorderSide(
-                                          color: Colors.transparent)))),
-                          child: Text("Your Watchlist",
-                              style: GoogleFonts.poppins(fontSize: 14))),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const RecommendationWidget()),
-                            );
-                          },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color(0xFF4B39EF)),
-                              minimumSize: MaterialStateProperty.all(
-                                  const Size(double.infinity, 40)),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: const BorderSide(
-                                          color: Colors.transparent)))),
-                          child: Text("Get a Movie Recommendation!",
-                              style: GoogleFonts.poppins(fontSize: 14))),
-                    ),
-                  ],
-                ),
-              ),
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                WatchedScreenWidget(
+                                                  movies: movieResponse,
+                                                  shows: showResponse,
+                                                  fromStats: false,
+                                                )),
+                                      );
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                const Color(0xFF4B39EF)),
+                                        minimumSize: MaterialStateProperty.all(
+                                            const Size(double.infinity, 40)),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                                side: const BorderSide(
+                                                    color:
+                                                        Colors.transparent)))),
+                                    child: Text("Your WatchD list",
+                                        style:
+                                            GoogleFonts.poppins(fontSize: 14))),
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    10, 10, 10, 10),
+                                child: ElevatedButton(
+                                    onPressed: () async {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      List<Record> movies =
+                                          await fRetrieveData("movie", "true");
+
+                                      List<Record> shows =
+                                          await fRetrieveData("series", "true");
+
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                WatchlistWidget(
+                                                    movies: movies,
+                                                    shows: shows)),
+                                      );
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                const Color(0xFF4B39EF)),
+                                        minimumSize: MaterialStateProperty.all(
+                                            const Size(double.infinity, 40)),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                                side: const BorderSide(
+                                                    color:
+                                                        Colors.transparent)))),
+                                    child: Text("Your Watchlist",
+                                        style:
+                                            GoogleFonts.poppins(fontSize: 14))),
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    10, 10, 10, 0),
+                                child: ElevatedButton(
+                                    onPressed: () async {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const RecommendationWidget()),
+                                      );
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                const Color(0xFF4B39EF)),
+                                        minimumSize: MaterialStateProperty.all(
+                                            const Size(double.infinity, 40)),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                                side: const BorderSide(
+                                                    color:
+                                                        Colors.transparent)))),
+                                    child: Text("Get a Movie Recommendation!",
+                                        style:
+                                            GoogleFonts.poppins(fontSize: 14))),
+                              ),
+                            ],
+                          ),
+                          if (isLoading)
+                            const Center(
+                              child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white)),
+                            )
+                        ],
+                      ))),
             ),
           ),
         ));
