@@ -71,8 +71,15 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
           return GestureDetector(
               onTap: () async {
                 debugPrint(widget.movies[index].imdbID);
+                setState(() {
+                  isLoading = true;
+                });
                 TitleDetails title =
                     await getDetails(widget.movies[index].imdbID);
+
+                setState(() {
+                  isLoading = false;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -126,8 +133,15 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
           return GestureDetector(
               onTap: () async {
                 debugPrint(widget.shows[index].imdbID);
+                setState(() {
+                  isLoading = true;
+                });
                 TitleDetails title =
                     await getDetails(widget.shows[index].imdbID);
+                setState(() {
+                  isLoading = false;
+                });
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -204,8 +218,15 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
           return GestureDetector(
               onTap: () async {
                 debugPrint(_searchResultM[index].imdbID);
+                setState(() {
+                  isLoading = true;
+                });
                 TitleDetails title =
                     await getDetails(_searchResultM[index].imdbID);
+                setState(() {
+                  isLoading = false;
+                });
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -259,8 +280,14 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
           return GestureDetector(
               onTap: () async {
                 debugPrint(_searchResultS[index].imdbID);
+                setState(() {
+                  isLoading = true;
+                });
                 TitleDetails title =
                     await getDetails(_searchResultS[index].imdbID);
+                setState(() {
+                  isLoading = false;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(
