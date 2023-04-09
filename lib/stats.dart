@@ -30,6 +30,8 @@ class StatsWidget extends StatefulWidget {
 class _StatsWidgetState extends State<StatsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool isLoading = false;
+
   Future<String> getTopDirImage() async {
     return await (getDirectorImageURL(widget.dd.keys.elementAt(0).toString()));
   }
@@ -251,9 +253,6 @@ class _StatsWidgetState extends State<StatsWidget> {
                                 2, 2, 2, 12),
                             child: GestureDetector(
                                 onTap: () async {
-                                  debugPrint(
-                                      "show movies on a graph for each year");
-
                                   Map<String, int> yearMap = await getyearMap();
 
                                   Navigator.push(

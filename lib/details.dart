@@ -6,13 +6,12 @@ import 'package:mtvdb/options.dart';
 import 'package:mtvdb/person_helper.dart';
 
 import "helper.dart";
+import 'secrets.dart';
 import 'services/database_handler.dart';
 
 import "youtube.dart";
 
 import 'package:http/http.dart' as http;
-
-import 'package:sqflite/sqflite.dart';
 
 import 'dart:convert';
 
@@ -34,16 +33,19 @@ class DetailsScreenWidget extends StatefulWidget {
 }
 
 class _DetailsScreenWidget extends State<DetailsScreenWidget> {
-  YoutubeAPI youtube = YoutubeAPI("AIzaSyA3WxLx51sMfthV99wJ7hkpDAufnEu3Sck");
+  bool isLoading = false;
+  YoutubeAPI youtube = YoutubeAPI(yt);
 
   Future<void> _launchYoutubeVideo(String youtubeUrl) async {
     if (youtubeUrl.isNotEmpty) {
+      debugPrint(youtubeUrl);
       if (await canLaunch(youtubeUrl)) {
         final bool nativeAppLaunchSucceeded = await launch(
           youtubeUrl,
           forceSafariVC: false,
           universalLinksOnly: true,
         );
+        debugPrint(nativeAppLaunchSucceeded.toString());
         if (!nativeAppLaunchSucceeded) {
           await launch(youtubeUrl, forceSafariVC: true);
         }
@@ -92,10 +94,14 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                         onTap: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
                           int personID = await getPersonID(list[index]);
                           Credits c = await getMovieCredits(personID);
 
                           if (type == "a") {
+                            // actor list
                             List<Cast>? credits = c.cast;
                             credits!;
 
@@ -120,12 +126,16 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                                   imdbID: imdbID,
                                   poster: poster));
                             }
+                            setState(() {
+                              isLoading = false;
+                            });
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         OptionsScreen(options: options)));
                           } else {
+                            // writer/director list
                             List<Crew>? credits = c.crew;
                             credits!;
 
@@ -155,6 +165,9 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                                   poster: poster));
                             }
 
+                            setState(() {
+                              isLoading = false;
+                            });
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -929,9 +942,19 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                   ],
                 ),
                 Expanded(
-                    child: TabBarView(children: [
-                  buildDetails(context, ratings, posterURL),
-                  buildMoreInfo(context, widget.title)
+                    child: Stack(children: [
+                  Opacity(
+                      opacity: isLoading ? 0.5 : 1,
+                      child: TabBarView(children: [
+                        buildDetails(context, ratings, posterURL),
+                        buildMoreInfo(context, widget.title)
+                      ])),
+                  if (isLoading)
+                    const Center(
+                      child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white)),
+                    )
                 ]))
               ]))),
     );

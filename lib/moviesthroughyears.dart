@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/services/database_handler.dart';
 import 'package:mtvdb/moviebyyearlist.dart';
-import 'package:sqflite/sqflite.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 
@@ -18,6 +17,7 @@ class GraphWidget extends StatefulWidget {
 
 class _GraphWidgetState extends State<GraphWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoading = false;
 
   Widget buildGraph(Map<String, int> movies) {
     List<FlSpot> spots = [];
@@ -98,13 +98,8 @@ class _GraphWidgetState extends State<GraphWidget> {
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                   onTap: () async {
-                    debugPrint(
-                        "show the list of movies from ${movies.keys.elementAt(index)}");
-
                     List<String> yearMovies = await getMoviesFromThisYear(
                         movies.keys.elementAt(index));
-
-                    debugPrint(yearMovies.toString());
 
                     Navigator.push(
                         context,
@@ -160,9 +155,19 @@ class _GraphWidgetState extends State<GraphWidget> {
                 indicatorColor: Color(0xFF673AB7),
               ),
               Expanded(
-                  child: TabBarView(
-                children: [buildGraph(sorted), buildList(sorted)],
-              ))
+                  child: Stack(children: [
+                Opacity(
+                    opacity: isLoading ? 0.5 : 1,
+                    child: TabBarView(
+                      children: [buildGraph(sorted), buildList(sorted)],
+                    )),
+                if (isLoading)
+                  const Center(
+                    child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.white)),
+                  )
+              ]))
             ]),
           ),
         ));

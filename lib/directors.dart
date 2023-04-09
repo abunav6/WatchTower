@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/services/database_handler.dart';
 import 'package:mtvdb/watched.dart';
-import 'package:sqflite/sqflite.dart';
 
 import 'helper.dart';
 
@@ -19,13 +18,20 @@ class DirectorsScreenWidget extends StatefulWidget {
 
 class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
   ScrollController listScrollController = ScrollController();
+  bool isLoading = false;
 
   void navigateToWatchedScreen(index) async {
     // pass to Watched Screen with a boolean saying its from here, so that the 'shows' list does not get built
 
+    setState(() {
+      isLoading = true;
+    });
     List<Record> movies = await getMoviesbyDirector(
         widget.directors.keys.elementAt(index).toString());
-    // List<Record> movies = res.map((e) => Record.fromMap(e)).toList();
+
+    setState(() {
+      isLoading = false;
+    });
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -52,73 +58,85 @@ class _DirectorsScreenWidget extends State<DirectorsScreenWidget> {
         backgroundColor: Colors.black,
         body: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(10, 50, 10, 50),
-            child: FutureBuilder(
-              future: getImageURLs(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.none &&
-                    snapshot.hasData == null) {
-                  return Container();
-                }
-                return ListView.separated(
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(
-                        height: 10,
-                      );
-                    },
-                    controller: listScrollController,
-                    itemCount: widget.directors.length,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                          onTap: () async {
-                            navigateToWatchedScreen(index);
+            child: Stack(children: [
+              Opacity(
+                  opacity: isLoading ? 0.5 : 1,
+                  child: FutureBuilder(
+                    future: getImageURLs(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.none &&
+                          snapshot.hasData == null) {
+                        return Container();
+                      }
+                      return ListView.separated(
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const SizedBox(
+                              height: 10,
+                            );
                           },
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0)),
-                              child: Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      5, 30, 5, 30),
-                                  child: ListTile(
-                                    leading: snapshot.hasData
-                                        ? ClipOval(
-                                            child: Image.network(
-                                                (snapshot.data as Map)[widget
-                                                    .directors.keys
-                                                    .elementAt(index)
-                                                    .toString()],
-                                                width: 60,
-                                                height: 60,
-                                                fit: BoxFit.cover))
-                                        : const ClipOval(
-                                            child: CircularProgressIndicator(
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                    Colors.black),
-                                          )),
-                                    title: Text(
-                                        widget.directors.keys
-                                            .elementAt(index)
-                                            .toString(),
-                                        style:
-                                            GoogleFonts.poppins(fontSize: 20)),
-                                    subtitle: Text(
-                                        widget.directors.values
-                                            .elementAt(index)
-                                            .toString(),
-                                        style:
-                                            GoogleFonts.poppins(fontSize: 16)),
-                                    trailing: IconButton(
-                                      icon: const Icon(Icons.arrow_right_sharp),
-                                      onPressed: () {
-                                        navigateToWatchedScreen(index);
-                                      },
-                                    ),
-                                  ))));
-                    });
-              },
-            )));
+                          controller: listScrollController,
+                          itemCount: widget.directors.length,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                                onTap: () async {
+                                  navigateToWatchedScreen(index);
+                                },
+                                child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.0)),
+                                    child: Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(5, 30, 5, 30),
+                                        child: ListTile(
+                                          leading: snapshot.hasData
+                                              ? ClipOval(
+                                                  child: Image.network(
+                                                      (snapshot.data as Map)[
+                                                          widget.directors.keys
+                                                              .elementAt(index)
+                                                              .toString()],
+                                                      width: 60,
+                                                      height: 60,
+                                                      fit: BoxFit.cover))
+                                              : const ClipOval(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(Colors.black),
+                                                )),
+                                          title: Text(
+                                              widget.directors.keys
+                                                  .elementAt(index)
+                                                  .toString(),
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 20)),
+                                          subtitle: Text(
+                                              widget.directors.values
+                                                  .elementAt(index)
+                                                  .toString(),
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 16)),
+                                          trailing: IconButton(
+                                            icon: const Icon(
+                                                Icons.arrow_right_sharp),
+                                            onPressed: () {
+                                              navigateToWatchedScreen(index);
+                                            },
+                                          ),
+                                        ))));
+                          });
+                    },
+                  )),
+              if (isLoading)
+                const Center(
+                  child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                )
+            ])));
   }
 }

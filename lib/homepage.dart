@@ -65,7 +65,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     10, 10, 10, 10),
                                 child: ElevatedButton(
                                     onPressed: () {
-                                      debugPrint("Need to add a movie");
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
