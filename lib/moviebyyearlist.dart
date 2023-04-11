@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/details.dart';
@@ -9,7 +7,7 @@ import 'package:mtvdb/details.dart';
 import 'helper.dart';
 
 class YearMoviesWidget extends StatefulWidget {
-  final List<String> movies;
+  final List<Record> movies;
   const YearMoviesWidget({Key? key, required this.movies}) : super(key: key);
 
   @override
@@ -17,23 +15,10 @@ class YearMoviesWidget extends StatefulWidget {
 }
 
 class _YearMoviesWidget extends State<YearMoviesWidget> {
-  Future<List<TitleDetails>> getList(StreamSink<double> progress) async {
-    List<TitleDetails> titles = [];
-    int count = 0;
-    int total = widget.movies.length;
-    for (String imdbId in widget.movies) {
-      titles.insert(0, await getDetails(imdbId));
-      count++;
-      progress.add(count / total);
-    }
-    titles.sort((a, b) => a.title.compareTo(b.title));
-    return titles;
-  }
-
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     ScrollController listScrollController = ScrollController();
-    StreamController<double> progress = StreamController.broadcast();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
@@ -41,44 +26,10 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
         backgroundColor: Colors.black,
         body: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(10, 50, 10, 50),
-            child: FutureBuilder(
-              future: getList(progress.sink),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return StreamBuilder<double>(
-                    stream: progress.stream,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(
-                                value: snapshot.data,
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                    Colors.white),
-                              ),
-                              StreamBuilder(
-                                  stream: progress.stream,
-                                  builder: (context, snapshot) {
-                                    return Text(
-                                      snapshot.hasData
-                                          ? "${((double.parse(snapshot.data.toString())) * 100).round()}%"
-                                          : "",
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.white, fontSize: 12),
-                                    );
-                                  }),
-                            ],
-                          ),
-                        );
-                      }
-                      return Container();
-                    },
-                  );
-                } else {
-                  progress.close();
-                  return ListView.separated(
+            child: Stack(children: [
+              Opacity(
+                  opacity: isLoading ? 0.5 : 1,
+                  child: ListView.separated(
                       separatorBuilder: (BuildContext context, int index) {
                         return const SizedBox(
                           height: 10,
@@ -92,12 +43,21 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                             onTap: () async {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              TitleDetails td =
+                                  await getDetails(widget.movies[index].imdbID);
+
+                              setState(() {
+                                isLoading = false;
+                              });
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => DetailsScreenWidget(
-                                            title:
-                                                (snapshot.data as List)[index],
+                                            title: td,
                                             showButtons: false,
                                           )));
                             },
@@ -111,17 +71,14 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
                                     child: ListTile(
                                       leading: ClipOval(
                                           child: Image.network(
-                                              ((snapshot.data as List)[index])
-                                                  .poster,
+                                              (widget.movies[index]).poster,
                                               width: 60,
                                               height: 60,
                                               fit: BoxFit.cover)),
-                                      title: Text(
-                                          (snapshot.data as List)[index].title,
+                                      title: Text(widget.movies[index].title,
                                           style: GoogleFonts.poppins(
                                               fontSize: 20)),
-                                      subtitle: Text(
-                                          (snapshot.data as List)[index].year,
+                                      subtitle: Text(widget.movies[index].year,
                                           style: GoogleFonts.poppins(
                                               fontSize: 16)),
                                       trailing: IconButton(
@@ -133,9 +90,12 @@ class _YearMoviesWidget extends State<YearMoviesWidget> {
                                         },
                                       ),
                                     ))));
-                      });
-                }
-              },
-            )));
+                      })),
+              if (isLoading)
+                const Center(
+                  child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                )
+            ])));
   }
 }
