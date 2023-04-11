@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mtvdb/helper.dart';
 import 'package:mtvdb/services/database_handler.dart';
 import 'package:mtvdb/moviebyyearlist.dart';
 
@@ -98,7 +99,7 @@ class _GraphWidgetState extends State<GraphWidget> {
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                   onTap: () async {
-                    List<String> yearMovies = await getMoviesFromThisYear(
+                    List<Record> yearMovies = await getMoviesFromThisYear(
                         movies.keys.elementAt(index));
 
                     Navigator.push(

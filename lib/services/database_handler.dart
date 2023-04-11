@@ -224,8 +224,8 @@ Future<Map<String, int>> getyearMap() async {
   return yearMap;
 }
 
-Future<List<String>> getMoviesFromThisYear(String year) async {
-  List<String> imdbIDS = [];
+Future<List<Record>> getMoviesFromThisYear(String year) async {
+  List<Record> records = [];
 
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
   Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
@@ -233,10 +233,10 @@ Future<List<String>> getMoviesFromThisYear(String year) async {
     Record r = Record.fromMap(json.decode(jsonEncode(value)));
     if (r.type == "movie" && r.watchlist == "false") {
       if (r.year == year) {
-        imdbIDS.add(r.imdbID);
+        records.add(r);
       }
     }
   });
 
-  return imdbIDS;
+  return records;
 }
