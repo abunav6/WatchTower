@@ -101,6 +101,7 @@ class _GraphWidgetState extends State<GraphWidget> {
                   onTap: () async {
                     List<Record> yearMovies = await getMoviesFromThisYear(
                         movies.keys.elementAt(index));
+                    yearMovies.sort((a, b) => a.title.compareTo(b.title));
 
                     Navigator.push(
                         context,
