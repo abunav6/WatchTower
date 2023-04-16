@@ -12,7 +12,7 @@ import 'details.dart';
 
 class StatsWidget extends StatefulWidget {
   final Map<String, int> dd;
-  final String id, rd;
+  final String id, rd, ard;
   final TitleDetails max, min;
   const StatsWidget(
       {Key? key,
@@ -20,7 +20,8 @@ class StatsWidget extends StatefulWidget {
       required this.rd,
       required this.max,
       required this.min,
-      required this.id})
+      required this.id,
+      required this.ard})
       : super(key: key);
 
   @override
@@ -31,9 +32,26 @@ class _StatsWidgetState extends State<StatsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool isLoading = false;
+  bool _showRating = true;
 
   Future<String> getTopDirImage() async {
     return await (getDirectorImageURL(widget.dd.keys.elementAt(0).toString()));
+  }
+
+  String get avgTitle {
+    if (!_showRating) {
+      return 'Average Rating';
+    } else {
+      return 'Average Runtime';
+    }
+  }
+
+  String get avgData {
+    if (!_showRating) {
+      return "${widget.id}/10.0";
+    } else {
+      return "${widget.ard} mins";
+    }
   }
 
   @override
@@ -224,7 +242,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                                               0, 12, 0, 0),
                                       child: InkWell(
                                         onTap: () async {},
-                                        child: Text('Average Rating',
+                                        child: Text("Average Rating",
                                             style: GoogleFonts.poppins(
                                                 fontSize: 17,
                                                 fontWeight: FontWeight.w700,
@@ -537,9 +555,9 @@ class _StatsWidgetState extends State<StatsWidget> {
                           const EdgeInsetsDirectional.fromSTEB(20, 10, 0, 0),
                       child: SelectionArea(
                           child: Text(
-                              'You\'ve spent ${widget.rd} minutes\n watching movies!',
+                              'You\'ve spent ${widget.rd} minutes watching\nmovies!\nThat\'s ${widget.ard} minutes per movie, on average!',
                               style: GoogleFonts.poppins(
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white))),
                     ),

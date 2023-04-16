@@ -151,6 +151,7 @@ Future<List<String>> getRuntimeData() async {
   int sum = 0;
   int max = -1;
   int min = 10000;
+  int movies = 0;
 
   String maxIMDBId = '', minIMDBId = '';
 
@@ -173,12 +174,18 @@ Future<List<String>> getRuntimeData() async {
         }
 
         sum += x;
+        movies += 1;
       } catch (e) {
         debugPrint(e.toString());
       }
     }
   });
-  return [sum.toString(), maxIMDBId, minIMDBId];
+  return [
+    sum.toString(),
+    maxIMDBId,
+    minIMDBId,
+    (sum / movies).toStringAsFixed(0)
+  ];
 }
 
 Future<Map<String, int>> getTopTenDirectors() async {
