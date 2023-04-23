@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import "package:mtvdb/helper.dart";
 import 'dart:convert';
