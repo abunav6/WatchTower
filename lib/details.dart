@@ -712,7 +712,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     );
   }
 
-  Widget addToWatchDButton() {
+  Widget addToWatchTowerButton() {
     return ElevatedButton(
         onPressed: () async {
           String rat = "";
@@ -721,7 +721,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               rat = r.value;
             }
           }
-          debugPrint("Add to WatchD");
+          debugPrint("Add to WatchTower");
           Record rec = Record(
               imdbID: widget.title.imdbID,
               title: widget.title.title,
@@ -736,13 +736,13 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
           int code = await fInsert(rec, false);
 
           if (code == 0) {
-            showToast(context, "Added ${widget.title.title} to WatchD!");
+            showToast(context, "Added ${widget.title.title} to WatchTower!");
           } else if (code == -1) {
             showToast(context,
-                "${rec.title} was in your watchlist! Moving it to the WatchD list!");
+                "${rec.title} was in your watchlist! Moving it to the WatchTower list!");
           } else {
-            showToast(
-                context, "${rec.title} already exists in your WatchD list!");
+            showToast(context,
+                "${rec.title} already exists in your WatchTower list!");
           }
           Navigator.pop(context);
         },
@@ -754,7 +754,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                     side: const BorderSide(color: Colors.transparent)))),
         child: Row(children: <Widget>[
           const Icon(Icons.add, size: 15),
-          Text("\t Add to WatchD", style: GoogleFonts.poppins(fontSize: 14))
+          Text("\t Add to WatchTower", style: GoogleFonts.poppins(fontSize: 14))
         ]));
   }
 
@@ -785,7 +785,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                 context, "Added ${widget.title.title} to your Watchlist!");
           } else if (code == -2) {
             showToast(context,
-                "${widget.title.title} already exists in WatchD list!");
+                "${widget.title.title} already exists in WatchTower list!");
           } else if (code == -3) {
             showToast(context,
                 "${widget.title.title} already exists in your watchlist!");
@@ -858,14 +858,16 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
     );
   }
 
-  Widget showWatchD() {
+  Widget showWatchTower() {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
       child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [(widget.showButtons) ? addToWatchDButton() : Container()]),
+          children: [
+            (widget.showButtons) ? addToWatchTowerButton() : Container()
+          ]),
     );
   }
 
@@ -894,7 +896,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
           createRatingsRow(),
           addRatingImages(ratings),
           genreRow(),
-          showWatchD(),
+          showWatchTower(),
           showWatchlist(),
         ],
       ),

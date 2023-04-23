@@ -11,11 +11,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const WatchD());
+  runApp(const WatchTower());
 }
 
-class WatchD extends StatelessWidget {
-  const WatchD({Key? key}) : super(key: key);
+class WatchTower extends StatelessWidget {
+  const WatchTower({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class WatchD extends StatelessWidget {
       _cleanUpTemporaryDirectory();
     }
     return MaterialApp(
-        title: 'WatchD',
+        title: 'WatchTower',
         theme: ThemeData(
             primarySwatch: Colors.blue, unselectedWidgetColor: Colors.white),
         initialRoute: "/",

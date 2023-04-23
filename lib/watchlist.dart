@@ -101,7 +101,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
 
                                       fChangeWatchlist(widget.movies[index]);
                                       showToast(context,
-                                          "Added ${widget.movies[index].title} to WatchD!");
+                                          "Added ${widget.movies[index].title} to WatchTower!");
                                       Navigator.pop(context);
                                     },
                                     icon: const Icon(Icons.check)),
@@ -173,7 +173,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                       fChangeWatchlist(widget.shows[index]);
 
                                       showToast(context,
-                                          "Added ${widget.shows[index].title} to WatchD!");
+                                          "Added ${widget.shows[index].title} to WatchTower!");
                                       Navigator.pop(context);
                                     },
                                     icon: const Icon(Icons.check)),
@@ -270,7 +270,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                           "watched ${_searchResultM[index].title}!");
                                       fChangeWatchlist(_searchResultM[index]);
                                       showToast(context,
-                                          "Added ${_searchResultM[index].title} to WatchD!");
+                                          "Added ${_searchResultM[index].title} to WatchTower!");
                                       Navigator.pop(context);
                                     },
                                     icon: const Icon(Icons.check)),
@@ -339,7 +339,7 @@ class _WatchlistWidget extends State<WatchlistWidget> {
                                           "watched ${_searchResultS[index].title}!");
                                       fChangeWatchlist(_searchResultS[index]);
                                       showToast(context,
-                                          "Added ${_searchResultS[index].title} to WatchD!");
+                                          "Added ${_searchResultS[index].title} to WatchTower!");
                                       Navigator.pop(context);
                                     },
                                     icon: const Icon(Icons.check)),

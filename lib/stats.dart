@@ -81,7 +81,7 @@ class _StatsWidgetState extends State<StatsWidget> {
                       Padding(
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                        child: Text('Here are your WatchD stats!',
+                        child: Text('Here are your WatchTower stats!',
                             style: GoogleFonts.poppins(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,

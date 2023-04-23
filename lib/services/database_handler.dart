@@ -35,7 +35,7 @@ Future<int> fInsert(Record toAdd, bool fromWatchlist) async {
           return -3;
         }
       } else {
-        debugPrint("Already exists in WatchD list");
+        debugPrint("Already exists in WatchTower list");
         return -2;
       }
     }

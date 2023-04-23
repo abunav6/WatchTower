@@ -54,7 +54,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     0, 0, 0, 70),
                                 child: Text(
-                                  'WatchD',
+                                  'WatchTower',
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.poppins(
                                       fontSize: 40, color: Colors.white),
@@ -134,7 +134,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                 side: const BorderSide(
                                                     color:
                                                         Colors.transparent)))),
-                                    child: Text("Your WatchD list",
+                                    child: Text("Your WatchTower list",
                                         style:
                                             GoogleFonts.poppins(fontSize: 14))),
                               ),

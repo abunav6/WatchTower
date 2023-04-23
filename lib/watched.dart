@@ -109,7 +109,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
 
                               fDelete(widget.movies[index].imdbID);
                               showToast(context,
-                                  "Deleted ${widget.movies[index].title} from WatchD!");
+                                  "Deleted ${widget.movies[index].title} from WatchTower!");
                               Navigator.pop(context);
                             },
                             icon: const Icon(Icons.cancel)),
@@ -169,7 +169,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
 
                               fDelete(widget.shows[index].imdbID);
                               showToast(context,
-                                  "Deleted ${widget.shows[index].title} from WatchD!");
+                                  "Deleted ${widget.shows[index].title} from WatchTower!");
                               Navigator.pop(context);
                             },
                             icon: const Icon(Icons.cancel)),
@@ -256,7 +256,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
 
                               fDelete(_searchResultM[index].imdbID);
                               showToast(context,
-                                  "Deleted ${_searchResultM[index].title} from WatchD!");
+                                  "Deleted ${_searchResultM[index].title} from WatchTower!");
                               Navigator.pop(context);
                             },
                             icon: const Icon(Icons.cancel)),
@@ -315,7 +315,7 @@ class _WatchedScreenWidget extends State<WatchedScreenWidget> {
 
                               fDelete(_searchResultS[index].imdbID);
                               showToast(context,
-                                  "Deleted ${_searchResultS[index].title} from WatchD!");
+                                  "Deleted ${_searchResultS[index].title} from WatchTower!");
                               Navigator.pop(context);
                             },
                             icon: const Icon(Icons.cancel)),
