@@ -56,7 +56,7 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                           padding:
                               const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                           child: Text(
-                            'Add a Movie or Show to WatchD',
+                            'Add a Movie or Show to WatchTower',
                             style: GoogleFonts.poppins(
                                 fontSize: 40,
                                 fontWeight: FontWeight.w700,
