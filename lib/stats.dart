@@ -32,7 +32,7 @@ class _StatsWidgetState extends State<StatsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool isLoading = false;
-  bool _showRating = true;
+  final bool _showRating = true;
 
   Future<String> getTopDirImage() async {
     return await (getDirectorImageURL(widget.dd.keys.elementAt(0).toString()));

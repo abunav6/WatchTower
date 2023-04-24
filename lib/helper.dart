@@ -329,20 +329,20 @@ class Credits {
     if (json['cast'] != null) {
       cast = <Cast>[];
       json['cast'].forEach((v) {
-        cast!.add(new Cast.fromJson(v));
+        cast!.add(Cast.fromJson(v));
       });
     }
     if (json['crew'] != null) {
       crew = <Crew>[];
       json['crew'].forEach((v) {
-        crew!.add(new Crew.fromJson(v));
+        crew!.add(Crew.fromJson(v));
       });
     }
     id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (this.cast != null) {
       data['cast'] = this.cast!.map((v) => v.toJson()).toList();
     }
@@ -380,7 +380,7 @@ class Cast {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
 
     data['id'] = this.id;
 
@@ -421,7 +421,7 @@ class Crew {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
 
     data['id'] = this.id;
 
@@ -459,7 +459,7 @@ class IMDBIDGetter {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = this.id;
     data['imdb_id'] = this.imdbId;
 
