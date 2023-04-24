@@ -134,7 +134,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                 side: const BorderSide(
                                                     color:
                                                         Colors.transparent)))),
-                                    child: Text("Your WatchTower watched list",
+                                    child: Text("Your WatchTower Watched list",
                                         style:
                                             GoogleFonts.poppins(fontSize: 14))),
                               ),
