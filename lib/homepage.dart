@@ -45,7 +45,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     30, 0, 30, 10),
                                 child: Image.asset(
                                   'assets/wt2.png',
-                                  width: MediaQuery.of(context).size.width,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
                                   // height: 150,
                                   fit: BoxFit.cover,
                                 ),
@@ -134,7 +135,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                 side: const BorderSide(
                                                     color:
                                                         Colors.transparent)))),
-                                    child: Text("Your WatchTower Watched list",
+                                    child: Text("Your Watched titles",
                                         style:
                                             GoogleFonts.poppins(fontSize: 14))),
                               ),
@@ -177,7 +178,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                 side: const BorderSide(
                                                     color:
                                                         Colors.transparent)))),
-                                    child: Text("Your WatchTower Watchlist",
+                                    child: Text("Your Watchlist",
                                         style:
                                             GoogleFonts.poppins(fontSize: 14))),
                               ),
