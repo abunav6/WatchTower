@@ -730,7 +730,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               watchlist: "false",
               year: widget.title.year,
               director: widget.title.director,
-              runtime: widget.title.runtime.replaceAll("min", ""),
+              runtime: widget.title.runtime.replaceAll("min", "").trim(),
               imdbRating: rat.replaceAll("/10", ""));
 
           int code = await fInsert(rec, false);
@@ -776,7 +776,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
               watchlist: "true",
               year: widget.title.year,
               director: widget.title.director,
-              runtime: widget.title.runtime.replaceAll("min", ""),
+              runtime: widget.title.runtime.replaceAll("min", "").trim(),
               imdbRating: rat.replaceAll("/10", ""));
           int code = await fInsert(rec, true);
 
