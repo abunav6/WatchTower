@@ -136,7 +136,8 @@ class TitleDetails {
   String genre = "";
   String director = "";
   String writer = "";
-  String actors = "";
+  String actors =
+      ""; // TODO: change this to be an object of class TMDBActorList
   String plot = "";
   String poster = "";
   List<Ratings> ratings = [];
@@ -489,4 +490,173 @@ Future<int> checkIfExists(String imdbID) async {
 
   // does not exist in the DB
   return 0;
+}
+
+class TMDBIDGetter {
+  List<MovieResults>? movieResults;
+  List<TvResults>? tvResults;
+
+  TMDBIDGetter({this.movieResults, this.tvResults});
+
+  TMDBIDGetter.fromJson(Map<String, dynamic> json) {
+    if (json['movie_results'] != null) {
+      movieResults = <MovieResults>[];
+      json['movie_results'].forEach((v) {
+        movieResults!.add(new MovieResults.fromJson(v));
+      });
+    }
+    if (json['tv_results'] != null) {
+      tvResults = <TvResults>[];
+      json['tv_results'].forEach((v) {
+        tvResults!.add(new TvResults.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.movieResults != null) {
+      data['movie_results'] =
+          this.movieResults!.map((v) => v.toJson()).toList();
+    }
+    if (this.tvResults != null) {
+      data['tv_results'] = this.tvResults!.map((v) => v.toJson()).toList();
+    }
+
+    return data;
+  }
+}
+
+class TvResults {
+  int? id;
+  String? name;
+
+  TvResults({
+    this.id,
+    this.name,
+  });
+
+  TvResults.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    return data;
+  }
+}
+
+class MovieResults {
+  int? _id;
+
+  MovieResults({
+    int? id,
+  }) {
+    if (id != null) {
+      this._id = id;
+    }
+  }
+
+  int? get id => _id;
+  set id(int? id) => _id = id;
+
+  MovieResults.fromJson(Map<String, dynamic> json) {
+    _id = json['id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['id'] = this._id;
+
+    return data;
+  }
+}
+
+class TMDBActors {
+  List<TMDBActor> cast = [];
+
+  TMDBActors({required this.cast});
+
+  TMDBActors.fromJson(Map<String, dynamic> json) {
+    if (json['cast'] != null) {
+      cast = <TMDBActor>[];
+      json['cast'].forEach((v) {
+        cast.add(new TMDBActor.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['cast'] = this.cast.map((v) => v.toJson()).toList();
+
+    return data;
+  }
+}
+
+class TMDBActor {
+  String? name;
+  String? character;
+  String? profile_path;
+
+  TMDBActor({this.name, this.character, this.profile_path});
+
+  TMDBActor.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    character = json['character'];
+    profile_path = json['profile_path'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['character'] = this.character;
+    data['profile_path'] = this.profile_path;
+    return data;
+  }
+}
+
+Future<List<TMDBActor>> getCharacterNames(
+    String imdbID, List<String> actors, String type) async {
+  String tmdbID = await getTMDBID(imdbID, type);
+  if (type == "series") {
+    type = "tv";
+  }
+  String url =
+      "https://api.themoviedb.org/3/$type/$tmdbID/credits?api_key=$tmdb?language=en-US";
+  Map<String, String> headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer $tmdbToken"
+  };
+  var response = await http.get(Uri.parse(url), headers: headers);
+
+  var jsonData = json.decode(response.body);
+  return TMDBActors.fromJson(jsonData).cast;
+}
+
+Future<String> getTMDBID(String imdbID, String type) async {
+  String url =
+      "https://api.themoviedb.org/3/find/$imdbID?external_source=imdb_id";
+  Map<String, String> headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer $tmdbToken"
+  };
+  var response = await http.get(Uri.parse(url), headers: headers);
+  var jsonData = json.decode(response.body);
+  if (type == "movie") {
+    return TMDBIDGetter.fromJson(jsonData).movieResults![0].id.toString();
+  } else {
+    return TMDBIDGetter.fromJson(jsonData).tvResults![0].id.toString();
+  }
+}
+
+String getValidURL(var url) {
+  if (url != null) {
+    return "https://image.tmdb.org/t/p/original/$url";
+  }
+  return "https://p.kindpng.com/picc/s/21-211168_transparent-person-icon-png-png-download.png";
 }
