@@ -75,138 +75,171 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
         width: MediaQuery.of(context).size.width * 0.9,
         height: 100,
         child: FutureBuilder(
-            future: getImages(type),
+            future: Future.wait([
+              getImages(type),
+              getCharacterNames(widget.title.imdbID, list)
+            ]),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.none &&
                   snapshot.hasData == null) {
                 return Container();
               }
-              return ListView.separated(
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(
-                      width: 10,
-                    );
-                  },
-                  itemCount: list.length,
-                  controller: controller,
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                        onTap: () async {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          int personID = await getPersonID(list[index]);
-                          Credits c = await getMovieCredits(personID);
-
-                          if (type == "a") {
-                            // actor list
-                            List<Cast>? credits = c.cast;
-                            credits!;
-
-                            credits.sort((a, b) =>
-                                b.popularity!.compareTo(a.popularity as num));
-
-                            credits = credits.sublist(0, 10);
-
-                            List<SearchDetails> options = [];
-
-                            for (var c in credits) {
-                              String? title = c.title as String;
-                              String? poster =
-                                  "https://image.tmdb.org/t/p/original${c.posterPath as String}";
-                              String imdbID = await getIMDBID(c.id as int);
-
-                              String year = c.releaseDate!.split("-")[0];
-
-                              options.add(SearchDetails(
-                                  title: title,
-                                  year: year,
-                                  imdbID: imdbID,
-                                  poster: poster));
-                            }
+              if (snapshot.hasData) {
+                return ListView.separated(
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const SizedBox(
+                        width: 10,
+                      );
+                    },
+                    itemCount: list.length,
+                    controller: controller,
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                          onTap: () async {
                             setState(() {
-                              isLoading = false;
+                              isLoading = true;
                             });
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        OptionsScreen(options: options)));
-                          } else {
-                            // writer/director list
-                            List<Crew>? credits = c.crew;
-                            credits!;
+                            int personID = await getPersonID(list[index]);
+                            Credits c = await getMovieCredits(personID);
 
-                            credits.sort((a, b) =>
-                                b.popularity!.compareTo(a.popularity as num));
+                            if (type == "a") {
+                              // actor list
+                              List<Cast>? credits = c.cast;
+                              credits!;
 
-                            credits = credits.sublist(0, 10);
+                              credits.sort((a, b) =>
+                                  b.popularity!.compareTo(a.popularity as num));
 
-                            List<SearchDetails> options = [];
+                              credits = credits.sublist(0, 10);
 
-                            for (var c in credits) {
-                              String? title = c.title as String;
-                              String? poster =
-                                  "https://image.tmdb.org/t/p/original${c.posterPath as String}";
-                              String imdbID = await getIMDBID(c.id as int);
-                              if (options
-                                  .map((e) => e.imdbID)
-                                  .contains(imdbID)) {
-                                continue;
+                              List<SearchDetails> options = [];
+
+                              for (var c in credits) {
+                                String? title = c.title as String;
+                                String? poster =
+                                    "https://image.tmdb.org/t/p/original${c.posterPath as String}";
+                                String imdbID = await getIMDBID(c.id as int);
+
+                                String year = c.releaseDate!.split("-")[0];
+
+                                options.add(SearchDetails(
+                                    title: title,
+                                    year: year,
+                                    imdbID: imdbID,
+                                    poster: poster));
                               }
-                              String year = c.releaseDate!.split("-")[0];
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          OptionsScreen(options: options)));
+                            } else {
+                              // writer/director list
+                              List<Crew>? credits = c.crew;
+                              credits!;
 
-                              options.add(SearchDetails(
-                                  title: title,
-                                  year: year,
-                                  imdbID: imdbID,
-                                  poster: poster));
+                              credits.sort((a, b) =>
+                                  b.popularity!.compareTo(a.popularity as num));
+
+                              credits = credits.sublist(0, 10);
+
+                              List<SearchDetails> options = [];
+
+                              for (var c in credits) {
+                                String? title = c.title as String;
+                                String? poster =
+                                    "https://image.tmdb.org/t/p/original${c.posterPath as String}";
+                                String imdbID = await getIMDBID(c.id as int);
+                                if (options
+                                    .map((e) => e.imdbID)
+                                    .contains(imdbID)) {
+                                  continue;
+                                }
+                                String year = c.releaseDate!.split("-")[0];
+
+                                options.add(SearchDetails(
+                                    title: title,
+                                    year: year,
+                                    imdbID: imdbID,
+                                    poster: poster));
+                              }
+
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          OptionsScreen(options: options)));
                             }
-
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        OptionsScreen(options: options)));
-                          }
-                        },
-                        child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
-                            child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                height: 20,
-                                child: Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            20, 15, 20, 0),
-                                    child: ListTile(
-                                      leading: snapshot.hasData
-                                          ? ClipOval(
-                                              child: Image.network(
-                                                  (snapshot.data
-                                                      as Map)[list[index]],
-                                                  width: 60,
-                                                  height: 60,
-                                                  fit: BoxFit.cover))
-                                          : const ClipOval(
-                                              child: CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      Colors.black),
-                                            )),
-                                      title: Text(
-                                        list[index],
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      trailing: const Icon(Icons.arrow_right),
-                                    )))));
-                  });
+                          },
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0)),
+                              child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  height: 20,
+                                  child: Padding(
+                                      padding: type != "a"
+                                          ? const EdgeInsetsDirectional
+                                              .fromSTEB(20, 15, 20, 0)
+                                          : const EdgeInsetsDirectional
+                                              .fromSTEB(20, 10, 20, 0),
+                                      child: ListTile(
+                                        leading: snapshot.hasData
+                                            ? ClipOval(
+                                                child: type != "a"
+                                                    ? Image.network(
+                                                        ((snapshot.data
+                                                                    as List)[0]
+                                                                as Map)[
+                                                            list[index]],
+                                                        width: 60,
+                                                        height: 60,
+                                                        fit: BoxFit.cover)
+                                                    : Image.network(
+                                                        "https://image.tmdb.org/t/p/original/" +
+                                                            (((snapshot.data
+                                                                        as List)[1]
+                                                                    as List)[index])
+                                                                .profile_path,
+                                                        width: 60,
+                                                        height: 60,
+                                                        fit: BoxFit.cover))
+                                            : const ClipOval(
+                                                child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(Colors.black),
+                                              )),
+                                        title: Text(
+                                          type != "a"
+                                              ? list[index]
+                                              : (((snapshot.data as List)[1]
+                                                      as List)[index])
+                                                  .name,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        subtitle: type == "a"
+                                            ? Text(
+                                                (((snapshot.data as List)[1]
+                                                        as List)[index])
+                                                    .character,
+                                                textAlign: TextAlign.center)
+                                            : null,
+                                        trailing: const Icon(Icons.arrow_right),
+                                      )))));
+                    });
+              } else {
+                return Container();
+              }
             }));
   }
 
