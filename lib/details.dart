@@ -77,7 +77,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
         child: FutureBuilder(
             future: Future.wait([
               getImages(type),
-              getCharacterNames(widget.title.imdbID, list)
+              getCharacterNames(widget.title.imdbID, list, widget.title.type)
             ]),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.none &&
@@ -205,16 +205,17 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                                                         height: 60,
                                                         fit: BoxFit.cover)
                                                     : Image.network(
-                                                        "https://image.tmdb.org/t/p/original/" +
-                                                            (((snapshot.data
-                                                                        as List)[1]
-                                                                    as List)[index])
-                                                                .profile_path,
+                                                        getValidURL((((snapshot
+                                                                        .data
+                                                                    as List)[1]
+                                                                as List)[index])
+                                                            .profile_path),
                                                         width: 60,
                                                         height: 60,
                                                         fit: BoxFit.cover))
                                             : const ClipOval(
-                                                child: CircularProgressIndicator(
+                                                child:
+                                                    CircularProgressIndicator(
                                                 valueColor:
                                                     AlwaysStoppedAnimation<
                                                         Color>(Colors.black),
