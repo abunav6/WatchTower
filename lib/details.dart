@@ -69,6 +69,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
   }
 
   Widget buildCrewList(List<String> list, String type) {
+    debugPrint("I am here");
     ScrollController controller = ScrollController();
 
     return SizedBox(

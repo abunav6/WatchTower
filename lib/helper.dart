@@ -639,6 +639,7 @@ Future<List<TMDBActor>> getCharacterNames(
 }
 
 Future<String> getTMDBID(String imdbID, String type) async {
+  debugPrint("Getting tmdb ID for $imdbID which is a $type");
   String url =
       "https://api.themoviedb.org/3/find/$imdbID?external_source=imdb_id";
   Map<String, String> headers = {
@@ -647,6 +648,7 @@ Future<String> getTMDBID(String imdbID, String type) async {
   };
   var response = await http.get(Uri.parse(url), headers: headers);
   var jsonData = json.decode(response.body);
+  debugPrint(jsonData.toString());
   if (type == "movie") {
     return TMDBIDGetter.fromJson(jsonData).movieResults![0].id.toString();
   } else {
