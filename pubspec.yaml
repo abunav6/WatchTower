@@ -43,7 +43,7 @@ dependencies:
   url_launcher: ^6.1.11
 
   firebase_core: ^2.15.1
-  firebase_database: ^10.2.5
+  firebase_database: ^10.2.6
 
 
 
