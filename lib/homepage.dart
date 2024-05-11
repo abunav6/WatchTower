@@ -87,7 +87,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         Colors.transparent)))),
                                     child: Text("Search for a Movie or Show",
                                         style:
-                                            GoogleFonts.poppins(fontSize: 14))),
+                                            GoogleFonts.poppins(fontSize: 14, color: Colors.white),
+                                            )),
                               ),
                               Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
@@ -137,7 +138,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         Colors.transparent)))),
                                     child: Text("Your Watched titles",
                                         style:
-                                            GoogleFonts.poppins(fontSize: 14))),
+                                            GoogleFonts.poppins(fontSize: 14, color: Colors.white))),
                               ),
                               Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
@@ -180,7 +181,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         Colors.transparent)))),
                                     child: Text("Your Watchlist",
                                         style:
-                                            GoogleFonts.poppins(fontSize: 14))),
+                                            GoogleFonts.poppins(fontSize: 14, color: Colors.white))),
                               ),
                               Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
@@ -209,7 +210,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         Colors.transparent)))),
                                     child: Text("Get a Movie Recommendation!",
                                         style:
-                                            GoogleFonts.poppins(fontSize: 14))),
+                                            GoogleFonts.poppins(fontSize: 14,  color: Colors.white))),
                               ),
                             ],
                           ),

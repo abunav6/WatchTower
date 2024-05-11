@@ -60,10 +60,12 @@ Future<List<Record>> fRetrieveAll() async {
 Future<List<Record>> fRetrieveData(String type, String watchlistValue) async {
   DatabaseEvent snap = await FirebaseDatabase.instance.ref().once();
   Map<dynamic, dynamic> nodes = snap.snapshot.value as Map;
-
+  // debugPrint(nodes.toString());
   List<Record> records = [];
   nodes.forEach((key, value) {
+    debugPrint(key);
     Record r = Record.fromMap(json.decode(jsonEncode(value)));
+    
     if (r.type == type && r.watchlist == watchlistValue) {
       records.add(r);
     }
