@@ -28,10 +28,11 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
     TitleDetails recommendation;
     while (true) {
       final response = await http
-          .get(Uri.parse("http://flaskmtv-abunav6.vercel.app/$genre"));
+          .get(Uri.parse("http://flaskmtv.vercel.app/$genre"));
 
       if (response.statusCode == 200) {
-        LinkedHashMap object = json.decode(response.body)[0];
+        List<dynamic> titleData = json.decode(json.decode(response.body)["body"]);
+        LinkedHashMap object = titleData[0];
         if (await checkIfExists(object['imdbID']) == 0) {
           recommendation = await getDetails(object['imdbID']);
           break;
@@ -114,6 +115,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                   onTap: () async {
+                                    debugPrint(genres[index]);
                                     showToast(context,
                                         "Searching for ${genres[index]} movies!");
                                     showDetails(context, genres[index]);

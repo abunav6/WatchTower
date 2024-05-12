@@ -788,7 +788,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                     borderRadius: BorderRadius.circular(20.0),
                     side: const BorderSide(color: Colors.transparent)))),
         child: Row(children: <Widget>[
-          const Icon(Icons.add, size: 15),
+          const Icon(Icons.add, size: 15, color: Colors.white,),
           Text("\t Add to WatchTower", style: GoogleFonts.poppins(fontSize: 14, color: Colors.white))
         ]));
   }
@@ -834,7 +834,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                     borderRadius: BorderRadius.circular(20.0),
                     side: const BorderSide(color: Colors.transparent)))),
         child: Row(children: <Widget>[
-          const Icon(Icons.bookmark_add, size: 15),
+          const Icon(Icons.bookmark_add, size: 15, color: Colors.white,),
           Text("\t Add to Watchlist", style: GoogleFonts.poppins(fontSize: 14, color: Colors.white))
         ]));
   }
