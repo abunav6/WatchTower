@@ -789,7 +789,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                     side: const BorderSide(color: Colors.transparent)))),
         child: Row(children: <Widget>[
           const Icon(Icons.add, size: 15),
-          Text("\t Add to WatchTower", style: GoogleFonts.poppins(fontSize: 14))
+          Text("\t Add to WatchTower", style: GoogleFonts.poppins(fontSize: 14, color: Colors.white))
         ]));
   }
 
@@ -835,7 +835,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                     side: const BorderSide(color: Colors.transparent)))),
         child: Row(children: <Widget>[
           const Icon(Icons.bookmark_add, size: 15),
-          Text("\t Add to Watchlist", style: GoogleFonts.poppins(fontSize: 14))
+          Text("\t Add to Watchlist", style: GoogleFonts.poppins(fontSize: 14, color: Colors.white))
         ]));
   }
 

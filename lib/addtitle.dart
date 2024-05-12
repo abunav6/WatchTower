@@ -222,7 +222,7 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                                           side: const BorderSide(
                                               color: Colors.transparent)))),
                               child: Text("Search by Name",
-                                  style: GoogleFonts.poppins(fontSize: 14))),
+                                  style: GoogleFonts.poppins(fontSize: 14,color: Colors.white))),
                         ),
 
                         //Button for search by IMDB
@@ -268,7 +268,7 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                                           side: const BorderSide(
                                               color: Colors.transparent)))),
                               child: Text("Search by IMDb ID",
-                                  style: GoogleFonts.poppins(fontSize: 14))),
+                                  style: GoogleFonts.poppins(fontSize: 14, color: Colors.white))),
                         ),
                       ],
                     )),
