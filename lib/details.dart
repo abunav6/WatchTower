@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, deprecated_member_use, use_build_context_synchronously, depend_on_referenced_packages, prefer_interpolation_to_compose_strings, duplicate_ignore, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mtvdb/options.dart';
 import 'package:mtvdb/person_helper.dart';
@@ -78,7 +79,8 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
         child: FutureBuilder(
             future: Future.wait([
               getImages(type),
-              getCharacterNames(widget.title.imdbID, list, widget.title.type)
+              getCharacterNames(widget
+              .title.imdbID, list, widget.title.type)
             ]),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.none &&
@@ -138,7 +140,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          OptionsScreen(options: options)));
+                                          OptionsScreen(options: options, isTMDBID: false,)));
                             } else {
                               // writer/director list
                               List<Crew>? credits = c.crew;
@@ -177,7 +179,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          OptionsScreen(options: options)));
+                                          OptionsScreen(options: options, isTMDBID: false,)));
                             }
                           },
                           child: Card(
@@ -918,6 +920,35 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
             ]));
   }
 
+  Widget showMoreLikeThisButton(){
+    return ElevatedButton(onPressed: () async {
+          debugPrint("show more liek dis");
+          List<Recommendations>? recs = (await getMoreLikeThisHelper(widget.title.imdbID)).results;
+          List<SearchDetails> options = convertRecommendationsToSearchDetails(recs!);
+          // Navigator.pop(context);
+          Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => OptionsScreen(
+                                                options: options,
+                                                isTMDBID: true,)));
+        },
+        child: const Text("Show more like this")
+        );
+  }
+
+  Widget showMoreLikeThis(){
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+        child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              (widget.title.type == "movie") ? showMoreLikeThisButton() : Container()
+            ]));
+  }
+
   Widget buildDetails(
       BuildContext context, Map<String, String> ratings, String posterURL) {
     return SingleChildScrollView(
@@ -933,6 +964,7 @@ class _DetailsScreenWidget extends State<DetailsScreenWidget> {
           genreRow(),
           showWatchTower(),
           showWatchlist(),
+          showMoreLikeThis(),
         ],
       ),
     );

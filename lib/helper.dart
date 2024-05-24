@@ -124,7 +124,7 @@ Future<String> getDirectorImageURL(String name) async {
 Future<TitleDetails> getDetails(String imdbID) async {
   String url = "http://www.omdbapi.com/?apikey=$omdb&i=$imdbID";
   final response = await http.read(Uri.parse(url));
-  // debugPrint(response);
+  
   final jsonData = json.decode(response);
   return TitleDetails.fromJson(jsonData);
 }
@@ -468,7 +468,7 @@ class IMDBIDGetter {
   }
 }
 
-Future<String> getIMDBID(int tmdbID) async {
+Future<String> getIMDBID(var tmdbID) async {
   String url =
       "https://api.themoviedb.org/3/movie/$tmdbID/external_ids?api_key=$tmdb";
   final String credits = await http.read(Uri.parse(url));
@@ -620,6 +620,19 @@ class TMDBActor {
   }
 }
 
+Future<MoreLikeThis> getMoreLikeThisHelper(String imdbID) async{
+  Map<String, String> headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer $tmdbToken"
+  };
+  String tmdbID = await getTMDBID(imdbID,"movie");
+  String url = "https://api.themoviedb.org/3/movie/$tmdbID/similar";
+  var response = await http.get(Uri.parse(url), headers: headers);
+
+  var jsonData = json.decode(response.body);
+  return MoreLikeThis.fromJson(jsonData);
+}
+
 Future<List<TMDBActor>> getCharacterNames(
     String imdbID, List<String> actors, String type) async {
   String tmdbID = await getTMDBID(imdbID, type);
@@ -661,4 +674,84 @@ String getValidURL(var url) {
     return "https://image.tmdb.org/t/p/original/$url";
   }
   return "https://p.kindpng.com/picc/s/21-211168_transparent-person-icon-png-png-download.png";
+}
+
+
+class MoreLikeThis {
+  int? page;
+  List<Recommendations>? results;
+  int? totalPages;
+  int? totalResults;
+
+  MoreLikeThis({this.page,
+                this.results,
+                this.totalPages,
+                this.totalResults});
+
+  MoreLikeThis.fromJson(Map<String, dynamic> json) {
+    page = json['page'];
+    if (json['results'] != null) {
+      results = <Recommendations>[];
+      json['results'].forEach((v) {
+        results?.add(Recommendations.fromJson(v));
+      });
+    }
+    totalPages = json['total_pages'];
+    totalResults = json['total_results'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['page'] = page;
+    if (results != null) {
+      data['results'] = results?.map((v) => v.toJson()).toList();
+    }
+    data['total_pages'] = totalPages;
+    data['total_results'] = totalResults;
+    return data;
+  }
+}
+
+class Recommendations {
+
+  int? id;
+  String? posterPath;
+  String? releaseDate;
+  String? title;
+
+  Recommendations(
+      {
+       this.id,
+       this.posterPath,
+       this.releaseDate,
+      this.title});
+
+  Recommendations.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    posterPath = json['poster_path'];
+    releaseDate = json['release_date'];
+    title = json['title'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['poster_path'] = posterPath;
+    data['release_date'] = releaseDate;
+    data['title'] = title;
+    return data;
+  }
+}
+
+
+List<SearchDetails> convertRecommendationsToSearchDetails(List<Recommendations> recommendations) {
+  List<SearchDetails> recs = recommendations.map((recommendation) {
+    return SearchDetails(
+      title: recommendation.title ?? "",
+      year: recommendation.releaseDate?.split('-')[0] ?? "",
+      imdbID: recommendation.id?.toString() ?? "",
+      poster: "https://image.tmdb.org/t/p/original${recommendation.posterPath as String}",
+    );
+  }).toList();
+  return recs;
 }

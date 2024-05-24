@@ -7,8 +7,9 @@ import "helper.dart";
 class OptionsScreen extends StatefulWidget {
   // Declare a field that holds the Person data
   final List<SearchDetails> options;
+  final bool isTMDBID;
 
-  const OptionsScreen({Key? key, required this.options}) : super(key: key);
+  const OptionsScreen({Key? key, required this.options, required this.isTMDBID}) : super(key: key);
 
   @override
   _OptionsScreen createState() => _OptionsScreen();
@@ -45,8 +46,9 @@ class _OptionsScreen extends State<OptionsScreen> {
                                 isLoading = true;
                               });
 
-                              TitleDetails title = await getDetails(
-                                  widget.options[index].imdbID);
+                              TitleDetails title = await getDetails(!widget.isTMDBID ? 
+                                  widget.options[index].imdbID : await getIMDBID(widget.options[index].imdbID));
+                              
                               setState(() {
                                 isLoading = false;
                               });

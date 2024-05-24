@@ -185,7 +185,8 @@ class _AddTitleWidgetState extends State<AddTitleWidget> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => OptionsScreen(
-                                                options: options)));
+                                                options: options,
+                                                isTMDBID: false,)));
                                   } else {
                                     if (movieRadio == true &&
                                         showRadio == true) {
